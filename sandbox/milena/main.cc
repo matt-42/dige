@@ -13,13 +13,17 @@
 
 namespace dg
 {
-  template <unsigned dim>
-  struct mln_to_dige_format {};
-  template <>
-  struct mln_to_dige_format<1> { typedef trait::format::luminance ret; };
-  template <>
-  struct mln_to_dige_format<3> { typedef trait::format::rgb ret; };
 
+  // Get the color format from the dimension of the color space.
+  template <unsigned dim>
+  struct dim_to_dige_format {};
+  template <>
+  struct dim_to_dige_format<1> { typedef trait::format::luminance ret; };
+  template <>
+  struct dim_to_dige_format<3> { typedef trait::format::rgb ret; };
+
+  // Check if a milena's value type is a type from milena (i.e has enc
+  // typedef) or a builtin type.
   template <typename T>
   struct mln_has_enc
   {
@@ -44,6 +48,10 @@ namespace dg
     typedef V ret;
   };
 
+  // Given a milena's value type V, get the encoding type of the
+  // components of the value type.
+  // Ex: rgb8 -> unsigned char, int_u16 -> short, rgbf -> float, char
+  // -> char ...
   template <typename V>
   struct mln_comp_encoding
   {
@@ -51,11 +59,12 @@ namespace dg
   };
 
 
+  // Dige adapter.
   template <typename V>
-  image<typename mln_to_dige_format<mln::trait::value_<V>::dim>::ret, typename mln_comp_encoding<V>::ret >
+  image<typename dim_to_dige_format<mln::trait::value_<V>::dim>::ret, typename mln_comp_encoding<V>::ret >
   adapt(const mln::image2d<V>& i)
   {
-    typedef image<typename mln_to_dige_format<mln::trait::value_<V>::dim>::ret, typename  mln_comp_encoding<V>::ret > ret;
+    typedef image<typename dim_to_dige_format<mln::trait::value_<V>::dim>::ret, typename  mln_comp_encoding<V>::ret > ret;
     return ret(i.ncols() + i.border() * 2, i.nrows() + i.border() * 2, (const char*) i.buffer());
   }
 
