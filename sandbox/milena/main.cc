@@ -1,4 +1,3 @@
-
 #include <dige/window.h>
 #include <dige/image.h>
 #include <dige/value_traits.h>
@@ -69,12 +68,9 @@ int main()
   using namespace dg;
 
   image2d<value::rgb8> lena = io::ppm::load<value::rgb8>("lena.ppm");
-  //  image2d<value::rgb16> lena = io::ppm::load<value::rgb8>("lena.ppm");
   image2d<value::int_u8> lena_pgm = io::pgm::load<value::int_u8>("lena.pgm");
   image2d<value::int_u16> lena_pgm_u16(lena_pgm.domain());
   image2d<float> lena_pgm_f(lena_pgm.domain());
-
-  //  mln::data::paste(lena_pgm, lena_pgm_u16);
 
 
   mln_piter_(image2d<value::int_u8>) p(lena_pgm.domain());
@@ -85,10 +81,8 @@ int main()
   }
 
 
-  display() <<= dl() - lena_pgm;// - lena - lena_pgm_f - lena_pgm_u16;
-  // display(400, 400) <<= dl() -
-  //   lena_pgm_f - lena_pgm - lena
-  //   + lena - lena;
+  display() <<= dl() - lena_pgm - lena +
+                       lena_pgm_f - lena_pgm_u16;
 
   dg::pause();
 
