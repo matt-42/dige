@@ -29,23 +29,23 @@ namespace dg
   class window
   {
   public:
-    display(unsigned width = 800, unsigned height = 600);
-    display(const std::string& title, unsigned width = 800, unsigned height = 600);
-    display(sf::Window& window);
+    inline display(unsigned width = 800, unsigned height = 600);
+    inline display(const std::string& title, unsigned width = 800, unsigned height = 600);
+    inline display(sf::Window& window);
 
-    void operator<<=(displaylist& l);
+    inline void operator<<=(displaylist& l);
 
-    void refresh();
+    inline void refresh();
 
-    static display* mainDisplay();
-    static std::map<const std::string, sf::Window*>& windows();
+    static inline display* mainDisplay();
+    static inline std::map<const std::string, sf::Window*>& windows();
 
-    void setupOpenGLViewport(unsigned w, unsigned h);
+    inline void setupOpenGLViewport(unsigned w, unsigned h);
 
-    sf::Window& window();
+    inline sf::Window& window();
 
   private:
-    void setupOpenGL();
+    inline void setupOpenGL();
 
     sf::Window* currentWindow_;
     displaylist dlist_;

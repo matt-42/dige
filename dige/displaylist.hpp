@@ -55,40 +55,58 @@ namespace dg
   }
 
   void
+  displaylist::load()
+  {
+    for (unsigned i = 0; i < textures_.size(); i++)
+      for (unsigned j = 0; j < textures_[i].size(); j++)
+        textures_[i][j].load();
+  }
+
+
+  void
+  displaylist::unload()
+  {
+    for (unsigned i = 0; i < textures_.size(); i++)
+      for (unsigned j = 0; j < textures_[i].size(); j++)
+        textures_[i][j].unload();
+  }
+
+  void
   displaylist::draw(unsigned width, unsigned height)
   {
     glClear(GL_COLOR_BUFFER_BIT);
 
     unsigned nrows = textures_.size();
-    float rowsize = 1. / nrows;
+    float rowheight = 1. / nrows;
     for (unsigned i = 0; i < textures_.size(); i++)
     {
       unsigned i_ = textures_.size() - i - 1;
       unsigned ncols = textures_[i].size();
-      float colsize = 1. / ncols;
+      float colwidth = 1. / ncols;
       for (unsigned j = 0; j < textures_[i].size(); j++)
       {
-        float cell_width = width * colsize;
-        float cell_height = height * rowsize;
+        float cell_width = width * colwidth;
+        float cell_height = height * rowheight;
         float texture_ratio = float(textures_[i][j].width()) / textures_[i][j].height();
         float cell_ratio = cell_width / cell_height;
-        float l = j * colsize;
-        float r = (j+1) * colsize;
-        float b = i_ * rowsize;
-        float t = (i_+1) * rowsize;
+        float l = j * colwidth;
+        float r = (j+1) * colwidth;
+        float b = i_ * rowheight;
+        float t = (i_+1) * rowheight;
 
         if (texture_ratio < cell_ratio)
         {
-          l = (l+r)/2. - (r-l)*texture_ratio/(2.*cell_ratio);
+          float tmp_l = (l+r)/2. - (r-l)*texture_ratio/(2.*cell_ratio);
           r = (l+r)/2. + (r-l)*texture_ratio/(2.*cell_ratio);
+          l = tmp_l;
         }
         else
         {
-          b = (b+t)/2. - (t-b)*cell_ratio/(2.*texture_ratio);
+          float tmp_b = (b+t)/2. - (t-b)*cell_ratio/(2.*texture_ratio);
           t = (b+t)/2. + (t-b)*cell_ratio/(2.*texture_ratio);
+          b = tmp_b;
         }
 
-        textures_[i][j].load();
         glColor3f(0,1,0);
         glBindTexture(GL_TEXTURE_2D, textures_[i][j].gl_id());
         glBegin(GL_QUADS);
@@ -98,7 +116,6 @@ namespace dg
         glTexCoord2f(1,1); glVertex2f(r, b);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        textures_[i][j].unload();
       }
     }
   }

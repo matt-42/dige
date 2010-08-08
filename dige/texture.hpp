@@ -95,8 +95,11 @@ namespace dg
 
   void texture::unload()
   {
-    glDeleteTextures(1, &gl_id_);
-    gl_id_ = 0;
+    if (gl_id_)
+    {
+      glDeleteTextures(1, &gl_id_);
+      gl_id_ = 0;
+    }
   }
 
   unsigned

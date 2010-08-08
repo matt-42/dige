@@ -21,45 +21,64 @@
 
 # include <map>
 # include <SFML/Window.hpp>
+# include <SFML/System/Mutex.hpp>
 # include <dige/displaylist.h>
 
 namespace dg
 {
 
+  class EventLoopThread;
+
   class window
   {
   public:
-    window(unsigned width = 800, unsigned height = 600);
-    window(const std::string& title, unsigned width = 800, unsigned height = 600);
-    window(sf::Window& window);
+    inline window(const std::string& title, unsigned width = 800, unsigned height = 600);
+    inline void operator<<=(displaylist& l);
 
-    void operator<<=(displaylist& l);
+    inline void refresh();
 
-    void refresh();
+    static inline std::map<const std::string, window*>& windows();
 
-    static window* mainWindow();
-    static std::map<const std::string, sf::Window*>& windows();
+    inline void setupOpenGLViewport(unsigned w, unsigned h, bool lock = true);
 
-    void setupOpenGLViewport(unsigned w, unsigned h);
+    inline sf::Window& sf_window();
 
-    sf::Window& sf_window();
+    inline void setupOpenGL();
+
+    inline void set_active(bool pause);
+    inline bool is_active();
+
+    inline void activateThreadLoop();
+    inline void deactivateThreadLoop();
+
+    bool thread_active_;
 
   private:
-    void setupOpenGL();
 
+  public:
     sf::Window* currentWindow_;
+    sf::Mutex windowMutex_;
+    sf::Mutex threadContextMutex_;
+  private:
+    EventLoopThread* loopthread_;
     displaylist dlist_;
-    static window* mainWindow_;
+    bool active_;
     static std::map<const std::string, window*> windows_;
 
     friend window& display(unsigned width, unsigned height);
+    friend window& display(const std::string& title, unsigned width,
+                           unsigned height);
+    friend void pause();
+
   };
 
-  window* window::mainWindow_ = 0;
+  inline window& display(unsigned width = 800, unsigned height = 600);
+  inline window& display(const std::string& title, unsigned width = 800,
+                         unsigned height= 600);
 
-  window& display(unsigned width = 800, unsigned height = 600);
+  inline void pause();
 
-  void pause();
+  extern sf::Mutex pauseMutex;
 
 } // end of namespace dg.
 

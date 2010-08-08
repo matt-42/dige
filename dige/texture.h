@@ -27,24 +27,24 @@ namespace dg
   class texture
   {
   public:
-    texture();
-    texture(unsigned width, unsigned height,
+    inline texture();
+    inline texture(unsigned width, unsigned height,
             GLuint comp_type, GLuint format,
             GLuint filter,
             const char* buffer);
 
-    texture(const texture&);
-    texture& operator=(const texture&);
+    inline texture(const texture&);
+    inline texture& operator=(const texture&);
 
-    ~texture();
+    inline ~texture();
 
-    unsigned width() const;
-    unsigned height() const;
+    inline unsigned width() const;
+    inline unsigned height() const;
 
-    void load();
-    void unload();
+    inline void load();
+    inline void unload();
 
-    GLuint gl_id() const;
+    inline GLuint gl_id() const;
 
   private:
     unsigned width_;

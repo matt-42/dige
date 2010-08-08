@@ -21,45 +21,75 @@
 
 #include <iostream>
 #include <SFML/Window.hpp>
+#include <SFML/System/Thread.hpp>
 #include <dige/displaylist.h>
 
 namespace dg
 {
 
-  window::window(unsigned width, unsigned height)
+  class EventLoopThread : public sf::Thread
   {
-    if (!mainWindow_)
+  public:
+    EventLoopThread(window& w)
+      : win_(w)
     {
-      sf::Window* mainWindow = new sf::Window(sf::VideoMode(width, height), "Dige window");
-      mainWindow_ = new window(*mainWindow);
     }
-    currentWindow_ = mainWindow_->currentWindow_;
-    dlist_ = mainWindow_->dlist_;
 
-    setupOpenGL();
-  }
+  private:
+    void Run()
+    {
+      sf::Context context;
+      sf::Event event;
+      while (true)
+      {
+        win_.sf_window().WaitEvent(event);
+        if (win_.thread_active_)
+        {
+          win_.threadContextMutex_.Lock();
+          win_.sf_window().SetActive(true);
+
+          if ((event.Type == sf::Event::KeyPressed) &&
+              (event.Key.Code == sf::Key::Space))
+            pauseMutex.Unlock();
+          if (event.Type == sf::Event::Resized)
+          {
+            win_.setupOpenGLViewport(event.Size.Width, event.Size.Height, true);
+            win_.refresh();
+          }
+          if (event.Type == sf::Event::GainedFocus)
+          {
+            win_.refresh();
+          }
+          win_.sf_window().SetActive(false);
+          win_.threadContextMutex_.Unlock();
+        }
+      }
+    }
+
+    window& win_;
+  };
 
   window::window(const std::string& title, unsigned width, unsigned height)
+    : loopthread_(0),
+      active_(false),
+      thread_active_(false)
   {
+    currentWindow_ = new sf::Window(sf::VideoMode(width, height), title);
+    currentWindow_->SetActive(true);
+    setupOpenGL();
+    loopthread_ = new EventLoopThread(*this);
+    loopthread_->Launch();
   }
 
-  window::window(sf::Window& window)
-    : currentWindow_(&window)
-  {
-  }
-
-
-  void window::setupOpenGLViewport(unsigned w, unsigned h)
+  void window::setupOpenGLViewport(unsigned w, unsigned h, bool lock)
   {
     assert(currentWindow_);
-    currentWindow_->SetActive();
     glViewport(0,0, currentWindow_->GetWidth(), currentWindow_->GetHeight());
   }
 
   void window::setupOpenGL()
   {
     assert(currentWindow_);
-    currentWindow_->SetActive();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
@@ -67,7 +97,7 @@ namespace dg
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-    setupOpenGLViewport(currentWindow_->GetWidth(), currentWindow_->GetHeight());
+    setupOpenGLViewport(currentWindow_->GetWidth(), currentWindow_->GetHeight(), false);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 1, 0, 1, 0, 1);
@@ -77,22 +107,23 @@ namespace dg
   void window::operator<<=(displaylist& l)
   {
     assert(currentWindow_);
+    dlist_.unload();
     dlist_ = l;
+    dlist_.load();
     refresh();
   }
 
   void window::refresh()
   {
     assert(currentWindow_);
-    currentWindow_->SetActive();
     dlist_.draw(currentWindow_->GetWidth(), currentWindow_->GetHeight());
     currentWindow_->Display();
   }
 
-  window*
-  window::mainWindow()
+  std::map<const std::string, window*>&
+  window::windows()
   {
-    return mainWindow_;
+    return windows_;
   }
 
   sf::Window&
@@ -101,34 +132,74 @@ namespace dg
     return *currentWindow_;
   }
 
+  void
+  window::set_active(bool active)
+  {
+    //    if (active)
+    //  currentWindow_->SetActive(false);
+    active_ = active;
+  }
+
+
+  void
+  window::activateThreadLoop()
+  {
+    currentWindow_->SetActive(false);
+    thread_active_ = true;
+  }
+
+  void
+  window::deactivateThreadLoop()
+  {
+    thread_active_ = false;
+    threadContextMutex_.Lock();
+    threadContextMutex_.Unlock();
+    currentWindow_->SetActive(true);
+  }
+
+  bool
+  window::is_active()
+  {
+    return active_;
+  }
+
+  window& display(const std::string& title, unsigned width, unsigned height)
+  {
+    std::map<const std::string, window*>::const_iterator it
+      = window::windows_.find(title);
+    if (it != window::windows_.end())
+      return *((*it).second);
+    else
+    {
+      window* window_ = new window(title, width, height);
+      window::windows_[title] = window_;
+      return *window_;
+    }
+  }
 
   window& display(unsigned width, unsigned height)
   {
-    if (!window::mainWindow_)
-      window::mainWindow_ = new window(width, height);
-    return *window::mainWindow_;
+    return display("Dige main window", width, height);
   }
 
   void pause()
   {
-    assert(window::mainWindow());
-    //    assert(window::mainWindow() || window::windows().size() > 0);
+    assert(window::windows().size() > 0);
 
-    window& window = display();
-    sf::Event event;
-    while (true)
-    {
-      window.sf_window().WaitEvent(event);
-      if ((event.Type == sf::Event::KeyPressed) && (event.Key.Code == sf::Key::Space))
-        break;
-      if (event.Type == sf::Event::Resized)
-      {
-        window.setupOpenGLViewport(event.Size.Width, event.Size.Height);
-               window.refresh();
-      }
-           if (event.Type == sf::Event::GainedFocus)
-        window.refresh();
-    }
+    // Start event loop thread of each opened window.
+    for (std::map<const std::string, window*>::const_iterator it
+      = window::windows().begin(); it != window::windows().end(); it++)
+      it->second->activateThreadLoop();
+
+    // Wait for space pressed.
+    pauseMutex.Lock();
+    pauseMutex.Lock();
+    pauseMutex.Unlock();
+
+    // Then we can stop the thread loops.
+    for (std::map<const std::string, window*>::const_iterator it
+      = window::windows().begin(); it != window::windows().end(); it++)
+      it->second->deactivateThreadLoop();
   }
 
 } // end of namespace dg.

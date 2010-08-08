@@ -27,22 +27,24 @@ namespace dg
   class displaylist
   {
   public:
-    displaylist();
+    inline displaylist();
 
     template <typename T>
-    displaylist& operator-(const T& i);
+    inline displaylist& operator-(const T& i);
 
     template <typename T>
-    displaylist& operator+(const T& i);
+    inline displaylist& operator+(const T& i);
 
 
-    void draw(unsigned width, unsigned height);
+    inline void load();
+    inline void unload();
+    inline void draw(unsigned width, unsigned height);
 
   private:
     template <typename T>
-    texture adapt_rec(const T& i);
+    inline texture adapt_rec(const T& i);
 
-    texture adapt_rec(texture i);
+    inline texture adapt_rec(texture i);
 
     std::vector<std::vector<texture> > textures_;
   };
