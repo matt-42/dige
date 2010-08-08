@@ -55,7 +55,9 @@ namespace dg
   template <typename V>
   struct mln_comp_encoding
   {
-    typedef typename mln_encoding_<mln_trait_value_comp(V, 0), mln_has_enc<mln_trait_value_comp(V, 0)>::ret >::ret ret;
+    typedef typename mln_encoding_<mln_trait_value_comp(V, 0),
+                                   mln_has_enc<mln_trait_value_comp(V, 0)>::ret >::ret
+    ret;
   };
 
 
@@ -89,10 +91,14 @@ int main()
     lena_pgm_u16(p) = lena_pgm(p) * 255;
   }
 
+  display("test", 200, 200) <<= dl() - lena_pgm;
+  display("hohoho", 200, 200) <<= dl() - lena_pgm;
+  display("fenetre 2", 400, 400) <<= dl() - lena;
 
-  display() <<= dl() - lena_pgm - lena +
-                       lena_pgm_f - lena_pgm_u16;
+  dg::pause();
 
+  display("test") <<= dl() - lena_pgm - lena +
+    lena_pgm_f - lena_pgm_u16 - lena_pgm_u16;
   dg::pause();
 
 }
