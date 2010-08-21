@@ -22,5 +22,6 @@
 namespace dg
 {
   std::map<const std::string, window*> window::windows_;
+  bool window::xlib_thread_initialized_ = false;
   sf::Mutex pauseMutex;
 } // end of namespace dg.

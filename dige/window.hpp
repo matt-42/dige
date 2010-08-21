@@ -20,6 +20,7 @@
 # define DIGE_WINDOW_HPP_
 
 #include <iostream>
+#include <X11/Xlib.h>
 #include <SFML/Window.hpp>
 #include <SFML/System/Thread.hpp>
 #include <dige/displaylist.h>
@@ -42,52 +43,61 @@ namespace dg
       sf::Event event;
       while (true)
       {
-        win_.sf_window().WaitEvent(event);
-        if (win_.thread_active_)
-        {
-          win_.threadContextMutex_.Lock();
-          win_.sf_window().SetActive(true);
-
-          if ((event.Type == sf::Event::KeyPressed) &&
-              (event.Key.Code == sf::Key::Space))
-            pauseMutex.Unlock();
-          if (event.Type == sf::Event::Resized)
-          {
-            win_.setupOpenGLViewport(event.Size.Width, event.Size.Height, true);
-            win_.refresh();
-          }
-          if (event.Type == sf::Event::GainedFocus)
-          {
-            win_.refresh();
-          }
-          win_.sf_window().SetActive(false);
-          win_.threadContextMutex_.Unlock();
-        }
+        if (win_.sf_window().WaitEvent(event))
+            win_.process_event(event);
       }
     }
-
     window& win_;
   };
 
   window::window(const std::string& title, unsigned width, unsigned height)
-    : loopthread_(0),
-      active_(false),
-      thread_active_(false)
+    : loopthread_(0)
   {
+    if (!xlib_thread_initialized_)
+    {
+      XInitThreads(); // FIXME: SHOULD BE DONE IN SFML!!!
+      xlib_thread_initialized_ = true;
+    }
+
     currentWindow_ = new sf::Window(sf::VideoMode(width, height), title);
     currentWindow_->SetActive(true);
-    setupOpenGL();
+    currentWindow_->SetFramerateLimit(0);
+    setup_opengl();
     loopthread_ = new EventLoopThread(*this);
     loopthread_->Launch();
   }
 
-  void window::setupOpenGLViewport(unsigned w, unsigned h, bool lock)
+  void window::setup_opengl_viewport(unsigned w, unsigned h, bool lock)
   {
     assert(currentWindow_);
     glViewport(0,0, currentWindow_->GetWidth(), currentWindow_->GetHeight());
   }
 
-  void window::setupOpenGL()
+  void window::process_event(sf::Event& e)
+  {
+    if ((e.Type == sf::Event::KeyPressed) &&
+        (e.Key.Code == sf::Key::Space))
+      pauseMutex.Unlock();
+    if (e.Type == sf::Event::Resized)
+    {
+      focusMutex_.Lock();
+      sf_window().SetActive(true);
+      setup_opengl_viewport(e.Size.Width, e.Size.Height);
+      refresh();
+      sf_window().SetActive(false);
+      focusMutex_.Unlock();
+    }
+    if (e.Type == sf::Event::GainedFocus)
+    {
+      focusMutex_.Lock();
+      sf_window().SetActive(true);
+      refresh();
+      sf_window().SetActive(false);
+      focusMutex_.Unlock();
+    }
+  }
+
+  void window::setup_opengl()
   {
     assert(currentWindow_);
 
@@ -97,20 +107,28 @@ namespace dg
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
-    setupOpenGLViewport(currentWindow_->GetWidth(), currentWindow_->GetHeight(), false);
+    setup_opengl_viewport(currentWindow_->GetWidth(), currentWindow_->GetHeight());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 1, 0, 1, 0, 1);
     glMatrixMode(GL_MODELVIEW);
   }
 
-  void window::operator<<=(displaylist& l)
+  window& window::operator<<=(displaylist& l)
   {
     assert(currentWindow_);
+
+    focusMutex_.Lock();
+    sf_window().SetActive(true);
+
     dlist_.unload();
     dlist_ = l;
     dlist_.load();
     refresh();
+
+    sf_window().SetActive(false);
+    focusMutex_.Unlock();
+    return *this;
   }
 
   void window::refresh()
@@ -126,6 +144,12 @@ namespace dg
     return windows_;
   }
 
+  const sf::Window&
+  window::sf_window() const
+  {
+    return *currentWindow_;
+  }
+
   sf::Window&
   window::sf_window()
   {
@@ -133,34 +157,33 @@ namespace dg
   }
 
   void
-  window::set_active(bool active)
+  window::dump_rgb_frame_buffer(char*& buffer,
+                                unsigned& buffer_size,
+                                unsigned& buffer_width,
+                                unsigned& buffer_height)
   {
-    //    if (active)
-    //  currentWindow_->SetActive(false);
-    active_ = active;
-  }
+    focusMutex_.Lock();
+    sf_window().SetActive(true);
 
+    if (buffer_size < currentWindow_->GetWidth() * currentWindow_->GetHeight() * 3)
+    {
+      std::cout << "resize" << std::endl;
+      delete[] buffer;
+      buffer_size = currentWindow_->GetWidth() * currentWindow_->GetHeight() * 3;
+      buffer = new char[buffer_size];
+    }
+    if (buffer_height != currentWindow_->GetHeight() ||
+        buffer_width != currentWindow_->GetWidth())
+    {
+      buffer_width = currentWindow_->GetWidth();
+      buffer_height = currentWindow_->GetHeight();
+    }
 
-  void
-  window::activateThreadLoop()
-  {
-    currentWindow_->SetActive(false);
-    thread_active_ = true;
-  }
+    glReadPixels(0, 0, currentWindow_->GetWidth(), currentWindow_->GetHeight(),
+                 GL_RGB, GL_UNSIGNED_BYTE, buffer);
 
-  void
-  window::deactivateThreadLoop()
-  {
-    thread_active_ = false;
-    threadContextMutex_.Lock();
-    threadContextMutex_.Unlock();
-    currentWindow_->SetActive(true);
-  }
-
-  bool
-  window::is_active()
-  {
-    return active_;
+    sf_window().SetActive(false);
+    focusMutex_.Unlock();
   }
 
   window& display(const std::string& title, unsigned width, unsigned height)
@@ -186,20 +209,15 @@ namespace dg
   {
     assert(window::windows().size() > 0);
 
-    // Start event loop thread of each opened window.
-    for (std::map<const std::string, window*>::const_iterator it
-      = window::windows().begin(); it != window::windows().end(); it++)
-      it->second->activateThreadLoop();
-
     // Wait for space pressed.
+
+    // Lock the pause mutex.
     pauseMutex.Lock();
+    // Wait for another thread to unlock it.
     pauseMutex.Lock();
+    // Then unlock it.
     pauseMutex.Unlock();
 
-    // Then we can stop the thread loops.
-    for (std::map<const std::string, window*>::const_iterator it
-      = window::windows().begin(); it != window::windows().end(); it++)
-      it->second->deactivateThreadLoop();
   }
 
 } // end of namespace dg.

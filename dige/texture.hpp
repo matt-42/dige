@@ -90,7 +90,6 @@ namespace dg
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_);
     glBindTexture(GL_TEXTURE_2D, 0);
-
   }
 
   void texture::unload()
