@@ -12,7 +12,7 @@ IF(EXISTS $ENV{INSTALL_PREFIX})
 ENDIF(EXISTS $ENV{INSTALL_PREFIX})
 
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
-add_library(dige dige/window.cpp)
+add_library(dige dige/recorder.cpp dige/window.cpp)
 target_link_libraries(dige sfml-system sfml-window GL GLU)
 
 
