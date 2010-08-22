@@ -67,7 +67,7 @@ namespace dg
     loopthread_->Launch();
   }
 
-  void window::setup_opengl_viewport(unsigned w, unsigned h, bool lock)
+  void window::setup_opengl_viewport(unsigned w, unsigned h)
   {
     assert(currentWindow_);
     glViewport(0,0, currentWindow_->GetWidth(), currentWindow_->GetHeight());
