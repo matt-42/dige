@@ -198,10 +198,7 @@ namespace dg
     unsigned s = -window_capture_width_ * 3;
     uint8_t* tmp[1] = { data };
     int stride[1] = { s };
-    // int r = sws_scale(swcontext_, tmp, stride, 0,
-    //                   window_capture_height_, yuvframe_->data, yuvframe_->linesize);
-
-    int r = sws_scale(swcontext_, rgbframe_->data, rgbframe_->linesize, 0,
+    int r = sws_scale(swcontext_, tmp, stride, 0,
                       window_capture_height_, yuvframe_->data, yuvframe_->linesize);
 
     // Encode video.
