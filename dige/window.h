@@ -21,7 +21,7 @@
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Sat Aug 21 12:53:21 2010
 **
-**\brief  window headers.
+**\brief  window header.
 **
 **
 */
