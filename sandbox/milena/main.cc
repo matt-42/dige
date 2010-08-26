@@ -2,6 +2,8 @@
 #include <dige/image.h>
 #include <dige/value_traits.h>
 
+#include "load.hh"
+
 #include <mln/core/image/image2d.hh>
 #include <mln/value/rgb8.hh>
 #include <mln/value/int_u16.hh>
@@ -91,7 +93,7 @@ int main()
     lena_pgm_u16(p) = lena_pgm(p) * 255;
   }
 
-  display("test", 200, 200) <<= dl() - lena_pgm;
+  display("test", 200, 200) <<= dl() - lena_pgm - lena;
   display("hohoho", 200, 200) <<= dl() - lena_pgm;
   display("fenetre 2", 400, 400) <<= dl() - lena;
 
