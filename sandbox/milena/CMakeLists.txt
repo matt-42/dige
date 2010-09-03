@@ -3,7 +3,7 @@ project (milena_test)
 
 SET(CMAKE_VERBOSE_MAKEFILE off)
 
-include_directories($ENV{HOME}/local/include  /home/matt/olena/milena)
+include_directories($ENV{HOME}/local/include  $ENV{HOME}/olena/milena)
 link_directories($ENV{HOME}/local/lib)
 
 add_definitions(-g)

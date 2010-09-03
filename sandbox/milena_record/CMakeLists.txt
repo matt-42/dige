@@ -3,8 +3,8 @@ project (milena_test)
 
 SET(CMAKE_VERBOSE_MAKEFILE on)
 
-include_directories(${CMAKE_SOURCE_DIR}/../.. $ENV{HOME}/local/include  /home/matt/olena/milena)
-link_directories($ENV{HOME}/local/lib /usr/lib)
+include_directories(${CMAKE_SOURCE_DIR}/../.. $ENV{HOME}/local/include  $ENV{HOME}/olena/milena)
+link_directories($ENV{HOME}/local/lib)
 
 add_definitions(-g)
 add_executable(milena_test main.cc)
