@@ -15,6 +15,15 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   value_traits.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Mon Sep  6 22:12:31 2010
+**
+**\brief  traits on values types.
+**
+**
+*/
 
 #ifndef VALUE_TRAITS_H_
 # define VALUE_TRAITS_H_
@@ -26,10 +35,18 @@ namespace dg
 
     namespace format
     {
+      /// Statically mark an image values as RGB.
       struct rgb { enum {to_gl_format = GL_RGB }; };
+      /// Statically mark an image values as gray levels.
       struct luminance { enum {to_gl_format = GL_LUMINANCE }; };
     }
 
+    /*!
+    ** Comvert a builtin component type into an OpenGL value flag.
+    **
+    ** \tparam C the component type.
+    */
+    //@{
     template <typename C>
     struct gl_component_type {};
 
@@ -49,6 +66,7 @@ namespace dg
     struct gl_component_type<unsigned short> { enum { ret = GL_UNSIGNED_SHORT }; };
     template <>
     struct gl_component_type<unsigned int> { enum { ret = GL_UNSIGNED_INT }; };
+    //@}
 
   }; // end of namespace trait.
 

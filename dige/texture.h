@@ -15,6 +15,15 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   texture.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Mon Sep  6 22:15:37 2010
+**
+**\brief  texture header.
+**
+**
+*/
 
 #ifndef TEXTURE_H_
 # define TEXTURE_H_
@@ -24,36 +33,82 @@
 namespace dg
 {
 
+  /*!
+  ** Encapsulate OpenGL textures managments. From an image hosted on
+  ** the main memory, transfert data into a newly created OpenGL texture.
+  **
+  ** This type is well adapted to adapt non statically typed image
+  ** types since information about components and image format and non
+  ** static in this class.
+  **
+  */
   class texture
   {
   public:
+    /*!
+    ** Default constructor.
+    ** Create an empty texture.
+    */
     inline texture();
+    /*!
+    ** Constructor from a "main memory" image.
+    **
+    ** \param width width
+    ** \param height height
+
+    ** \param comp_type OpenGL component type (GL_FLOAT, GL_INT).
+    **                  "type" argument of glteximage2d.
+    ** \param format OpenGL format (GL_RGB, GL_LUMINANCE, ...).
+    ** \param filter Texture filter (GL_NEAREST, GL_LINEAR)
+    ** \param buffer image data.
+    */
     inline texture(unsigned width, unsigned height,
             GLuint comp_type, GLuint format,
             GLuint filter,
             const char* buffer);
 
-    inline texture(const texture&);
-    inline texture& operator=(const texture&);
+    /*!
+    ** Copy constructor
+    **
+    ** \param t a texture.
+    */
+    inline texture(const texture& t);
 
+    /*!
+    ** Assigment operator.
+    **
+    ** \param t a texture.
+    */
+    inline texture& operator=(const texture& t);
+
+    /*!
+    ** Destructor.
+    ** Delete the texture from the video memory if image has been transfered.
+    **
+    */
     inline ~texture();
 
+    /// \return width of the texture.
     inline unsigned width() const;
+    /// \return height of the texture.
     inline unsigned height() const;
 
+    /// Load the texture on the video memory.
     inline void load();
+    /// Delete the texture from the video memory.
     inline void unload();
 
+    /// \return The OpenGL texture id.
     inline GLuint gl_id() const;
 
   private:
-    unsigned width_;
-    unsigned height_;
-    GLuint comp_type_;
-    GLuint format_;
-    GLuint filter_;
-    const char* buffer_;
-    GLuint gl_id_;
+    unsigned width_;            /*!< width. */
+    unsigned height_;           /*!< height. */
+    GLuint comp_type_;          /*!< OpenGL component type. */
+    GLuint format_;             /*!< OpenGL format. */
+    GLuint filter_;             /*!< OpenGL filter. */
+    const char* buffer_;        /*!< image data. */
+    GLuint gl_id_;              /*!< OpenGL texture id. */
   };
 
 } // end of namespace dg.
