@@ -34,7 +34,7 @@ namespace dg
 
   template <typename F, typename C>
   image<F, C>::image(unsigned width, unsigned height,
-                        const char* buffer)
+                        const value_type* buffer)
     : width_(width),
       height_(height),
       buffer_(buffer)
@@ -86,7 +86,7 @@ namespace dg
     return texture(i.width(), i.height(),
                    trait::gl_component_type<C>::ret,
                    F::to_gl_format, GL_NEAREST,
-                   i.buffer());
+                   (char*) i.buffer());
   }
 
 } // end of namespace dg.

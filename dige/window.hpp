@@ -200,11 +200,6 @@ namespace dg
     }
   }
 
-  window& display(unsigned width, unsigned height)
-  {
-    return display("Dige main window", width, height);
-  }
-
   void pause()
   {
     assert(window::windows().size() > 0);

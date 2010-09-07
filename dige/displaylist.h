@@ -15,6 +15,15 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   displaylist.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Tue Sep  7 23:34:02 2010
+**
+**\brief  displaylist header.
+**
+**
+*/
 
 #ifndef DISPLAYLIST_H_
 # define DISPLAYLIST_H_
@@ -24,29 +33,69 @@
 namespace dg
 {
 
+  /*!
+  ** List of drawables objects. Easy to build via operators - and +.
+  **
+  */
   class displaylist
   {
   public:
+    /// Default constructor.
     inline displaylist();
 
+    /*!
+    ** Append an object to the current line.
+    **
+    ** \param i an object to be drawn.
+    **
+    ** \return *this.
+    */
     template <typename T>
     inline displaylist& operator-(const T& i);
 
+    /*!
+    ** Append an object to a newly created line.
+    **
+    ** \param i an object to be drawn.
+    **
+    ** \return *this.
+    */
     template <typename T>
     inline displaylist& operator+(const T& i);
 
-
+    /// Load all objects on the video memory.
     inline void load();
+    /// Unload all objects on the video memory.
     inline void unload();
+    /*!
+    ** Draw the list in the given dimensions.
+    **
+    ** \param width width,
+    ** \param height height.
+    */
     inline void draw(unsigned width, unsigned height);
 
   private:
+    /*!
+    ** Recursivelly adapt the types until reaching a texture.
+    **
+    ** \param i an object.
+    **
+    ** \return \p i as a  texture.
+    */
     template <typename T>
     inline texture adapt_rec(const T& i);
 
+    /*!
+    ** Recursivelly adapt the types until reaching a texture.
+    ** Stop case.
+    ** \param i an object.
+    **
+    ** \return \p i as a  texture.
+    */
     inline texture adapt_rec(texture i);
 
-    std::vector<std::vector<texture> > textures_;
+    std::vector<std::vector<texture> > textures_; /*!< 2d array of textures. */
   };
 
   typedef displaylist dl;

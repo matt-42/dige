@@ -124,13 +124,13 @@ namespace dg
     static inline std::map<const std::string, window*>& windows();
 
   private:
-    sf::Window* currentWindow_;
-    sf::Mutex focusMutex_;
+    sf::Window* currentWindow_; /*!< Underlying sfml window. */
+    sf::Mutex focusMutex_;      /*!< Mutex to synchronise the two threads. */
 
-    EventLoopThread* loopthread_;
-    displaylist dlist_;
-    static bool xlib_thread_initialized_;
-    static std::map<const std::string, window*> windows_;
+    EventLoopThread* loopthread_; /*!< Second thread used to listen to incoming X event. */
+    displaylist dlist_;         /*!< Current displaylist. */
+    static bool xlib_thread_initialized_; /*!< True if Xinitthreads has been called. */
+    static std::map<const std::string, window*> windows_; /*!< List all the created windows. */
 
     friend window& display(const std::string& title, unsigned width,
                            unsigned height);

@@ -67,8 +67,10 @@ namespace dg
   image<typename dim_to_dige_format<mln::trait::value_<V>::dim>::ret, typename mln_comp_encoding<V>::ret >
   adapt(const mln::image2d<V>& i)
   {
-    typedef image<typename dim_to_dige_format<mln::trait::value_<V>::dim>::ret, typename  mln_comp_encoding<V>::ret > ret;
-    return ret(i.ncols() + i.border() * 2, i.nrows() + i.border() * 2, (const char*) i.buffer());
+    typedef typename  mln_comp_encoding<V>::ret comp_type;
+    typedef image<typename dim_to_dige_format<mln::trait::value_<V>::dim>::ret, comp_type> ret;
+    return ret(i.ncols() + i.border() * 2, i.nrows() + i.border() * 2,
+               (comp_type*)i.buffer());
   }
 
 

@@ -38,8 +38,8 @@ namespace dg
   ** the main memory, transfert data into a newly created OpenGL texture.
   **
   ** This type is well adapted to adapt non statically typed image
-  ** types since information about components and image format and non
-  ** static in this class.
+  ** since information about components and image format are not
+  ** static in this class (unlike in the image class).
   **
   */
   class texture
