@@ -170,7 +170,7 @@ namespace dg
   recorder::operator<<=(window& w)
   {
     if (!avcontext_ && !init_failed_)
-      init_context(w.sf_window().GetWidth(), w.sf_window().GetHeight());
+      init_context(w.width(), w.height());
     if (init_failed_)
       return;
 

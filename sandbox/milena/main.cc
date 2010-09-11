@@ -82,8 +82,14 @@ int main()
   using namespace mln;
   using namespace dg;
 
+  // static const char* dumy_argv = "dige";
+  // static int dumy_argc = 1;
+  // QApplication app(dumy_argc, (char**)&dumy_argv);
+
+  unsigned t = clock();
   image2d<value::rgb8> lena = io::ppm::load<value::rgb8>("lena.ppm");
   image2d<value::int_u8> lena_pgm = io::pgm::load<value::int_u8>("lena.pgm");
+  std::cout << "load done: " << float(clock()-t)/CLOCKS_PER_SEC << "s."<< std::endl;
   image2d<value::int_u16> lena_pgm_u16(lena_pgm.domain());
   image2d<float> lena_pgm_f(lena_pgm.domain());
 
@@ -103,6 +109,13 @@ int main()
 
   display("test") <<= dl() - lena_pgm - lena +
     lena_pgm_f - lena_pgm_u16 - lena_pgm_u16;
+  dg::pause();
+  display("test") <<= dl() - lena +
+    lena_pgm_f - lena_pgm_u16 - lena_pgm_u16;
+  display("hohoho", 200, 200) <<= dl() - lena_pgm - lena;
+  dg::pause();
+  display("test") <<= dl() - lena_pgm - lena +
+    lena_pgm_f - lena_pgm_u16;
   dg::pause();
 
 }

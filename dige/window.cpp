@@ -16,12 +16,13 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#include <SFML/Window.hpp>
+#include <QApplication>
 #include <dige/window.h>
 
 namespace dg
 {
   std::map<const std::string, window*> window::windows_;
-  bool window::xlib_thread_initialized_ = false;
-  sf::Mutex pauseMutex;
+  QRect window_placer::screen_(0,0,0,0);
+  pause_watcher pause_manager;
+
 } // end of namespace dg.

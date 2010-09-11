@@ -19,123 +19,119 @@
 #ifndef DIGE_WINDOW_HPP_
 # define DIGE_WINDOW_HPP_
 
-#include <iostream>
-#include <X11/Xlib.h>
-#include <SFML/Window.hpp>
-#include <SFML/System/Thread.hpp>
-#include <dige/displaylist.h>
+# include <iostream>
+# include <QApplication>
+# include <QKeyEvent>
+# include <QDesktopWidget>
+# include <dige/displaylist.h>
+# include <dige/window_placer.h>
+# include <dige/pause_watcher.h>
 
 namespace dg
 {
-
-  class EventLoopThread : public sf::Thread
+  class gl_widget : public QGLWidget
   {
   public:
-    EventLoopThread(window& w)
-      : win_(w)
+    gl_widget(displaylist& dlist)
+      : dlist_(&dlist)
     {
     }
 
-  private:
-    void Run()
+  protected:
+
+    void initializeGL()
     {
-      sf::Context context;
-      sf::Event event;
-      while (true)
-      {
-        if (win_.sf_window().WaitEvent(event))
-            win_.process_event(event);
-      }
+      glDisable(GL_DEPTH_TEST);
+      glDisable(GL_BLEND);
+      glDisable(GL_LIGHTING);
+      glEnable(GL_TEXTURE_2D);
+      glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      glOrtho(0, 1, 0, 1, 0, 1);
+      glMatrixMode(GL_MODELVIEW);
     }
-    window& win_;
+
+    void resizeGL(int w, int h)
+    {
+      glViewport(0, 0, (GLint)w, (GLint)h);
+    }
+
+    void paintGL()
+    {
+      glClear(GL_COLOR_BUFFER_BIT);
+      dlist_->draw(width(), height());
+    }
+
+
+  private:
+    displaylist* dlist_;         /*!< Current displaylist. */
   };
 
   window::window(const std::string& title, unsigned width, unsigned height)
-    : loopthread_(0)
   {
-    if (!xlib_thread_initialized_)
+    if (window::windows().size() == 0)
     {
-      XInitThreads(); // FIXME: SHOULD BE DONE IN SFML!!!
-      xlib_thread_initialized_ = true;
+      static const char* dumy_argv = "";
+      static int dumy_argc = 1;
+      QApplication* app = new QApplication(dumy_argc, (char**)&dumy_argv);
+    }
+    currentWidget_ = new gl_widget(dlist_);
+    currentWidget_->setGeometry(window_placer::place(width, height));
+    currentWidget_->setWindowTitle(QString::fromStdString(title));
+    currentWidget_->show();
+
+    if (window::windows().size() == 0)
+    {
+      currentWidget_->grabKeyboard();
+      currentWidget_->installEventFilter(&pause_manager);
     }
 
-    currentWindow_ = new sf::Window(sf::VideoMode(width, height), title);
-    currentWindow_->SetActive(true);
-    currentWindow_->SetFramerateLimit(0);
-    setup_opengl();
-    loopthread_ = new EventLoopThread(*this);
-    loopthread_->Launch();
   }
 
-  void window::setup_opengl_viewport(unsigned w, unsigned h)
+  window::~window()
   {
-    assert(currentWindow_);
-    glViewport(0,0, currentWindow_->GetWidth(), currentWindow_->GetHeight());
+    currentWidget_->makeCurrent();
+    dlist_.unload();
+    delete currentWidget_;
   }
 
-  void window::process_event(sf::Event& e)
+  unsigned window::width() const
   {
-    if ((e.Type == sf::Event::KeyPressed) &&
-        (e.Key.Code == sf::Key::Space))
-      pauseMutex.Unlock();
-    if (e.Type == sf::Event::Resized)
-    {
-      focusMutex_.Lock();
-      sf_window().SetActive(true);
-      setup_opengl_viewport(e.Size.Width, e.Size.Height);
-      refresh();
-      sf_window().SetActive(false);
-      focusMutex_.Unlock();
-    }
-    if (e.Type == sf::Event::GainedFocus)
-    {
-      focusMutex_.Lock();
-      sf_window().SetActive(true);
-      refresh();
-      sf_window().SetActive(false);
-      focusMutex_.Unlock();
-    }
+    return currentWidget_->width();
   }
 
-  void window::setup_opengl()
+  unsigned window::height() const
   {
-    assert(currentWindow_);
-
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
-    glDisable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-
-    setup_opengl_viewport(currentWindow_->GetWidth(), currentWindow_->GetHeight());
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, 1, 0, 1, 0, 1);
-    glMatrixMode(GL_MODELVIEW);
+    return currentWidget_->height();
   }
 
   window& window::operator<<=(displaylist& l)
   {
-    assert(currentWindow_);
-
-    focusMutex_.Lock();
-    sf_window().SetActive(true);
-
+    currentWidget_->makeCurrent();
     dlist_.unload();
     dlist_ = l;
     dlist_.load();
     refresh();
+    if (!pause_manager)
+    {
+      QApplication::processEvents();
+      QApplication::sendPostedEvents();
+    }
+    else
+      pause();
 
-    sf_window().SetActive(false);
-    focusMutex_.Unlock();
     return *this;
   }
 
   void window::refresh()
   {
-    assert(currentWindow_);
-    dlist_.draw(currentWindow_->GetWidth(), currentWindow_->GetHeight());
-    currentWindow_->Display();
+    currentWidget_->updateGL();
+  }
+
+  gl_widget* window::widget()
+  {
+    return currentWidget_;
   }
 
   std::map<const std::string, window*>&
@@ -144,46 +140,29 @@ namespace dg
     return windows_;
   }
 
-  const sf::Window&
-  window::sf_window() const
-  {
-    return *currentWindow_;
-  }
-
-  sf::Window&
-  window::sf_window()
-  {
-    return *currentWindow_;
-  }
-
   void
   window::dump_rgb_frame_buffer(char*& buffer,
                                 unsigned& buffer_size,
                                 unsigned& buffer_width,
                                 unsigned& buffer_height)
   {
-    focusMutex_.Lock();
-    sf_window().SetActive(true);
+    currentWidget_->makeCurrent();
 
-    if (buffer_size < currentWindow_->GetWidth() * currentWindow_->GetHeight() * 3)
+    if (buffer_size < currentWidget_->width() * currentWidget_->height() * 3)
     {
-      std::cout << "resize" << std::endl;
       delete[] buffer;
-      buffer_size = currentWindow_->GetWidth() * currentWindow_->GetHeight() * 3;
+      buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
       buffer = new char[buffer_size];
     }
-    if (buffer_height != currentWindow_->GetHeight() ||
-        buffer_width != currentWindow_->GetWidth())
+    if (buffer_height != currentWidget_->height() ||
+        buffer_width != currentWidget_->width())
     {
-      buffer_width = currentWindow_->GetWidth();
-      buffer_height = currentWindow_->GetHeight();
+      buffer_width = currentWidget_->width();
+      buffer_height = currentWidget_->height();
     }
 
-    glReadPixels(0, 0, currentWindow_->GetWidth(), currentWindow_->GetHeight(),
+    glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
                  GL_RGB, GL_UNSIGNED_BYTE, buffer);
-
-    sf_window().SetActive(false);
-    focusMutex_.Unlock();
   }
 
   window& display(const std::string& title, unsigned width, unsigned height)
@@ -191,7 +170,10 @@ namespace dg
     std::map<const std::string, window*>::const_iterator it
       = window::windows_.find(title);
     if (it != window::windows_.end())
+    {
+      window* win = (*it).second;
       return *((*it).second);
+    }
     else
     {
       window* window_ = new window(title, width, height);
@@ -204,15 +186,12 @@ namespace dg
   {
     assert(window::windows().size() > 0);
 
-    // Wait for space pressed.
-
-    // Lock the pause mutex.
-    pauseMutex.Lock();
-    // Wait for another thread to unlock it.
-    pauseMutex.Lock();
-    // Then unlock it.
-    pauseMutex.Unlock();
-
+    pause_manager.set(true);
+    while (pause_manager)
+    {
+      QApplication::processEvents(QEventLoop::WaitForMoreEvents);
+      QApplication::sendPostedEvents();
+    }
   }
 
 } // end of namespace dg.

@@ -30,14 +30,14 @@
 # define DIGE_WINDOW_H_
 
 # include <map>
-# include <QGLWidget>
-# include <QKeyEvent>
+# include <SFML/Window.hpp>
+# include <SFML/System/Mutex.hpp>
 # include <dige/displaylist.h>
 
 namespace dg
 {
   // Forward declaration.
-  class gl_widget;
+  class EventLoopThread;
 
   /*!
   ** The window class allow to display the content of a displaylist
@@ -57,17 +57,8 @@ namespace dg
     **
     */
     inline window(const std::string& title, unsigned width = 800, unsigned height = 600);
-    /// Destructor.
-    inline ~window();
 
   public:
-
-    /// \return width of the window.
-    inline unsigned width() const;
-
-    /// \return height of the window.
-    inline unsigned height() const;
-
     /*!
     ** Set \p l to be drawn in the window.
     **
@@ -80,7 +71,37 @@ namespace dg
     /// Refresh the window content.
     inline void refresh();
 
-    inline gl_widget* widget();
+    /*!
+    ** Update the openGL viewport dimensions.
+    **
+    ** \param w the new width in pixels.
+    ** \param h the new height in pixels.
+    */
+    inline void setup_opengl_viewport(unsigned w, unsigned h);
+
+    /*!
+    ** Getter
+    **
+    ** \return the underlying SFML window.
+    */
+    inline sf::Window& sf_window();
+
+    /*!
+    ** Getter
+    **
+    ** \return the underlying SFML window (const).
+    */
+    inline const sf::Window& sf_window() const;
+
+    /// Initialize the opengl context.
+    inline void setup_opengl();
+
+    /*!
+    ** Process the window event \p e.
+    **
+    ** \param e the event.
+    */
+    inline void process_event(sf::Event& e);
 
     /*!
     ** Dump the window content to \p buffer.
@@ -103,13 +124,17 @@ namespace dg
     static inline std::map<const std::string, window*>& windows();
 
   private:
-    gl_widget* currentWidget_; /*!< Underlying sfml window. */
-    displaylist dlist_;         /*!< Current displaylist. */
+    sf::Window* currentWindow_; /*!< Underlying sfml window. */
+    sf::Mutex focusMutex_;      /*!< Mutex to synchronise the two threads. */
 
+    EventLoopThread* loopthread_; /*!< Second thread used to listen to incoming X event. */
+    displaylist dlist_;         /*!< Current displaylist. */
+    static bool xlib_thread_initialized_; /*!< True if Xinitthreads has been called. */
     static std::map<const std::string, window*> windows_; /*!< List all the created windows. */
 
     friend window& display(const std::string& title, unsigned width,
                            unsigned height);
+    friend void pause();
   };
 
   /*!
@@ -121,14 +146,17 @@ namespace dg
   **
   ** \return the window.
   */
-  inline window& display(const std::string& title, unsigned width = 400,
-                         unsigned height = 400);
+  inline window& display(const std::string& title, unsigned width = 800,
+                         unsigned height= 600);
 
   /*!
   ** Pause the current thread until the user press the space key in any of the
   ** window. It need at least one created window.
   */
   inline void pause();
+
+  /// The mutex used to passively wait until the space key being pressed.
+  extern sf::Mutex pauseMutex;
 
 } // end of namespace dg.
 

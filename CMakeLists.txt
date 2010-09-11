@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.6)
 project (dige)
 
+find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+include(${QT_USE_FILE})
+
 SET(CMAKE_VERBOSE_MAKEFILE off)
 
 include_directories(${CMAKE_SOURCE_DIR} $ENV{HOME}/local/include)
@@ -12,7 +15,7 @@ IF(EXISTS $ENV{INSTALL_PREFIX})
 ENDIF(EXISTS $ENV{INSTALL_PREFIX})
 
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
-add_library(dige dige/recorder.cpp dige/window.cpp)
+add_library(dige dige/window.cpp  dige/recorder.cpp dige/app.cpp)
 
 
 install(TARGETS dige DESTINATION lib)
