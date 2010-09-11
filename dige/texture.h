@@ -25,10 +25,10 @@
 **
 */
 
-#ifndef TEXTURE_H_
-# define TEXTURE_H_
+#ifndef DIGE_TEXTURE_H_
+# define DIGE_TEXTURE_H_
 
-#include <SFML/OpenGL.hpp>
+# include <GL/gl.h>
 
 namespace dg
 {
