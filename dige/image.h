@@ -25,10 +25,10 @@
 **
 */
 
-#ifndef IMAGE_H_
-# define IMAGE_H_
+#ifndef DIGE_IMAGE_H_
+# define DIGE_IMAGE_H_
 
-#include <dige/texture.hpp>
+#include <dige/texture.h>
 
 namespace dg
 {
