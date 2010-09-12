@@ -15,13 +15,29 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   shortcuts.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Sat Sep 11 22:37:43 2010
+**
+**\brief  shortcuts global variables.
+**
+**
+*/
 
-#include <QApplication>
-#include <dige/window.h>
+#ifndef DIGE_SHORTCUTS_H_
+# define DIGE_SHORTCUTS_H_
+
+# include <dige/shortcuts/pause_watcher.h>
+# include <dige/shortcuts/shortcut_manager.h>
 
 namespace dg
 {
-  std::map<const std::string, window*> window::windows_;
-  QRect window_placer::screen_(0,0,0,0);
+
+  pause_watcher pause_manager;
+  shortcut_manager shortcut_filter;
 
 } // end of namespace dg.
+
+#endif
+

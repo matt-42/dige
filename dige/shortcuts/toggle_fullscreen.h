@@ -15,13 +15,35 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   toggle_fullscreen.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Sat Sep 11 22:37:43 2010
+**
+**\brief  toggle_fullscreen header.
+**
+**
+*/
 
-#include <QApplication>
-#include <dige/window.h>
+#ifndef DIGE_TOGGLE_FULLSCREEN_H_
+# define DIGE_TOGGLE_FULLSCREEN_H_
+
+# include <QApplication>
+# include <QWidget>
 
 namespace dg
 {
-  std::map<const std::string, window*> window::windows_;
-  QRect window_placer::screen_(0,0,0,0);
+  /// Toggle fullscreen state of the active window.
+  inline void toggle_fullscreen()
+  {
+    if (QApplication::activeWindow())
+      if (QApplication::activeWindow()->isFullScreen())
+        QApplication::activeWindow()->showNormal();
+      else
+        QApplication::activeWindow()->showFullScreen();
+  }
 
 } // end of namespace dg.
+
+#endif
+

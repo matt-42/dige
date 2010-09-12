@@ -32,7 +32,9 @@
 # include <map>
 # include <QGLWidget>
 # include <QKeyEvent>
+
 # include <dige/displaylist.h>
+# include <dige/shortcuts/shortcut_manager.h>
 
 namespace dg
 {

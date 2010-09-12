@@ -28,7 +28,8 @@
 #ifndef DIGE_PAUSE_WATCHER_H_
 # define DIGE_PAUSE_WATCHER_H_
 
-#include <QObject>
+# include <QObject>
+# include <QKeyEvent>
 
 namespace dg
 {
@@ -45,6 +46,7 @@ namespace dg
     {
     }
 
+    /// Trigger a pause event.
     static inline void trigger();
 
     /*!
@@ -72,7 +74,7 @@ namespace dg
     **
     ** \return false if paused.
     */
-    inline bool operator !() const
+    inline bool operator!() const
     {
       return !pause_;
     }

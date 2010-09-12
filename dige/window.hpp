@@ -25,7 +25,7 @@
 # include <QDesktopWidget>
 # include <dige/displaylist.h>
 # include <dige/window_placer.h>
-# include <dige/pause_watcher.h>
+# include <dige/shortcuts/pause_watcher.h>
 
 namespace dg
 {
@@ -84,7 +84,7 @@ namespace dg
     if (window::windows().size() == 0)
     {
       currentWidget_->grabKeyboard();
-      currentWidget_->installEventFilter(&pause_manager);
+      currentWidget_->installEventFilter(&shortcut_filter);
     }
 
   }
