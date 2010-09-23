@@ -22,9 +22,12 @@
 # include <iostream>
 # include <QApplication>
 # include <QKeyEvent>
+# include <QColor>
 # include <QDesktopWidget>
+# include <QToolTip>
 # include <dige/displaylist.h>
 # include <dige/window_placer.h>
+# include <dige/color_picker.h>
 # include <dige/shortcuts/pause_watcher.h>
 
 namespace dg
@@ -63,6 +66,27 @@ namespace dg
       dlist_->draw(width(), height());
     }
 
+    bool event(QEvent *event)
+    {
+      if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)
+      {
+        QMouseEvent* e = (QMouseEvent*) event;
+        if (e->x() < 0 || e->y() < 0 || e->x() >= width() || e->y() >= height())
+          color_picker::instance().hide();
+        else
+        {
+          makeCurrent();
+          unsigned char c[3];
+          glReadPixels(e->x(), height() - e->y(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, c);
+          color_picker::instance().place(e);
+          color_picker::instance().update(e->pos(), QColor(c[0], c[1], c[2], 255));
+        }
+      }
+      if (event->type() == QEvent::MouseButtonRelease)
+        color_picker::instance().hide();
+
+      return QWidget::event(event);
+    }
 
   private:
     displaylist* dlist_;         /*!< Current displaylist. */
