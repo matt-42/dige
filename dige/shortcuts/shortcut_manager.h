@@ -33,16 +33,18 @@
 
 # include <dige/shortcuts/pause_watcher.h>
 # include <dige/shortcuts/toggle_fullscreen.h>
+# include <dige/shortcuts/reset_panzoom.h>
 
 namespace dg
 {
   /// Shortcut type.
-  struct shortcut { int key; void (*trigger)(); };
+  struct shortcut { int key; void (*trigger)(QObject *obj, QEvent *e); };
 
   /// Shortcuts bindings.
   static const shortcut shortcuts[]
     = { {Qt::Key_Space, &pause_watcher::trigger},
         {Qt::Key_F,     &toggle_fullscreen},
+        {Qt::Key_R,     &reset_panzoom},
         {0, 0}};
 
   /*!
@@ -52,9 +54,7 @@ namespace dg
   {
   public:
     /// Constructor.
-    inline shortcut_manager()
-    {
-    }
+    inline shortcut_manager();
 
     /*!
     ** Filter "key space release" events.
@@ -64,26 +64,15 @@ namespace dg
     **
     ** \return true if the event has been catched.
     */
-    inline bool eventFilter(QObject *obj, QEvent *e)
-    {
-      if (e->type() == QEvent::KeyRelease)
-      {
-        int key = ((QKeyEvent*)e)->key();
-        for (unsigned i = 0; shortcuts[i].key; i++)
-          if (shortcuts[i].key == key)
-            shortcuts[i].trigger();
-        return true;
-      }
-      else
-      {
-        return QObject::eventFilter(obj, e);
-      }
-    }
+    inline bool eventFilter(QObject* obj, QEvent* e);
+
   };
 
   extern shortcut_manager shortcut_filter; /*!< Global shortcut manager. */
 
 } // end of namespace dg.
+
+# include <dige/shortcuts/shortcut_manager.hpp>
 
 #endif
 

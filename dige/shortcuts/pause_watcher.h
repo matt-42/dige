@@ -47,7 +47,7 @@ namespace dg
     }
 
     /// Trigger a pause event.
-    static inline void trigger();
+    static inline void trigger(QObject *obj, QEvent *e);
 
     /*!
     ** pause_ setter.
@@ -85,7 +85,7 @@ namespace dg
 
   extern pause_watcher pause_manager; /*!< Global pause manager. */
 
-  void pause_watcher::trigger()
+  void pause_watcher::trigger(QObject*, QEvent*)
   {
     pause_manager.pause_ = !pause_manager.pause_;
   }

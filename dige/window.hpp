@@ -21,76 +21,15 @@
 
 # include <iostream>
 # include <QApplication>
-# include <QKeyEvent>
-# include <QColor>
-# include <QDesktopWidget>
-# include <QToolTip>
+
 # include <dige/displaylist.h>
 # include <dige/window_placer.h>
-# include <dige/color_picker.h>
+# include <dige/shortcuts/shortcut_manager.h>
 # include <dige/shortcuts/pause_watcher.h>
+# include <dige/gl_widget.h>
 
 namespace dg
 {
-  class gl_widget : public QGLWidget
-  {
-  public:
-    gl_widget(displaylist& dlist)
-      : dlist_(&dlist)
-    {
-    }
-
-  protected:
-
-    void initializeGL()
-    {
-      glDisable(GL_DEPTH_TEST);
-      glDisable(GL_BLEND);
-      glDisable(GL_LIGHTING);
-      glEnable(GL_TEXTURE_2D);
-      glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      glOrtho(0, 1, 0, 1, 0, 1);
-      glMatrixMode(GL_MODELVIEW);
-    }
-
-    void resizeGL(int w, int h)
-    {
-      glViewport(0, 0, (GLint)w, (GLint)h);
-    }
-
-    void paintGL()
-    {
-      glClear(GL_COLOR_BUFFER_BIT);
-      dlist_->draw(width(), height());
-    }
-
-    bool event(QEvent *event)
-    {
-      if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove)
-      {
-        QMouseEvent* e = (QMouseEvent*) event;
-        if (e->x() < 0 || e->y() < 0 || e->x() >= width() || e->y() >= height())
-          color_picker::instance().hide();
-        else
-        {
-          makeCurrent();
-          unsigned char c[3];
-          glReadPixels(e->x(), height() - e->y(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, c);
-          color_picker::instance().place(e);
-          color_picker::instance().update(e->pos(), QColor(c[0], c[1], c[2], 255));
-        }
-      }
-      if (event->type() == QEvent::MouseButtonRelease)
-        color_picker::instance().hide();
-
-      return QWidget::event(event);
-    }
-
-  private:
-    displaylist* dlist_;         /*!< Current displaylist. */
-  };
 
   window::window(const std::string& title, unsigned width, unsigned height)
   {
@@ -99,11 +38,16 @@ namespace dg
       static const char* dumy_argv = "";
       static int dumy_argc = 1;
       QApplication* app = new QApplication(dumy_argc, (char**)&dumy_argv);
+      currentWidget_ = new gl_widget(dlist_);
     }
-    currentWidget_ = new gl_widget(dlist_);
+    else
+    {
+      currentWidget_ = new gl_widget(dlist_,
+                                     window::windows().begin()->second->widget());
+    }
+
     currentWidget_->setGeometry(window_placer::place(width, height));
     currentWidget_->setWindowTitle(QString::fromStdString(title));
-    currentWidget_->show();
 
     if (window::windows().size() == 0)
     {
@@ -132,6 +76,7 @@ namespace dg
 
   window& window::operator<<=(displaylist& l)
   {
+    currentWidget_->show();
     currentWidget_->makeCurrent();
     dlist_.unload();
     dlist_ = l;
@@ -156,6 +101,11 @@ namespace dg
   gl_widget* window::widget()
   {
     return currentWidget_;
+  }
+
+  displaylist& window::dlist()
+  {
+    return dlist_;
   }
 
   std::map<const std::string, window*>&

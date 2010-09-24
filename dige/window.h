@@ -34,7 +34,6 @@
 # include <QKeyEvent>
 
 # include <dige/displaylist.h>
-# include <dige/shortcuts/shortcut_manager.h>
 
 namespace dg
 {
@@ -83,6 +82,9 @@ namespace dg
     inline void refresh();
 
     inline gl_widget* widget();
+
+    /// Displaylist accessor.
+    inline displaylist& dlist();
 
     /*!
     ** Dump the window content to \p buffer.

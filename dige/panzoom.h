@@ -16,32 +16,48 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   toggle_fullscreen.h
+**\file   panzoom.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Sat Sep 11 22:37:43 2010
 **
-**\brief  toggle_fullscreen header.
+**\brief  panzoom header.
 **
 **
 */
 
-#ifndef DIGE_TOGGLE_FULLSCREEN_H_
-# define DIGE_TOGGLE_FULLSCREEN_H_
+#ifndef DIGE_PANZOOM_H_
+# define DIGE_PANZOOM_H_
 
-# include <QApplication>
-# include <QWidget>
+# include <QObject>
+# include <QPointF>
+
+# include <dige/singleton.h>
 
 namespace dg
 {
-  /// Toggle fullscreen state of the active window.
-  inline void toggle_fullscreen(QObject*, QEvent*)
+
+  class gl_widget;
+
+  /*!
+  ** Panzoom.
+  */
+  class panzoom : public QObject, public singleton<panzoom>
   {
-    if (QApplication::activeWindow())
-      if (QApplication::activeWindow()->isFullScreen())
-        QApplication::activeWindow()->showNormal();
-      else
-        QApplication::activeWindow()->showFullScreen();
-  }
+    friend class singleton<panzoom>;
+
+  private:
+    /// Constructor.
+    panzoom();
+
+  public:
+    bool eventFilter(QObject *obj, QEvent *event);
+
+    gl_widget* focuswidget();
+
+  private:
+    QPointF previous_pos_;
+    gl_widget* focuswidget_;
+  };
 
 } // end of namespace dg.
 

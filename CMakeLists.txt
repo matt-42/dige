@@ -18,6 +18,8 @@ message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
 add_library(dige
   dige/window.cpp
   dige/recorder.cpp
+  dige/panzoom.cpp
+  dige/shortcuts/reset_panzoom.cpp
   dige/shortcuts/shortcuts.cpp)
 
 

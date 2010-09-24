@@ -18,7 +18,7 @@
 /*!
 **\file   color_picker.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Mon Sep  6 22:15:37 2010
+**\date   Sat Sep 11 22:37:43 2010
 **
 **\brief  color_picker header.
 **
@@ -28,60 +28,71 @@
 #ifndef DIGE_COLOR_PICKER_H_
 # define DIGE_COLOR_PICKER_H_
 
-# include <QTextStream>
-# include <QPainter>
-# include <QWidget>
-
-# include <GL/gl.h>
+# include <QObject>
+# include <QApplication>
 
 # include <dige/singleton.h>
+# include <dige/gl_widget.h>
+# include <dige/color_picker_control.h>
 
 namespace dg
 {
 
   /*!
-  ** color_picker display information about a color.
+  ** Color_Picker.
   */
-  class color_picker : public QWidget, public singleton<color_picker>
+  class color_picker : public QObject, public singleton<color_picker>
   {
+  private:
+    /// Constructor.
+    inline color_picker()
+    {
+    }
+
   public:
     friend class singleton<color_picker>;
 
     /*!
-    ** Place the color_picker window under the cursor.
+    ** Filter color_picker events.
     **
-    ** \param e a mouse event.
-    */
-    inline void place(QMouseEvent* e);
-
-    /*!
-    ** Update color and position.
+    ** \param obj watched object.
+    ** \param e event
     **
-    ** \param p a position.
-    ** \param c a color.
+    ** \return true if the event has been catched.
     */
-    inline void update(QPoint p, QColor c);
+    inline bool eventFilter(QObject *obj, QEvent *event)
+    {
+      gl_widget* w = (gl_widget*)(obj);
 
-    /*!
-    ** Draw the window content.
-    */
-    inline void paintEvent(QPaintEvent *);
+      if (event->type() == QEvent::MouseButtonPress ||
+          event->type() == QEvent::MouseMove)
+      {
+        QMouseEvent* e = (QMouseEvent*) event;
+        if (!(e->buttons() & Qt::RightButton))
+          return false;
+        if (e->x() < 0 || e->y() < 0 ||
+            e->x() >= w->width() || e->y() >= w->height())
+          color_picker_control::instance().hide();
+        else
+        {
+          color_picker_control::instance().place(e);
+          color_picker_control::instance().update(QPoint(e->x(), e->y()),
+                                                  QColor(w->pick_color(e->x(), e->y())));
+          //w->activateWindow();
+        }
+        return true;
+      }
+      if (event->type() == QEvent::MouseButtonRelease)
+      {
+        color_picker_control::instance().hide();
+        return true;
+      }
 
-  private:
-    /*!
-    ** Constructor. Build the window.
-    */
-    inline color_picker();
-
-    QColor color_;              /*!< current color. */
-    QPoint pos_;                /*!< current position. */
-
-    static const unsigned width_ = 200;
-    static const unsigned height_ = 40;
+      return false;
+    }
   };
 
 } // end of namespace dg.
 
-# include <dige/color_picker.hpp>
-
 #endif
+

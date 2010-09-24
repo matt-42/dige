@@ -15,35 +15,48 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-/*!
-**\file   toggle_fullscreen.h
-**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
-**
-**\brief  toggle_fullscreen header.
-**
-**
-*/
 
-#ifndef DIGE_TOGGLE_FULLSCREEN_H_
-# define DIGE_TOGGLE_FULLSCREEN_H_
+#ifndef DIGE_GL_WIDGET_H_
+# define DIGE_GL_WIDGET_H_
 
-# include <QApplication>
-# include <QWidget>
+# include <QGLWidget>
+# include <QColor>
+# include <QPointF>
+# include <dige/displaylist.h>
 
 namespace dg
 {
-  /// Toggle fullscreen state of the active window.
-  inline void toggle_fullscreen(QObject*, QEvent*)
+  class gl_widget : public QGLWidget
   {
-    if (QApplication::activeWindow())
-      if (QApplication::activeWindow()->isFullScreen())
-        QApplication::activeWindow()->showNormal();
-      else
-        QApplication::activeWindow()->showFullScreen();
-  }
+  public:
+    inline gl_widget(displaylist& dlist, gl_widget* share = 0);
+
+  protected:
+
+    inline void initializeGL();
+
+    inline void resizeGL(int w, int h);
+
+    inline void paintGL();
+
+  public:
+    inline QColor pick_color(unsigned x, unsigned y);
+
+    inline float& scale();
+
+    inline QPointF& pan();
+
+    /// Displaylist accessor.
+    inline displaylist* dlist();
+
+  private:
+    displaylist* dlist_;         /*!< Current displaylist. */
+    float scale_;               /*!< Zoom factor. */
+    QPointF pan_;             /*!< Pan. */
+  };
 
 } // end of namespace dg.
 
-#endif
+# include <dige/gl_widget.hpp>
 
+#endif

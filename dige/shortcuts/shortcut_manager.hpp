@@ -16,34 +16,47 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   toggle_fullscreen.h
+**\file   shortcut_manager.hpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sat Sep 24 22:37:43 2010
 **
-**\brief  toggle_fullscreen header.
+**\brief  shortcut_manager implementation.
 **
 **
 */
 
-#ifndef DIGE_TOGGLE_FULLSCREEN_H_
-# define DIGE_TOGGLE_FULLSCREEN_H_
+#ifndef DIGE_SHORTCUT_MANAGER_HPP_
+# define DIGE_SHORTCUT_MANAGER_HPP_
 
+# include <QObject>
 # include <QApplication>
-# include <QWidget>
+
+# include <dige/shortcuts/shortcut_manager.h>
 
 namespace dg
 {
-  /// Toggle fullscreen state of the active window.
-  inline void toggle_fullscreen(QObject*, QEvent*)
+
+  shortcut_manager::shortcut_manager()
   {
-    if (QApplication::activeWindow())
-      if (QApplication::activeWindow()->isFullScreen())
-        QApplication::activeWindow()->showNormal();
-      else
-        QApplication::activeWindow()->showFullScreen();
+  }
+
+  bool
+  shortcut_manager::eventFilter(QObject* obj, QEvent* e)
+  {
+    if (e->type() == QEvent::KeyRelease)
+    {
+      int key = ((QKeyEvent*)e)->key();
+      for (unsigned i = 0; shortcuts[i].key; i++)
+        if (shortcuts[i].key == key)
+          shortcuts[i].trigger(obj, e);
+      return true;
+    }
+    else
+    {
+      return QObject::eventFilter(obj, e);
+    }
   }
 
 } // end of namespace dg.
 
 #endif
-
