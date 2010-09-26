@@ -32,13 +32,22 @@
 # include <fstream>
 # include <boost/shared_ptr.hpp>
 
+# include <dige/window.h>
+
+/* extern "C" */
+/* { */
+/* #include <libavcodec/avcodec.h> */
+/* #include <libswscale/swscale.h> */
+/* #include <libavcodec/opt.h> */
+/* } */
+
 extern "C"
 {
-# include <libavcodec/avcodec.h>
-# include <libswscale/swscale.h>
-# include <libavcodec/opt.h>
+  struct AVCodec;
+  struct AVCodecContext;
+  struct SwsContext;
+  struct AVFrame;
 }
-# include <dige/window.h>
 
 namespace dg
 {
@@ -58,7 +67,7 @@ namespace dg
     ** \note Use record to create a new recorder.
     **
     */
-    inline recorder(const std::string& output_video_filepath);
+    recorder(const std::string& output_video_filepath);
 
   public:
     /*!
@@ -66,17 +75,17 @@ namespace dg
     **
     ** Close the video.
     */
-    inline ~recorder();
+    ~recorder();
 
     /*!
     ** Append a capture of \p w to the video.
     **
     ** \param w a window.
     */
-    inline void operator<<=(window& w);
+    void operator<<=(window& w);
 
     /// Associate all the created recorder with theirs video filepath.
-    static inline std::map<const std::string, boost::shared_ptr<recorder> >& recorders();
+    static std::map<const std::string, boost::shared_ptr<recorder> >& recorders();
 
   private:
     /*!
@@ -85,7 +94,7 @@ namespace dg
     ** \param width
     ** \param height
     */
-    inline void init_context(unsigned width, unsigned height);
+    void init_context(unsigned width, unsigned height);
 
     /// Associate all the created recorder with theirs video filepath.
     static std::map<const std::string, boost::shared_ptr<recorder> > recorders_;
@@ -118,10 +127,8 @@ namespace dg
   **
   ** \return the recorder.
   */
-  inline recorder& record(const std::string& video_filepath);
+  recorder& record(const std::string& video_filepath);
 
 } // end of namespace dg.
-
-# include <dige/recorder.hpp>
 
 #endif

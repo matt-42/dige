@@ -52,7 +52,7 @@ namespace dg
     **
     ** \param e a mouse event.
     */
-    inline void place(QMouseEvent* e);
+    void place(QMouseEvent* e);
 
     /*!
     ** Update color and position.
@@ -60,18 +60,18 @@ namespace dg
     ** \param p a position.
     ** \param c a color.
     */
-    inline void update(QPoint p, QColor c);
+    void update(QPoint p, QColor c);
 
     /*!
     ** Draw the window content.
     */
-    inline void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *);
 
   private:
     /*!
     ** Constructor. Build the window.
     */
-    inline color_picker_control();
+    color_picker_control();
 
     QColor color_;              /*!< current color. */
     QPoint pos_;                /*!< current position. */
@@ -81,7 +81,5 @@ namespace dg
   };
 
 } // end of namespace dg.
-
-# include <dige/color_picker_control.hpp>
 
 #endif

@@ -28,7 +28,8 @@
 #ifndef DISPLAYLIST_H_
 # define DISPLAYLIST_H_
 
-#include <dige/texture.h>
+# include <vector>
+# include <dige/texture.h>
 
 namespace dg
 {
@@ -41,7 +42,7 @@ namespace dg
   {
   public:
     /// Default constructor.
-    inline displaylist();
+    displaylist();
 
     /*!
     ** Append an object to the current line.
@@ -51,7 +52,7 @@ namespace dg
     ** \return *this.
     */
     template <typename T>
-    inline displaylist& operator-(const T& i);
+    displaylist& operator-(const T& i);
 
     /*!
     ** Append an object to a newly created line.
@@ -61,19 +62,19 @@ namespace dg
     ** \return *this.
     */
     template <typename T>
-    inline displaylist& operator+(const T& i);
+    displaylist& operator+(const T& i);
 
     /// Load all objects on the video memory.
-    inline void load();
+    void load();
     /// Unload all objects on the video memory.
-    inline void unload();
+    void unload();
     /*!
     ** Draw the list in the given dimensions.
     **
     ** \param width width,
     ** \param height height.
     */
-    inline void draw(unsigned width, unsigned height);
+    void draw(unsigned width, unsigned height);
 
   private:
     /*!
@@ -84,7 +85,7 @@ namespace dg
     ** \return \p i as a  texture.
     */
     template <typename T>
-    inline texture adapt_rec(const T& i);
+    texture adapt_rec(const T& i);
 
     /*!
     ** Recursivelly adapt the types until reaching a texture.
@@ -93,7 +94,7 @@ namespace dg
     **
     ** \return \p i as a  texture.
     */
-    inline texture adapt_rec(texture i);
+    texture adapt_rec(texture i);
 
     std::vector<std::vector<texture> > textures_; /*!< 2d array of textures. */
   };

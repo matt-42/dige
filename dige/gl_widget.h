@@ -22,32 +22,33 @@
 # include <QGLWidget>
 # include <QColor>
 # include <QPointF>
-# include <dige/displaylist.h>
 
 namespace dg
 {
+  class displaylist;
+
   class gl_widget : public QGLWidget
   {
   public:
-    inline gl_widget(displaylist& dlist, gl_widget* share = 0);
+    gl_widget(displaylist& dlist, gl_widget* share = 0);
 
   protected:
 
-    inline void initializeGL();
+    void initializeGL();
 
-    inline void resizeGL(int w, int h);
+    void resizeGL(int w, int h);
 
-    inline void paintGL();
+    void paintGL();
 
   public:
-    inline QColor pick_color(unsigned x, unsigned y);
+    QColor pick_color(unsigned x, unsigned y);
 
-    inline float& scale();
+    float& scale();
 
-    inline QPointF& pan();
+    QPointF& pan();
 
     /// Displaylist accessor.
-    inline displaylist* dlist();
+    displaylist* dlist();
 
   private:
     displaylist* dlist_;         /*!< Current displaylist. */
@@ -56,7 +57,5 @@ namespace dg
   };
 
 } // end of namespace dg.
-
-# include <dige/gl_widget.hpp>
 
 #endif

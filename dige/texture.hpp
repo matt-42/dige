@@ -19,7 +19,6 @@
 #ifndef DIGE_TEXTURE_HPP_
 # define DIGE_TEXTURE_HPP_
 
-# include <iostream>
 # include <cassert>
 
 namespace dg

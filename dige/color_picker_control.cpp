@@ -16,27 +16,24 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   color_picker_control.h
+**\file   color_picker_control.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Mon Sep  6 22:15:37 2010
 **
-**\brief  color_picker_control header.
+**\brief  color_picker_control implemetation.
 **
 **
 */
 
-#ifndef DIGE_COLOR_PICKER_CONTROL_HPP_
-# define DIGE_COLOR_PICKER_CONTROL_HPP_
+#include <QApplication>
+#include <QTextStream>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QDesktopWidget>
 
-# include <QTextStream>
-# include <QPainter>
-# include <QWidget>
-# include <QMouseEvent>
-# include <QDesktopWidget>
+#include <GL/gl.h>
 
-# include <GL/gl.h>
-
-# include <dige/color_picker_control.h>
+#include <dige/color_picker_control.h>
 
 namespace dg
 {
@@ -96,5 +93,3 @@ namespace dg
   }
 
 } // end of namespace dg.
-
-#endif

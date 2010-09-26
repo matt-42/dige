@@ -30,8 +30,7 @@
 # define DIGE_WINDOW_H_
 
 # include <map>
-# include <QGLWidget>
-# include <QKeyEvent>
+# include <string>
 
 # include <dige/displaylist.h>
 
@@ -57,17 +56,17 @@ namespace dg
     ** \param height height in pixels.
     **
     */
-    inline window(const std::string& title, unsigned width = 800, unsigned height = 600);
+    window(const std::string& title, unsigned width = 800, unsigned height = 600);
     /// Destructor.
-    inline ~window();
+    ~window();
 
   public:
 
     /// \return width of the window.
-    inline unsigned width() const;
+    unsigned width() const;
 
     /// \return height of the window.
-    inline unsigned height() const;
+    unsigned height() const;
 
     /*!
     ** Set \p l to be drawn in the window.
@@ -76,15 +75,15 @@ namespace dg
     **
     ** \return the window.
     */
-    inline window& operator<<=(displaylist& l);
+    window& operator<<=(displaylist& l);
 
     /// Refresh the window content.
-    inline void refresh();
+    void refresh();
 
-    inline gl_widget* widget();
+    gl_widget* widget();
 
     /// Displaylist accessor.
-    inline displaylist& dlist();
+    displaylist& dlist();
 
     /*!
     ** Dump the window content to \p buffer.
@@ -98,13 +97,13 @@ namespace dg
     ** \todo The size of the buffer should stay constant even during
     ** window resizing. We may need to use opengl FBO.
     */
-    inline void dump_rgb_frame_buffer(char*& buffer,
+    void dump_rgb_frame_buffer(char*& buffer,
                                       unsigned& buffer_size,
                                       unsigned& buffer_width,
                                       unsigned& buffer_height);
 
     /// Associate all the created windows with theis names.
-    static inline std::map<const std::string, window*>& windows();
+    static std::map<const std::string, window*>& windows();
 
   private:
     gl_widget* currentWidget_; /*!< Underlying sfml window. */
@@ -125,17 +124,15 @@ namespace dg
   **
   ** \return the window.
   */
-  inline window& display(const std::string& title, unsigned width = 400,
+  window& display(const std::string& title, unsigned width = 400,
                          unsigned height = 400);
 
   /*!
   ** Pause the current thread until the user press the space key in any of the
   ** window. It need at least one created window.
   */
-  inline void pause();
+  void pause();
 
 } // end of namespace dg.
-
-# include <dige/window.hpp>
 
 #endif

@@ -16,9 +16,14 @@ ENDIF(EXISTS $ENV{INSTALL_PREFIX})
 
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
 add_library(dige
-  dige/window.cpp
-  dige/recorder.cpp
+  dige/color_picker_control.cpp
+  dige/color_picker.cpp
+  dige/displaylist.cpp
+  dige/gl_widget.cpp
+  dige/panzoom_control.cpp
   dige/panzoom.cpp
+  dige/recorder.cpp
+  dige/window.cpp
   dige/shortcuts/reset_panzoom.cpp
   dige/shortcuts/shortcuts.cpp)
 

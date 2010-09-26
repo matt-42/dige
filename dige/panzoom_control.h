@@ -53,7 +53,7 @@ namespace dg
     **
     ** \param e a mouse event.
     */
-    inline void place(gl_widget* w);
+    void place(gl_widget* w);
 
     /*!
     ** Update control.
@@ -61,32 +61,35 @@ namespace dg
     ** \param p a position.
     ** \param c a color.
     */
-    inline void update(gl_widget* w);
+    void update(gl_widget* w);
 
     /*!
     ** Draw the window content.
     */
-    //    inline void paintEvent(QPaintEvent *);
+    //    void paintEvent(QPaintEvent *);
 
     /*!
     ** Hide the control.
     **
     */
-    inline void hide();
+    void hide();
+
+    /// Move the window to the top.
+    void activateWindow();
 
   protected:
 
-    inline void initializeGL();
+    void initializeGL();
 
-    inline void resizeGL(int w, int h);
+    void resizeGL(int w, int h);
 
-    inline void paintGL();
+    void paintGL();
 
   private:
     /*!
     ** Constructor. Build the window.
     */
-    inline panzoom_control();
+    panzoom_control();
 
     gl_widget* widget_;              /*!< current gl_widget. */
 
@@ -95,7 +98,5 @@ namespace dg
   };
 
 } // end of namespace dg.
-
-# include <dige/panzoom_control.hpp>
 
 #endif

@@ -25,10 +25,14 @@
 **
 */
 
-# include <QObject>
+#include <QObject>
+#include <QEvent>
+#include <QWheelEvent>
+#include <QMouseEvent>
 
-# include <dige/panzoom_control.h>
-# include <dige/gl_widget.h>
+#include <dige/panzoom.h>
+#include <dige/panzoom_control.h>
+#include <dige/gl_widget.h>
 
 namespace dg
 {
@@ -71,7 +75,11 @@ namespace dg
       if (focuswidget_ != w)
         panzoom_control::instance().place(w);
       else
+      {
         panzoom_control::instance().update(w);
+        panzoom_control::instance().activateWindow();
+        w->activateWindow();
+      }
 
       focuswidget_ = w;
       return true;
@@ -106,12 +114,6 @@ namespace dg
       panzoom_control::instance().place(w);
       focuswidget_ = w;
     }
-
-    // if (event->type() == QEvent::WindowDeactivate)
-    // {
-    //   if (focuswidget_ == w)
-    //     panzoom_control::instance().hide();
-    // }
 
     if (event->type() == QEvent::WindowActivate)
     {

@@ -16,26 +16,20 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   panzoom_control.h
+**\file   panzoom_control.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Mon Sep  6 22:15:37 2010
 **
-**\brief  panzoom_control header.
+**\brief  panzoom_control implemetation.
 **
 **
 */
 
-#ifndef DIGE_PANZOOM_CONTROL_HPP_
-# define DIGE_PANZOOM_CONTROL_HPP_
+#include <QApplication>
+#include <QDesktopWidget>
 
-# include <QTextStream>
-# include <QPainter>
-# include <QWidget>
-
-# include <GL/gl.h>
-
-# include <dige/window.h>
-# include <dige/panzoom_control.h>
+#include <dige/window.h>
+#include <dige/panzoom_control.h>
 
 namespace dg
 {
@@ -104,8 +98,19 @@ namespace dg
     show();
     update(w);
 
+    raise();
     activateWindow();
-    w->activateWindow();
+  }
+
+
+  void
+  panzoom_control::activateWindow()
+  {
+    if (!widget_)
+      return;
+
+    QGLWidget::activateWindow();
+    widget_->activateWindow();
   }
 
   void
@@ -162,5 +167,3 @@ namespace dg
   }
 
 } // end of namespace dg.
-
-#endif

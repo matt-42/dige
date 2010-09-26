@@ -15,14 +15,21 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   gl_widget.cpp
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Sat Sep 25 10:02:41 2010
+**
+**\brief  gl_widget implemetation
+**
+**
+*/
 
-#ifndef DIGE_GL_WIDGET_HPP_
-# define DIGE_GL_WIDGET_HPP_
+#include <dige/displaylist.h>
+#include <dige/gl_widget.h>
 
-# include <dige/displaylist.h>
-# include <dige/gl_widget.h>
-# include <dige/color_picker.h>
-# include <dige/panzoom.h>
+#include <dige/color_picker.h>
+#include <dige/panzoom.h>
 
 namespace dg
 {
@@ -96,5 +103,3 @@ namespace dg
   }
 
 } // end of namespace dg.
-
-#endif

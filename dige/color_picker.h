@@ -45,9 +45,7 @@ namespace dg
   {
   private:
     /// Constructor.
-    inline color_picker()
-    {
-    }
+    color_picker();
 
   public:
     friend class singleton<color_picker>;
@@ -60,36 +58,7 @@ namespace dg
     **
     ** \return true if the event has been catched.
     */
-    inline bool eventFilter(QObject *obj, QEvent *event)
-    {
-      gl_widget* w = (gl_widget*)(obj);
-
-      if (event->type() == QEvent::MouseButtonPress ||
-          event->type() == QEvent::MouseMove)
-      {
-        QMouseEvent* e = (QMouseEvent*) event;
-        if (!(e->buttons() & Qt::RightButton))
-          return false;
-        if (e->x() < 0 || e->y() < 0 ||
-            e->x() >= w->width() || e->y() >= w->height())
-          color_picker_control::instance().hide();
-        else
-        {
-          color_picker_control::instance().place(e);
-          color_picker_control::instance().update(QPoint(e->x(), e->y()),
-                                                  QColor(w->pick_color(e->x(), e->y())));
-          //w->activateWindow();
-        }
-        return true;
-      }
-      if (event->type() == QEvent::MouseButtonRelease)
-      {
-        color_picker_control::instance().hide();
-        return true;
-      }
-
-      return false;
-    }
+    bool eventFilter(QObject *obj, QEvent *event);
   };
 
 } // end of namespace dg.
