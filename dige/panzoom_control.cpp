@@ -62,6 +62,17 @@ namespace dg
     int l;
     int b;
 
+    if (w->width() > w->height())
+    {
+      wi = width_;
+      he = width_ * w->height() / float(w->width());
+    }
+    else
+    {
+      wi = height_ * w->width() / float(w->height());
+      he = height_;
+    }
+
     if (w->isFullScreen())
     {
       setWindowFlags(Qt::FramelessWindowHint |
@@ -72,16 +83,6 @@ namespace dg
     else
     {
       setWindowFlags(Qt::FramelessWindowHint);
-      if (w->width() > w->height())
-      {
-        wi = width_;
-        he = width_ * w->height() / float(w->width());
-      }
-      else
-      {
-        wi = height_ * w->width() / float(w->height());
-        he = height_;
-      }
 
       unsigned sp = 10;
       l = wg.x() - wi - sp;
