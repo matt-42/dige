@@ -176,6 +176,16 @@ namespace dg
       glVertex2f(r, b);
       glEnd();
     }
+
+    // Widget border.
+    glColor3f(1.,1.,1.);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(1. / width(), 1. / height());
+    glVertex2f(1. / width(), (height() - 1.) / float(height()));
+    glVertex2f((width() - 1.) / float(width()), (height() - 1.) / float(height()));
+    glVertex2f((width() - 1) / float(width()), 1. / height());
+    glEnd();
+
   }
 
 } // end of namespace dg.
