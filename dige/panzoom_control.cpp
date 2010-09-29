@@ -55,7 +55,7 @@ namespace dg
   panzoom_control::place(gl_widget* w)
   {
     QRect s = QApplication::desktop()->availableGeometry();
-    QRect wg = w->geometry();
+    QRect wg = w->frameGeometry();
 
     float wi = width_;
     float he = height_;
@@ -88,8 +88,19 @@ namespace dg
       l = wg.x() - wi - sp;
       b = wg.y() - sp;
 
-      if (l < s.x())
+      if (l < s.x()) // go right
         l += wi + wg.width() + sp*2;
+      if (l + wi >= s.width()) // go down
+      {
+        l = wg.x();
+        b = wg.y() - he - sp;
+      }
+      if (b < 0) // go up
+      {
+        l = wg.x();
+        b = wg.y() + wg.height() + sp;
+      }
+
     }
 
     setGeometry(l, b, wi, he);
