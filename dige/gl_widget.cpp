@@ -25,6 +25,7 @@
 **
 */
 
+#include <cmath>
 #include <dige/displaylist.h>
 #include <dige/gl_widget.h>
 
@@ -69,10 +70,10 @@ namespace dg
     glClear(GL_COLOR_BUFFER_BIT);
     glPushMatrix();
     glScalef(scale_, scale_, 1);
-    glTranslatef(- pan_.x() / float(width()),
-                 - pan_.y() / float(height()),
+    glTranslatef(-pan_.x() / float(width()),
+                 -pan_.y() / float(height()),
                  0);
-    dlist_->draw(width(), height());
+    dlist_->draw(width(), height(), layout_);
     glPopMatrix();
   }
 
@@ -83,6 +84,22 @@ namespace dg
     unsigned char c[3];
     glReadPixels(x, height() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, c);
     return QColor(c[0], c[1], c[2], 255);
+  }
+
+  point2d<float>
+  gl_widget::window_to_dlist_coord(const point2d<int>& p)
+  {
+    return point2d<float>(p[0] / float(scale_) + pan_.x(),
+                          (height() - p[1]) / float(scale_) + pan_.y());
+  }
+
+  point2d<int>
+  gl_widget::window_to_image_coord(const point2d<int>& p)
+  {
+    if (dlist_)
+      return dlist_->dlist_to_image_coord(layout_, window_to_dlist_coord(p));
+    else
+      return point2d<int>(0, 0);
   }
 
   float&

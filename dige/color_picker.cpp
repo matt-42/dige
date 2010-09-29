@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QMouseEvent>
 
+#include <dige/displaylist.h>
 #include <dige/singleton.h>
 #include <dige/gl_widget.h>
 #include <dige/color_picker.h>
@@ -55,8 +56,10 @@ namespace dg
         color_picker_control::instance().hide();
       else
       {
+        point2d<int> ip = w->window_to_image_coord(point2d<int>(e->x(), e->y()));
         color_picker_control::instance().place(e);
         color_picker_control::instance().update(QPoint(e->x(), e->y()),
+                                                QPoint(ip[0], ip[1]),
                                                 QColor(w->pick_color(e->x(), e->y())));
       }
       return true;

@@ -64,9 +64,10 @@ namespace dg
   }
 
   void
-  color_picker_control::update(QPoint p, QColor c)
+  color_picker_control::update(QPoint p, QPoint image_p, QColor c)
   {
     pos_ = p;
+    image_pos_ = image_p;
     color_ = c;
     QWidget::update();
   }
@@ -84,8 +85,10 @@ namespace dg
     writer.setFont(QFont("Helvetica", 9));
     QString text;
     QTextStream ss(&text);
-    ss << '(' << pos_.x() << ", " << pos_.y() << ")\n"
-       << "rgb(" << color_.red() << ", " << color_.green()
+    ss << '(' << pos_.x() << ", " << pos_.y() << ")";
+    if (image_pos_.x() >= 0)
+      ss << " (" << image_pos_.x() << ", " << image_pos_.y() << ")";
+    ss << "\nrgb(" << color_.red() << ", " << color_.green()
        << ", " << color_.blue() <<  ")";
     writer.drawText(QRect(height() + 10, 0,
                           width() - height() - 10, height()), Qt::AlignLeft,

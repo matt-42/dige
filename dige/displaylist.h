@@ -25,14 +25,20 @@
 **
 */
 
-#ifndef DISPLAYLIST_H_
-# define DISPLAYLIST_H_
+#ifndef DIGE_DISPLAYLIST_H_
+# define DIGE_DISPLAYLIST_H_
+
+# include <iostream>
 
 # include <vector>
 # include <dige/texture.h>
+# include <dige/rect2d.h>
 
 namespace dg
 {
+
+  /// Layout.
+  typedef std::vector<std::vector<rect2d> > layout;
 
   /*!
   ** List of drawables objects. Easy to build via operators - and +.
@@ -76,7 +82,28 @@ namespace dg
     */
     void draw(unsigned width, unsigned height);
 
+    /*!
+    ** Draw the list in the given dimensions and fill \p layout.
+    **
+    ** \param width width,
+    ** \param height height.
+    ** \param layout layout to fill with positions of images.
+    */
+    void draw(unsigned width, unsigned height, layout& layout);
+
+    point2d<int> dlist_to_image_coord(const layout& l, const point2d<float>& p);
+
   private:
+    /*!
+    ** Draw the list in the given dimensions and fill \p layout if
+    ** given.
+    **
+    ** \param width width,
+    ** \param height height.
+    ** \param layout layout to fill with positions of images.
+    */
+    void draw_(unsigned width, unsigned height, layout* layout = 0);
+
     /*!
     ** Recursivelly adapt the types until reaching a texture.
     **

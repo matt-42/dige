@@ -19,18 +19,23 @@
 #ifndef DIGE_GL_WIDGET_H_
 # define DIGE_GL_WIDGET_H_
 
+# include <vector>
 # include <QGLWidget>
 # include <QColor>
 # include <QPointF>
 
+# include <dige/displaylist.h>
+
 namespace dg
 {
-  class displaylist;
 
   class gl_widget : public QGLWidget
   {
   public:
     gl_widget(displaylist& dlist, gl_widget* share = 0);
+
+    point2d<int> window_to_image_coord(const point2d<int>& p);
+    point2d<float> window_to_dlist_coord(const point2d<int>& p);
 
   protected:
 
@@ -39,6 +44,7 @@ namespace dg
     void resizeGL(int w, int h);
 
     void paintGL();
+
 
   public:
     QColor pick_color(unsigned x, unsigned y);
@@ -52,8 +58,9 @@ namespace dg
 
   private:
     displaylist* dlist_;         /*!< Current displaylist. */
-    float scale_;               /*!< Zoom factor. */
-    QPointF pan_;             /*!< Pan. */
+    std::vector<std::vector<rect2d> > layout_;       /*!< 2d layout. */
+    float scale_;                /*!< Zoom factor. */
+    QPointF pan_;                /*!< Pan. */
   };
 
 } // end of namespace dg.

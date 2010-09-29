@@ -60,7 +60,7 @@ namespace dg
     ** \param p a position.
     ** \param c a color.
     */
-    void update(QPoint p, QColor c);
+    void update(QPoint p, QPoint image_p, QColor c);
 
     /*!
     ** Draw the window content.
@@ -75,6 +75,7 @@ namespace dg
 
     QColor color_;              /*!< current color. */
     QPoint pos_;                /*!< current position. */
+    QPoint image_pos_;                /*!< current image coordinates. */
 
     static const unsigned width_ = 170;
     static const unsigned height_ = 40;

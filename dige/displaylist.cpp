@@ -25,6 +25,8 @@
 **
 */
 
+#include <iostream>
+#include <cmath>
 #include <dige/displaylist.h>
 
 namespace dg
@@ -32,27 +34,6 @@ namespace dg
   displaylist::displaylist()
     : textures_(1)
   {
-  }
-
-  template <typename T>
-  displaylist& displaylist::operator-(const T& i)
-  {
-    textures_.back().push_back(adapt_rec(i));
-    return *this;
-  }
-
-  template <typename T>
-  displaylist& displaylist::operator+(const T& i)
-  {
-    textures_.push_back(std::vector<texture>());
-    return *this - i;
-  }
-
-
-  template <typename T>
-  texture displaylist::adapt_rec(const T& i)
-  {
-    return adapt_rec(adapt(i));
   }
 
   texture displaylist::adapt_rec(texture i)
@@ -77,15 +58,52 @@ namespace dg
         textures_[i][j].unload();
   }
 
+  point2d<int>
+  displaylist::dlist_to_image_coord(const layout& l, const point2d<float>& p)
+  {
+    for (unsigned i = 0; i < l.size(); i++)
+    {
+      for (unsigned j = 0; j < l[i].size(); j++)
+      {
+        if (l[i][j].has(p))
+        {
+          return point2d<int>((p[0] - l[i][j].origin()[0]) *
+                              textures_[i][j].width() / float(l[i][j].width()),
+                              textures_[i][j].height() - 1
+                              -
+                              std::floor((p[1] - l[i][j].origin()[1]) *
+                                         textures_[i][j].height() / float(l[i][j].height())));
+        }
+      }
+    }
+    return point2d<int>(-1, -1);
+  }
+
+  void
+  displaylist::draw(unsigned width, unsigned height, layout& layout)
+  {
+    draw_(width, height, &layout);
+  }
+
   void
   displaylist::draw(unsigned width, unsigned height)
   {
+    draw_(width, height);
+  }
+
+  void
+  displaylist::draw_(unsigned width, unsigned height, layout* layout)
+  {
     glClear(GL_COLOR_BUFFER_BIT);
 
+    if (layout)
+      layout->clear();
     unsigned nrows = textures_.size();
     float rowheight = 1. / nrows;
     for (unsigned i = 0; i < textures_.size(); i++)
     {
+      if (layout)
+        layout->push_back(std::vector<rect2d>());
       unsigned i_ = textures_.size() - i - 1;
       unsigned ncols = textures_[i].size();
       float colwidth = 1. / ncols;
@@ -111,6 +129,13 @@ namespace dg
           float tmp_b = (b+t)/2. - (t-b)*cell_ratio/(2.*texture_ratio);
           t = (b+t)/2. + (t-b)*cell_ratio/(2.*texture_ratio);
           b = tmp_b;
+        }
+
+        if (layout)
+        {
+          rect2d rect(point2d<float>(l * width, b * height),
+                      (r - l) * width, (t - b) * height);
+          (*layout)[i].push_back(rect);
         }
 
         glColor3f(0,1,0);

@@ -53,7 +53,7 @@ namespace dg
       QWheelEvent* e = (QWheelEvent*) event;
       float c = 1. + e->delta() / 900.;
       w->pan() += QPointF(e->x() * (c-1) / (c * w->scale()),
-                          (w->height() - e->y()) * (c-1) / (c * w->scale()));
+                          float(w->height() - e->y()) * (c-1) / (c * w->scale()));
       w->scale() *= c;
       if (focuswidget_ != w || ! w->isActiveWindow())
         panzoom_control::instance().place(w);
