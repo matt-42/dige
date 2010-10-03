@@ -85,6 +85,9 @@ namespace dg
     /// Displaylist accessor.
     displaylist& dlist();
 
+    /// Set unresizable
+    void set_unresizable();
+
     /*!
     ** Dump the window content to \p buffer.
     ** Resize it if needed

@@ -45,6 +45,10 @@ extern "C"
 {
   struct AVCodec;
   struct AVCodecContext;
+  struct AVFormatContext;
+  struct AVOutputFormat;
+  struct AVStream;
+
   struct SwsContext;
   struct AVFrame;
 }
@@ -104,12 +108,16 @@ namespace dg
 
     AVCodec* avcodec_;          /*!< ffmpeg codec. */
     AVCodecContext* avcontext_; /*!< ffmpeg context. */
+    AVFormatContext* fmtcontext_;
+    AVOutputFormat  *outputfmt_;
+    AVStream        *video_st_;
     SwsContext* swcontext_;     /*!< swscale context. */
     AVFrame* yuvframe_;         /*!< current yuv frame. */
     AVFrame* rgbframe_;         /*!< current rgb frame. */
     uint8_t* video_buffer_;     /*!< encoding buffer. */
     int video_buffer_size_;     /*!< encoding buffer size. */
     std::ofstream output_;      /*!< output stream. */
+    std::string path_;
     bool init_failed_;          /*!< remember a failed initialization. */
     char* window_capture_;      /*!< rgbframe buffer use to capture windows content. */
     unsigned window_capture_size_; /*!< rgbframe buffer size. */
