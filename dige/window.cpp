@@ -77,7 +77,7 @@ namespace dg
   void
   window::set_unresizable()
   {
-    return currentWidget_->setFixedSize(currentWidget_->size());
+    return currentWidget_->set_unresizable();
   }
 
   window& window::operator<<=(displaylist& l)

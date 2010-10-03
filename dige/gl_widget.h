@@ -56,11 +56,16 @@ namespace dg
     /// Displaylist accessor.
     displaylist* dlist();
 
+    void set_unresizable();
+
+    bool unresizable() const;
+
   private:
     displaylist* dlist_;         /*!< Current displaylist. */
     std::vector<std::vector<rect2d> > layout_;       /*!< 2d layout. */
     float scale_;                /*!< Zoom factor. */
     QPointF pan_;                /*!< Pan. */
+    bool unresizable_;
   };
 
 } // end of namespace dg.

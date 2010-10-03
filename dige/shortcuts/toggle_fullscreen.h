@@ -30,6 +30,7 @@
 
 # include <QApplication>
 # include <QWidget>
+# include <dige/gl_widget.h>
 
 namespace dg
 {
@@ -37,10 +38,16 @@ namespace dg
   inline void toggle_fullscreen(QObject*, QEvent*)
   {
     if (QApplication::activeWindow())
-      if (QApplication::activeWindow()->isFullScreen())
-        QApplication::activeWindow()->showNormal();
+    {
+      gl_widget* w = dynamic_cast<gl_widget*> (QApplication::activeWindow());
+      if (!w || w->unresizable())
+        return;
+
+      if (w->isFullScreen())
+        w->showNormal();
       else
-        QApplication::activeWindow()->showFullScreen();
+        w->showFullScreen();
+    }
   }
 
 } // end of namespace dg.

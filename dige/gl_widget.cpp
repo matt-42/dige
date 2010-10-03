@@ -38,7 +38,8 @@ namespace dg
     : QGLWidget(0, share),
       dlist_(&dlist),
       scale_(1),
-      pan_(0,0)
+      pan_(0,0),
+      unresizable_(false)
   {
     installEventFilter(&panzoom::instance());
     installEventFilter(&color_picker::instance());
@@ -117,6 +118,19 @@ namespace dg
   displaylist* gl_widget::dlist()
   {
     return dlist_;
+  }
+
+  void
+  gl_widget::set_unresizable()
+  {
+    setFixedSize(size());
+    unresizable_ = true;
+  }
+
+  bool
+  gl_widget::unresizable() const
+  {
+    return unresizable_;
   }
 
 } // end of namespace dg.
