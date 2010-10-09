@@ -1,0 +1,165 @@
+
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Dige 0.1</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="d0e19"></a><p>
+        Distributed under the LGPL License, Version 3.0.
+      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.screenshot">Screenshot</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Tutorial</a></span></dt><dt><span class="section"><a href="#dige.shortcuts">Shortcuts</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
+      Dige is a library of tools to visualize and record what is happening in
+      your code. It provides a set of C++ operators that display content of
+      images. In few lines of code, you can display any types of images. The
+      aim of the library is to help developers dectect bugs faster, and easily
+      get more intuition about algorithms there are writting. Dige is licensed
+      under LGPL.
+    </p><p>
+      At this time, dige compiles and works well on Linux / g++-4.4.3, but
+      since it uses only portable external libraries, it should be possible to
+      use it on other operating systems.
+    </p></div><div class="section" title="Features"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.features"></a>Features</h2></div></div></div><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Display images in multiple windows.</li><li class="listitem">Panzoom.</li><li class="listitem">Color picker.</li><li class="listitem">Video capture of windows.</li><li class="listitem">Pause / resume the program.</li><li class="listitem">Fullscreen windows.</li></ul></div><p>
+    </p></div><div class="section" title="Screenshot"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.screenshot"></a>Screenshot</h2></div></div></div><p>
+      </p><div><img src="images/screenshot.jpg"></div><p>
+    </p></div><div class="section" title="Compilation and Installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.install"></a>Compilation and Installation</h2></div></div></div><p>
+      </p><pre class="programlisting">
+git clone git@gitorious.org:dige/dige.git dige
+cd dige
+mkdir build
+cd build
+INSTALL_PREFIX=$fixme$ cmake ..
+make
+(sudo) make install
+      </pre><p>
+      Use <code class="code">INSTALL_PREFIX</code> to install the library in an other place
+      than the default one.
+    </p></div><div class="section" title="Tutorial"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.tutorial"></a>Tutorial</h2></div></div></div><p>
+This little piece of code shows how to use dige to display a
+simple <code class="code">rgb_image</code> image type.
+</p><pre class="programlisting">
+      
+ <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Needed by rand.</span>
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;cstdlib&gt;</span>
+
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige includes.</span>
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;dige/window.h&gt;</span>
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;dige/image.h&gt;</span>
+
+    </pre><p>
+We define here our simple 2d image type that will be displayed by dige.
+</p><pre class="programlisting">
+      
+
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// A simple rgb image type</span>
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">struct</span> rgb_image
+{
+  rgb_image(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> w, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> h)
+    : width(w),
+      height(h),
+      image_size(w * h * <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">3</span>)
+  {
+    data = <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">new</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>[image_size];
+  }
+
+  ~rgb_image()
+  {
+    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">delete</span> data;
+  }
+
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> width;
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> height;
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> image_size;
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>* data;
+};
+
+    </pre><p>
+Now, let's adapt our image typeto dige's internal image type. Since
+<code class="code">rgb_image</code> handle a buffer of contiguous rgb pixels
+with <code class="code"><span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span></code>, we can adapt it
+into <code class="code">dg::image&lt;dg::trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span>
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;</code>.
+
+</p><pre class="programlisting">
+      
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">namespace</span> dg
+{
+  image&lt;trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;
+  adapt(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">const</span> rgb_image&amp; i)
+  {
+    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">return</span> image&lt;trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;
+      (i.width, i.height, i.data);
+  }
+}
+
+    </pre><p>
+      Note that we overload here the function <code class="code">dg::adapt</code> that will
+      be called internally by dige to convert instances
+      of <code class="code">rgb_image</code>. Once we made the adaptor, instances
+      of <code class="code">rgb_image</code> can be directly passed to dige operator.
+    </p><pre class="programlisting">
+      
+<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">int</span> main()
+{
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">using</span> dg::display; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige display.</span>
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">using</span> dg::dl; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige list starter</span>
+
+  srand(time(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">0</span>));
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Initialize an image.</span>
+  rgb_image img(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>);
+
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> t = clock();
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">while</span> (clock() - t &lt; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">5</span> * CLOCKS_PER_SEC)
+  {
+    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Fill img with random values.</span>
+    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">for</span> (<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> i = <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">0</span>; i &lt; img.image_size; i++)
+      img.data[i] = rand();
+
+    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// display it.</span>
+    display(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"random"</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">300</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>)
+      &lt;&lt;= dl() - img - img +
+                    img;
+  }
+
+  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Pause the program at the end, and make the last image stay on the window.</span>
+  dg::pause();
+}
+
+    </pre><p>
+     In this program, with only one c++ statement, we displayed 3 copy of our
+     randomly filled image in a window named "random" (see screeshot below).
+     </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="code">dl()</code> tells
+         to the compiler that we start a list of things to display.
+       </li><li class="listitem"><code class="code">operator-</code> places the images from left to right.
+       </li><li class="listitem"><code class="code">operator+</code> places the next image on the beginning of the
+         next line, behind the current one.
+       </li><li class="listitem"><code class="code">display("random", 300, 200)</code> refer to the window named
+         "random". If it doesn't exists, create one of 300*200 pixels.
+       </li><li class="listitem">
+         Finally <code class="code">operator&lt;&lt;=</code> tells to the window "random" to draw
+         our newly created displaylist.
+       </li></ul></div><p>
+     </p><div class="figure"><a name="d0e132"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
+   </p><p>
+     To capture the content of a window into a video, use the following:
+    </p><pre class="programlisting">
+      
+      record(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"video.avi"</span>) &lt;&lt;= display(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"random"</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">300</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>)
+      &lt;&lt;= dl() - img - img +
+                    img;
+
+    </pre><p>
+    The codec used is FFVHUFF (ffmpeg). The window wont be resizable if
+    recorded.
+   </p></div><div class="section" title="Shortcuts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.shortcuts"></a>Shortcuts</h2></div></div></div><p>
+      Here is a list of what you can do within a dige window:
+     </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+         Key 'f': toggle fullscreen state of the current window.
+       </li><li class="listitem">
+         Key Space: Pause / Resume the program.
+       </li><li class="listitem">
+         Key 'r': Reset the panzoom state of the current window.
+       </li><li class="listitem">
+         Left click: Pan.
+       </li><li class="listitem">
+         Right click: Color picker.
+       </li><li class="listitem">
+         Mouse wheel: Zoom in / out.
+       </li></ul></div><p>
+    </p></div></div></body></html>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "/usr/share/xml/docbook/schema/dtd/4.4/docbookx.dtd">
+<article id="dige" last-revision="$Date: 2010/10/03 19:27:41 $" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Dige 0.1</title>
+  <articleinfo>
+    <authorgroup>
+    <author>
+      <firstname>Matthieu</firstname> <surname>Garrigues</surname>
+    </author>
+    </authorgroup>
+    <copyright>
+      <year>2010</year> <holder>Matthieu Garrigues</holder>
+    </copyright>
+    <legalnotice>
+      <para>
+        Distributed under the LGPL License, Version 3.0.
+      </para>
+    </legalnotice>
+  </articleinfo>
+
+  <section id="dige.intro">
+    <title>Introduction</title>
+    <para>
+      Dige is a library of tools to visualize and record what is happening in
+      your code. It provides a set of C++ operators that display content of
+      images. In few lines of code, you can display any types of images. The
+      aim of the library is to help developers detect bugs faster, and easily
+      get more intuition about algorithms there are writing. Dige is licensed
+      under LGPL.
+    </para>
+    <para>
+      At this time, dige compiles and works well on Linux / g++-4.4.3, but
+      since it uses only portable external libraries, it should be possible to
+      run it on other operating systems.
+    </para>
+  </section>
+
+  <section id="dige.features">
+    <title>Features</title>
+    <para>
+      <itemizedlist>
+        <listitem>Display images in multiple windows.</listitem>
+        <listitem>Pan-zoom.</listitem>
+        <listitem>Color picker.</listitem>
+        <listitem>Video capture of windows.</listitem>
+        <listitem>Pause / resume the program.</listitem>
+        <listitem>Full-screen windows.</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+  <section id="dige.screenshot">
+    <title>Screenshot</title>
+    <para>
+      <graphic fileref="images/screenshot.jpg"></graphic>
+    </para>
+  </section>
+
+  <section id="dige.install">
+    <title>Compilation and Installation</title>
+    <para>
+      <programlisting>
+git clone git@gitorious.org:dige/dige.git dige
+cd dige
+mkdir build
+cd build
+INSTALL_PREFIX=$fixme$ cmake ..
+make
+(sudo) make install
+      </programlisting>
+      Use <code>INSTALL_PREFIX</code> to install the library in an other place
+      than the default one.
+    </para>
+  </section>
+
+
+  <section id="dige.tutorial">
+    <title>Tutorial</title>
+
+<para>
+This little piece of code shows how to use dige to display a
+simple <code>rgb_image</code> image type.
+</para>
+
+    <programlisting language="cpp">
+      <![CDATA[
+ // Needed by rand.
+#include <cstdlib>
+
+// Dige includes.
+#include <dige/window.h>
+#include <dige/image.h>
+]]>
+    </programlisting>
+
+
+<para>
+We define here our simple 2d image type that will be displayed by dige.
+</para>
+
+    <programlisting language="cpp">
+      <![CDATA[
+
+// A simple rgb image type
+struct rgb_image
+{
+  rgb_image(unsigned w, unsigned h)
+    : width(w),
+      height(h),
+      image_size(w * h * 3)
+  {
+    data = new unsigned char[image_size];
+  }
+
+  ~rgb_image()
+  {
+    delete data;
+  }
+
+  unsigned width;
+  unsigned height;
+  unsigned image_size;
+  unsigned char* data;
+};
+]]>
+    </programlisting>
+
+<para>
+Now, let's adapt our image type to dige's internal image type. Since
+<code>rgb_image</code> handle a buffer of contiguous rgb pixels
+with <code language="cpp">unsigned char</code>, we can adapt it
+into <code language="cpp"><![CDATA[dg::image<dg::trait::format::rgb, unsigned
+char>]]></code>.
+
+</para>
+
+    <programlisting language="cpp">
+      <![CDATA[
+namespace dg
+{
+  image<trait::format::rgb, unsigned char>
+  adapt(const rgb_image& i)
+  {
+    return image<trait::format::rgb, unsigned char>
+      (i.width, i.height, i.data);
+  }
+}
+]]>
+    </programlisting>
+
+    <para>
+      Note that we overload here the function <code>dg::adapt</code> that will
+      be called internally by dige to convert instances
+      of <code>rgb_image</code>. Once we made the adaptor, instances
+      of <code>rgb_image</code> can be directly passed to dige operator.
+    </para>
+
+    <programlisting language="cpp">
+      <![CDATA[
+int main()
+{
+  using dg::display; // Dige display.
+  using dg::dl; // Dige list starter
+
+  srand(time(0));
+  // Initialize an image.
+  rgb_image img(200, 200);
+
+  unsigned t = clock();
+  while (clock() - t < 5 * CLOCKS_PER_SEC)
+  {
+    // Fill img with random values.
+    for (unsigned i = 0; i < img.image_size; i++)
+      img.data[i] = rand();
+
+    // display it.
+    display("random", 300, 200)
+      <<= dl() - img - img +
+                    img;
+  }
+
+  // Pause the program at the end, and make the last image stay on the window.
+  dg::pause();
+}
+]]>
+    </programlisting>
+
+   <para>
+     In this program, with only one c++ statement, we displayed 3 copy of our
+     randomly filled image in a window named "random" (see screeshot below).
+     <itemizedlist>
+       <listitem>
+         <code>dl()</code> tells
+         to the compiler that we start a list of things to display.
+       </listitem>
+       <listitem>
+         <code>operator-</code> places the images from left to right.
+       </listitem>
+       <listitem>
+         <code>operator+</code> places the next image on the beginning of the
+         next line, behind the current one.
+       </listitem>
+       <listitem>
+         <code>display("random", 300, 200)</code> refer to the window named
+         "random". If it doesn't exists, create one of 300*200 pixels.
+       </listitem>
+       <listitem>
+         Finally <code><![CDATA[operator<<=]]></code> tells to the window "random" to draw
+         our newly created displaylist.
+       </listitem>
+     </itemizedlist>
+     <figure>
+       <title>Random screenshot</title> <graphic fileref="images/dige_random_example.jpeg"></graphic>
+     </figure>
+   </para>
+
+   <para>
+     To capture the content of a window into a video, use the following:
+    <programlisting language="cpp">
+      <![CDATA[
+      record("video.avi") <<= display("random", 300, 200)
+      <<= dl() - img - img +
+                    img;
+]]>
+    </programlisting>
+    The codec used is FFVHUFF (ffmpeg). The window wont be resizable if
+    recorded.
+   </para>
+  </section>
+
+  <section id="dige.shortcuts">
+    <title>Shortcuts</title>
+    <para>
+      Here is a list of what you can do within a dige window:
+     <itemizedlist>
+       <listitem>
+         Key 'f': toggle full-screen state of the current window.
+       </listitem>
+       <listitem>
+         Key Space: Pause / Resume the program.
+       </listitem>
+       <listitem>
+         Key 'r': Reset the pan-zoom state of the current window.
+       </listitem>
+       <listitem>
+         Left click: Pan.
+       </listitem>
+       <listitem>
+         Right click: Color picker.
+       </listitem>
+       <listitem>
+         Mouse wheel: Zoom in / out.
+       </listitem>
+     </itemizedlist>
+    </para>
+  </section>
+
+</article>
