@@ -11,8 +11,10 @@ include_directories(${CMAKE_SOURCE_DIR} $ENV{HOME}/local/include)
 link_directories($ENV{HOME}/local/lib)
 
 IF(EXISTS $ENV{INSTALL_PREFIX})
-  set(CMAKE_INSTALL_PREFIX $ENV{INSTALL_PREFIX})
+  set(CMAKE_INSTALL_PREFIX $ENV{INSTALL_PREFIX} CACHE PATH "Install prefix")
 ENDIF(EXISTS $ENV{INSTALL_PREFIX})
+
+add_definitions(-D__STDC_CONSTANT_MACROS)
 
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
 add_library(dige

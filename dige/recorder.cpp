@@ -111,7 +111,7 @@ namespace dg
       goto init_failed;
     }
 
-    outputfmt_ = guess_format ("avi", NULL, NULL);
+    outputfmt_ = av_guess_format ("avi", NULL, NULL);
     assert(outputfmt_);
     fmtcontext_ = avformat_alloc_context();
     fmtcontext_->oformat = outputfmt_;

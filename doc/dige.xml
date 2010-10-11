@@ -61,7 +61,7 @@
     <title>Compilation and Installation</title>
     <para>
       <programlisting>
-git clone git@gitorious.org:dige/dige.git dige
+git clone git://gitorious.org/dige/dige.git dige
 cd dige
 mkdir build
 cd build
