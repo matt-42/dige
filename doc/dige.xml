@@ -30,9 +30,10 @@
       under LGPL.
     </para>
     <para>
-      At this time, dige compiles and works well on Linux / g++-4.4.3, but
-      since it uses only portable external libraries, it should be possible to
-      run it on other operating systems.
+      Tested environments:
+      <itemizedlist>
+        <listitem>Linux (Ubuntu) / g++-4.4.3</listitem>
+      </itemizedlist>
     </para>
   </section>
 
@@ -65,12 +66,13 @@ git clone git://gitorious.org/dige/dige.git dige
 cd dige
 mkdir build
 cd build
-INSTALL_PREFIX=$fixme$ cmake ..
+INSTALL_PREFIX=$fixme$ cmake .. [ -DWITH_RECORDING:bool=ON ]
 make
 (sudo) make install
       </programlisting>
       Use <code>INSTALL_PREFIX</code> to install the library in an other place
       than the default one.
+      <code>-DWITH_RECORDING:bool=ON</code> enable video recording. Need FFmpeg.
     </para>
   </section>
 
@@ -251,6 +253,20 @@ int main()
        </listitem>
        <listitem>
          Mouse wheel: Zoom in / out.
+       </listitem>
+     </itemizedlist>
+    </para>
+  </section>
+
+  <section id="dige.links">
+    <title>Links</title>
+    <para>
+     <itemizedlist>
+       <listitem>
+         <ulink url="http://www.ohloh.net/p/dige">Dige on Ohloh</ulink>
+       </listitem>
+       <listitem>
+         <ulink url="http://gitorious.org/dige">Dige on Gitorious</ulink>
        </listitem>
      </itemizedlist>
     </para>
