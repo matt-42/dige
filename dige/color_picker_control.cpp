@@ -31,8 +31,6 @@
 #include <QPaintEvent>
 #include <QDesktopWidget>
 
-#include <GL/gl.h>
-
 #include <dige/color_picker_control.h>
 
 namespace dg

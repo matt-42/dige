@@ -1,7 +1,11 @@
 cmake_minimum_required (VERSION 2.6)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+                      ${CMAKE_SOURCE_DIR}/cmake)
+
 project (dige)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+
 include(${QT_USE_FILE})
 
 SET(CMAKE_VERBOSE_MAKEFILE off)
@@ -13,10 +17,22 @@ link_directories($ENV{HOME}/local/lib)
 IF(EXISTS $ENV{INSTALL_PREFIX})
   set(CMAKE_INSTALL_PREFIX $ENV{INSTALL_PREFIX} CACHE PATH "Install prefix")
 ENDIF(EXISTS $ENV{INSTALL_PREFIX})
-
-add_definitions(-D__STDC_CONSTANT_MACROS)
-
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
+
+
+
+set(WITH_RECORDING CACHE BOOL "Enable video recording (need FFmpeg)")
+IF(WITH_RECORDING)
+  find_package(FFmpeg)
+  if (NOT FFMPEG_FOUND)
+    message(FATAL_ERROR "FFmpeg not found")
+  endif (NOT FFMPEG_FOUND)
+  add_definitions(-D__STDC_CONSTANT_MACROS) # Needed by ffmpeg.
+  set(RECORDING_SRC dige/recorder.cpp)
+ENDIF(WITH_RECORDING)
+
+include_directories(${FFMPEG_INCLUDE_DIR})
+
 add_library(dige
   dige/color_picker_control.cpp
   dige/color_picker.cpp
@@ -24,10 +40,10 @@ add_library(dige
   dige/gl_widget.cpp
   dige/panzoom_control.cpp
   dige/panzoom.cpp
-  dige/recorder.cpp
   dige/window.cpp
   dige/shortcuts/reset_panzoom.cpp
-  dige/shortcuts/shortcuts.cpp)
+  dige/shortcuts/shortcuts.cpp
+  ${RECORDING_SRC})
 
 
 install(TARGETS dige DESTINATION lib)

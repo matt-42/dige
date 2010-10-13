@@ -17,6 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <cstdlib>
+#include <ctime>
 
 // Dige includes.
 #include <dige/window.h>
@@ -64,10 +65,15 @@ int main()
   rgb_image img(200, 200);
 
   unsigned t = clock();
-  while (clock() - t < 5 * CLOCKS_PER_SEC)
+  //  while (clock() - t < 5 * CLOCKS_PER_SEC)
+  while (true)
   {
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
+
+    img.data[42 * 200 * 3 + 43 * 3 + 0 ] = 42;
+    img.data[42 * 200 * 3 + 43 * 3 + 1 ] = 42;
+    img.data[42 * 200 * 3 + 43 * 3 + 2 ] = 42;
 
     // Display in a 300*200 window called "random" 3 copy of our image.
     // It will looks like:
@@ -82,6 +88,7 @@ int main()
     display("random", 300, 200)
       <<= dl() - img - img +
                     img;
+    //      <<= dl() - img;
   }
 
   // Pause the program on the last image.

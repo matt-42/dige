@@ -28,6 +28,10 @@
 #ifndef DIGE_TEXTURE_H_
 # define DIGE_TEXTURE_H_
 
+# ifdef WIN32
+#  include <windows.h>
+# endif
+
 # include <GL/gl.h>
 
 namespace dg

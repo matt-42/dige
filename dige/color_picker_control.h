@@ -32,8 +32,6 @@
 # include <QPainter>
 # include <QWidget>
 
-# include <GL/gl.h>
-
 # include <dige/singleton.h>
 
 namespace dg

@@ -16,9 +16,12 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#include <cstdlib>
+#include <ctime>
+
 // Dige includes.
-#include <dige/recorder.h>
 #include <dige/window.h>
+#include <dige/recorder.h>
 #include <dige/image.h>
 
 // A simple rgb image type
@@ -61,9 +64,10 @@ int main()
   using dg::dl; // Dige list starter
 
   srand(time(0));
-  rgb_image img(200, 200);
+  rgb_image img(20, 20);
 
   unsigned t = clock();
+  // while (true)
   while (clock() - t < 5 * CLOCKS_PER_SEC)
   {
     for (unsigned i = 0; i < img.image_size; i++)

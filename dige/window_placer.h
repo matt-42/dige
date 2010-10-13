@@ -28,8 +28,10 @@
 #ifndef DIGE_WINDOW_PLACER_H_
 # define DIGE_WINDOW_PLACER_H_
 
-#include <QDesktopWidget>
-#include <QRect>
+# include <QDesktopWidget>
+# include <QRect>
+
+# include <ctime>
 
 namespace dg
 {

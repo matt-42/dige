@@ -28,11 +28,7 @@
 #ifndef DIGE_PANZOOM_CONTROL_H_
 # define DIGE_PANZOOM_CONTROL_H_
 
-# include <QTextStream>
-# include <QPainter>
-# include <QWidget>
-
-# include <GL/gl.h>
+# include <QGLWidget>
 
 # include <dige/singleton.h>
 # include <dige/gl_widget.h>
