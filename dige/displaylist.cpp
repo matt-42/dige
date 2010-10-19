@@ -67,12 +67,12 @@ namespace dg
       {
         if (l[i][j].has(p))
         {
-          return point2d<int>((p[0] - l[i][j].origin()[0]) *
-                              textures_[i][j].width() / float(l[i][j].width()),
-                              textures_[i][j].height() - 1
+          return point2d<int>(int((p[0] - l[i][j].origin()[0]) *
+                                  textures_[i][j].width() / float(l[i][j].width())),
+                              int(textures_[i][j].height() - 1
                               -
                               std::floor((p[1] - l[i][j].origin()[1]) *
-                                         textures_[i][j].height() / float(l[i][j].height())));
+                                         textures_[i][j].height() / float(l[i][j].height()))));
         }
       }
     }
@@ -99,14 +99,14 @@ namespace dg
     if (layout)
       layout->clear();
     unsigned nrows = textures_.size();
-    float rowheight = 1. / nrows;
+    float rowheight = 1.f / nrows;
     for (unsigned i = 0; i < textures_.size(); i++)
     {
       if (layout)
         layout->push_back(std::vector<rect2d>());
       unsigned i_ = textures_.size() - i - 1;
       unsigned ncols = textures_[i].size();
-      float colwidth = 1. / ncols;
+      float colwidth = 1.f / ncols;
       for (unsigned j = 0; j < textures_[i].size(); j++)
       {
         float cell_width = width * colwidth;
@@ -120,14 +120,14 @@ namespace dg
 
         if (texture_ratio < cell_ratio)
         {
-          float tmp_l = (l+r)/2. - (r-l)*texture_ratio/(2.*cell_ratio);
-          r = (l+r)/2. + (r-l)*texture_ratio/(2.*cell_ratio);
+          float tmp_l = (l+r)/2.f - (r-l)*texture_ratio/(2.*cell_ratio);
+          r = (l+r)/2.f + (r-l)*texture_ratio/(2.*cell_ratio);
           l = tmp_l;
         }
         else
         {
-          float tmp_b = (b+t)/2. - (t-b)*cell_ratio/(2.*texture_ratio);
-          t = (b+t)/2. + (t-b)*cell_ratio/(2.*texture_ratio);
+          float tmp_b = (b+t)/2.f - (t-b)*cell_ratio/(2.*texture_ratio);
+          t = (b+t)/2.f + (t-b)*cell_ratio/(2.*texture_ratio);
           b = tmp_b;
         }
 

@@ -49,8 +49,8 @@ namespace dg
   color_picker_control::place(QMouseEvent* e)
   {
     QRect s = QApplication::desktop()->availableGeometry();
-    unsigned l = e->globalX() + 20;
-    unsigned b = e->globalY() + 20;
+    int l = e->globalX() + 20;
+    int b = e->globalY() + 20;
 
     if (l + width_ >= s.width())
       l -= width_ + 40;

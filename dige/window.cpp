@@ -128,7 +128,7 @@ namespace dg
   {
     currentWidget_->makeCurrent();
 
-    if (buffer_size < currentWidget_->width() * currentWidget_->height() * 3)
+    if (int(buffer_size) < currentWidget_->width() * currentWidget_->height() * 3)
     {
       delete[] buffer;
       buffer_size = currentWidget_->width() * currentWidget_->height() * 3;

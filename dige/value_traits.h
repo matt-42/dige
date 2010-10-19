@@ -37,9 +37,17 @@ namespace dg
     {
       /// Statically mark an image values as RGB.
       struct rgb { enum {to_gl_format = GL_RGB }; };
+      /// Statically mark an image values as RGBA.
+      struct rgba { enum {to_gl_format = GL_RGBA }; };
       /// Statically mark an image values as gray levels.
       struct luminance { enum {to_gl_format = GL_LUMINANCE }; };
-    }
+
+      #ifdef GL_BGR_EXT
+      struct bgr { enum {to_gl_format = GL_BGR_EXT }; };    }
+      #endif
+      #ifdef GL_BGRA_EXT
+      struct bgra { enum {to_gl_format = GL_BGRA_EXT }; };    }
+      #endif
 
     /*!
     ** Comvert a builtin component type into an OpenGL value flag.

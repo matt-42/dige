@@ -21,8 +21,8 @@ message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
 
 
 
-set(WITH_RECORDING CACHE BOOL "Enable video recording (need FFmpeg)")
-IF(WITH_RECORDING)
+set(WITH_FFMPEG CACHE BOOL "Enable video recording (need FFmpeg)")
+IF(WITH_FFMPEG)
   find_package(FFmpeg)
   if (NOT FFMPEG_FOUND)
     message(FATAL_ERROR "FFmpeg not found")
@@ -30,7 +30,7 @@ IF(WITH_RECORDING)
   add_definitions(-D__STDC_CONSTANT_MACROS) # Needed by ffmpeg.
   set(RECORDING_SRC dige/recorder.cpp)
   message(STATUS "Recording enabled")
-ENDIF(WITH_RECORDING)
+ENDIF(WITH_FFMPEG)
 
 include_directories(${FFMPEG_INCLUDE_DIR})
 
