@@ -43,10 +43,10 @@ namespace dg
       struct luminance { enum {to_gl_format = GL_LUMINANCE }; };
 
       #ifdef GL_BGR_EXT
-      struct bgr { enum {to_gl_format = GL_BGR_EXT }; };    }
+      struct bgr { enum {to_gl_format = GL_BGR_EXT }; };
       #endif
       #ifdef GL_BGRA_EXT
-      struct bgra { enum {to_gl_format = GL_BGRA_EXT }; };    }
+      struct bgra { enum {to_gl_format = GL_BGRA_EXT }; };
       #endif
 
     /*!
