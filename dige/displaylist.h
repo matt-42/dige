@@ -29,10 +29,13 @@
 # define DIGE_DISPLAYLIST_H_
 
 # include <iostream>
-
 # include <vector>
-# include <dige/texture.h>
+# include <boost/utility/enable_if.hpp>
+# include <boost/shared_ptr.hpp>
+
+# include <dige/abstract_texture.h>
 # include <dige/rect2d.h>
+# include <dige/is_texture_type.h>
 
 namespace dg
 {
@@ -49,6 +52,9 @@ namespace dg
   public:
     /// Default constructor.
     displaylist();
+
+    /// Destructor.
+    ~displaylist();
 
     /*!
     ** Append an object to the current line.
@@ -112,7 +118,8 @@ namespace dg
     ** \return \p i as a  texture.
     */
     template <typename T>
-    texture adapt_rec(const T& i);
+    typename boost::enable_if_c<is_texture_type<T>::val, abstract_texture*>::type
+    adapt_rec(const T& i);
 
     /*!
     ** Recursivelly adapt the types until reaching a texture.
@@ -121,9 +128,12 @@ namespace dg
     **
     ** \return \p i as a  texture.
     */
-    texture adapt_rec(texture i);
+    template <typename T>
+    typename boost::enable_if_c<is_texture_type<T>::not_val, abstract_texture*>::type
+    adapt_rec(const T& t);
 
-    std::vector<std::vector<texture> > textures_; /*!< 2d array of textures. */
+    boost::shared_ptr<std::vector<std::vector<abstract_texture*> > >
+      textures_; /*!< 2d array of textures. */
   };
 
   typedef displaylist dl;

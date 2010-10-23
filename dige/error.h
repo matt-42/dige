@@ -38,7 +38,7 @@ namespace dg
     GLenum err = glGetError();\
     if (err != GL_NO_ERROR)\
     {\
-      std::cerr << "Opengl Error at" << __FILE__ << "(" << __LINE__ << "): " << gluErrorString(err) << std::endl;\
+      std::cerr << "Opengl Error at" << __FILE__ << "(" << __LINE__ << "): "  << std::endl;\
       assert(0);\
     }\
   }

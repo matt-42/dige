@@ -49,6 +49,7 @@ namespace dg
   class texture
   {
   public:
+    typedef int dige_texture_type;
     /*!
     ** Default constructor.
     ** Create an empty texture.

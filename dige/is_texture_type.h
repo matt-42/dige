@@ -15,43 +15,37 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   is_texture_type.h
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Sat Oct 23 19:45:09 2010
+**
+**\brief  is_texture_type trait
+**
+**
+*/
 
-#ifndef DISPLAYLIST_HPP_
-# define DISPLAYLIST_HPP_
+#ifndef DIGE_IS_TEXTURE_TYPE
+# define DIGE_IS_TEXTURE_TYPE
 
-# include <dige/internal_texture.h>
+# include <GL/glu.h>
 
 namespace dg
 {
-
   template <typename T>
-  displaylist& displaylist::operator-(const T& i)
+  struct is_texture_type
   {
-    textures_->back().push_back(adapt_rec(i));
-    return *this;
-  }
+  private:
+    template <typename U>
+    static char   sfinae(typename U::dige_texture_type* x);
 
-  template <typename T>
-  displaylist& displaylist::operator+(const T& i)
-  {
-    textures_->push_back(std::vector<abstract_texture*>());
-    return *this - i;
-  }
+    template <typename U>
+    static double sfinae(...);
 
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& t)
-  {
-    return new internal_texture<T>(t);
-  }
-
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::not_val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& i)
-  {
-    return adapt_rec(adapt(i));
-  }
-
-} // end of namespace dg.
+  public:
+    enum { val = sizeof(sfinae<T>(0)) == sizeof(char) };
+    enum { not_val = !val };
+  };
+}
 
 #endif

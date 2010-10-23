@@ -15,43 +15,26 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+/*!
+**\file   abstract_texture.cpp
+**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
+**\date   Sat Oct 23 18:53:54 2010
+**
+**\brief  abstract_texture implemetation.
+**
+*/
 
-#ifndef DISPLAYLIST_HPP_
-# define DISPLAYLIST_HPP_
-
-# include <dige/internal_texture.h>
+# include <dige/abstract_texture.h>
 
 namespace dg
 {
 
-  template <typename T>
-  displaylist& displaylist::operator-(const T& i)
+  abstract_texture::abstract_texture()
   {
-    textures_->back().push_back(adapt_rec(i));
-    return *this;
-  }
+  };
 
-  template <typename T>
-  displaylist& displaylist::operator+(const T& i)
+  abstract_texture::~abstract_texture()
   {
-    textures_->push_back(std::vector<abstract_texture*>());
-    return *this - i;
-  }
-
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& t)
-  {
-    return new internal_texture<T>(t);
-  }
-
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::not_val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& i)
-  {
-    return adapt_rec(adapt(i));
   }
 
 } // end of namespace dg.
-
-#endif

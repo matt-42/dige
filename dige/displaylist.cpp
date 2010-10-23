@@ -32,30 +32,35 @@
 namespace dg
 {
   displaylist::displaylist()
-    : textures_(1)
+    : textures_(new std::vector<std::vector<abstract_texture*> >(1))
   {
   }
 
-  texture displaylist::adapt_rec(texture i)
+  displaylist::~displaylist()
   {
-    return i;
+    for (unsigned i = 0; i < textures_->size(); i++)
+      for (unsigned j = 0; j < (*textures_)[i].size(); j++)
+      {
+        (*textures_)[i][j]->unload();
+        delete (*textures_)[i][j];
+      }
   }
 
   void
   displaylist::load()
   {
-    for (unsigned i = 0; i < textures_.size(); i++)
-      for (unsigned j = 0; j < textures_[i].size(); j++)
-        textures_[i][j].load();
+    for (unsigned i = 0; i < textures_->size(); i++)
+      for (unsigned j = 0; j < (*textures_)[i].size(); j++)
+        (*textures_)[i][j]->load();
   }
 
 
   void
   displaylist::unload()
   {
-    for (unsigned i = 0; i < textures_.size(); i++)
-      for (unsigned j = 0; j < textures_[i].size(); j++)
-        textures_[i][j].unload();
+    for (unsigned i = 0; i < textures_->size(); i++)
+      for (unsigned j = 0; j < (*textures_)[i].size(); j++)
+        (*textures_)[i][j]->unload();
   }
 
   point2d<int>
@@ -68,11 +73,11 @@ namespace dg
         if (l[i][j].has(p))
         {
           return point2d<int>(int((p[0] - l[i][j].origin()[0]) *
-                                  textures_[i][j].width() / float(l[i][j].width())),
-                              int(textures_[i][j].height() - 1
+                                  (*textures_)[i][j]->width() / float(l[i][j].width())),
+                              int((*textures_)[i][j]->height() - 1
                               -
                               std::floor((p[1] - l[i][j].origin()[1]) *
-                                         textures_[i][j].height() / float(l[i][j].height()))));
+                                         (*textures_)[i][j]->height() / float(l[i][j].height()))));
         }
       }
     }
@@ -98,20 +103,20 @@ namespace dg
 
     if (layout)
       layout->clear();
-    unsigned nrows = textures_.size();
+    unsigned nrows = textures_->size();
     float rowheight = 1.f / nrows;
-    for (unsigned i = 0; i < textures_.size(); i++)
+    for (unsigned i = 0; i < textures_->size(); i++)
     {
       if (layout)
         layout->push_back(std::vector<rect2d>());
-      unsigned i_ = textures_.size() - i - 1;
-      unsigned ncols = textures_[i].size();
+      unsigned i_ = textures_->size() - i - 1;
+      unsigned ncols = (*textures_)[i].size();
       float colwidth = 1.f / ncols;
-      for (unsigned j = 0; j < textures_[i].size(); j++)
+      for (unsigned j = 0; j < (*textures_)[i].size(); j++)
       {
         float cell_width = width * colwidth;
         float cell_height = height * rowheight;
-        float texture_ratio = float(textures_[i][j].width()) / textures_[i][j].height();
+        float texture_ratio = float((*textures_)[i][j]->width()) / (*textures_)[i][j]->height();
         float cell_ratio = cell_width / cell_height;
         float l = j * colwidth;
         float r = (j+1) * colwidth;
@@ -139,7 +144,7 @@ namespace dg
         }
 
         glColor3f(0,1,0);
-        glBindTexture(GL_TEXTURE_2D, textures_[i][j].gl_id());
+        glBindTexture(GL_TEXTURE_2D, (*textures_)[i][j]->gl_id());
         glBegin(GL_QUADS);
         glTexCoord2f(0,1); glVertex2f(l, b);
         glTexCoord2f(0,0); glVertex2f(l, t);

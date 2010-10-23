@@ -49,6 +49,8 @@ namespace dg
       struct bgra { enum {to_gl_format = GL_BGRA_EXT }; };
       #endif
 
+    }
+
     /*!
     ** Comvert a builtin component type into an OpenGL value flag.
     **
