@@ -88,6 +88,8 @@ namespace dg
     /// Set unresizable
     void set_unresizable();
 
+    point2d<int> selected_coords() const;
+
     /*!
     ** Dump the window content to \p buffer.
     ** Resize it if needed

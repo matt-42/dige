@@ -26,11 +26,14 @@
 */
 
 #include <cmath>
+#include <QMouseEvent>
+
 #include <dige/displaylist.h>
 #include <dige/gl_widget.h>
 
 #include <dige/color_picker.h>
 #include <dige/panzoom.h>
+#include <dige/event_waiter.h>
 
 namespace dg
 {
@@ -39,10 +42,12 @@ namespace dg
       dlist_(&dlist),
       scale_(1),
       pan_(0,0),
+      selected_coords_(-1, -1),
       unresizable_(false)
   {
     installEventFilter(&panzoom::instance());
     installEventFilter(&color_picker::instance());
+    installEventFilter(&event_waiter::instance());
   }
 
   void
@@ -131,6 +136,19 @@ namespace dg
   gl_widget::unresizable() const
   {
     return unresizable_;
+  }
+
+  void
+  gl_widget::mouseDoubleClickEvent(QMouseEvent* event)
+  {
+    selected_coords_ = window_to_image_coord(point2d<int>(event->x(), event->y()));
+  }
+
+
+  point2d<int>
+  gl_widget::selected_coords() const
+  {
+    return selected_coords_;
   }
 
 } // end of namespace dg.

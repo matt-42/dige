@@ -45,6 +45,7 @@ namespace dg
 
     void paintGL();
 
+    void mouseDoubleClickEvent(QMouseEvent* event);
 
   public:
     QColor pick_color(unsigned x, unsigned y);
@@ -60,11 +61,14 @@ namespace dg
 
     bool unresizable() const;
 
+    point2d<int> selected_coords() const;
+
   private:
     displaylist* dlist_;         /*!< Current displaylist. */
     std::vector<std::vector<rect2d> > layout_;       /*!< 2d layout. */
     float scale_;                /*!< Zoom factor. */
     QPointF pan_;                /*!< Pan. */
+    point2d<int> selected_coords_;
     bool unresizable_;
   };
 

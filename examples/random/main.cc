@@ -22,6 +22,7 @@
 // Dige includes.
 #include <dige/window.h>
 #include <dige/image.h>
+#include <dige/pick_coords.h>
 
 // A simple rgb image type
 struct rgb_image
@@ -36,7 +37,7 @@ struct rgb_image
 
   ~rgb_image()
   {
-    delete data;
+    delete[] data;
   }
 
   unsigned width;
@@ -71,10 +72,24 @@ int main()
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    img.data[42 * 200 * 3 + 43 * 3 + 0 ] = 42;
-    img.data[42 * 200 * 3 + 43 * 3 + 1 ] = 42;
-    img.data[42 * 200 * 3 + 43 * 3 + 2 ] = 42;
+    int x = 0, y = 0;
+    dg::pick_coords("random", x, y);
+    if (x >= 0)
+    {
+      for (unsigned i = 0; i < 200; i++)
+      {
+        img.data[y * 200 * 3 + i * 3 + 0 ] = 1;
+        img.data[y * 200 * 3 + i * 3 + 1 ] = 2;
+        img.data[y * 200 * 3 + i * 3 + 2 ] = 3;
+      }
+      for (unsigned i = 0; i < 200; i++)
+      {
+        img.data[i * 200 * 3 + x * 3 + 0 ] = 1;
+        img.data[i * 200 * 3 + x * 3 + 1 ] = 2;
+        img.data[i * 200 * 3 + x * 3 + 2 ] = 3;
+      }
 
+    }
     // Display in a 300*200 window called "random" 3 copy of our image.
     // It will looks like:
     //
@@ -85,12 +100,18 @@ int main()
     //  |     img     |
     //  |-------------|
     //
+    //  std::cout << " create dl "  << std::endl;
     display("random", 300, 200)
-      <<= dl() - img - img +
+      <<=
+      dl() - img - img +
                     img;
     //      <<= dl() - img;
+
+    // int x = 0, y = 0;
+    // dg::pick_coords("random", x, y);
+    // std::cout << x << ' ' << y << std::endl;
   }
 
   // Pause the program on the last image.
-  dg::pause();
+  //  dg::pause();
 }

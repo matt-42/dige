@@ -31,12 +31,7 @@
 
 namespace dg
 {
-  displaylist::displaylist()
-    : textures_(new std::vector<std::vector<abstract_texture*> >(1))
-  {
-  }
-
-  displaylist::~displaylist()
+  void free_textures(std::vector<std::vector<abstract_texture*> >* textures_)
   {
     for (unsigned i = 0; i < textures_->size(); i++)
       for (unsigned j = 0; j < (*textures_)[i].size(); j++)
@@ -44,6 +39,16 @@ namespace dg
         (*textures_)[i][j]->unload();
         delete (*textures_)[i][j];
       }
+    delete textures_;
+  }
+
+  displaylist::displaylist()
+    : textures_(new std::vector<std::vector<abstract_texture*> >(1), free_textures)
+  {
+  }
+
+  displaylist::~displaylist()
+  {
   }
 
   void

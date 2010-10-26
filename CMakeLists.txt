@@ -34,11 +34,16 @@ ENDIF(WITH_FFMPEG)
 
 include_directories(${FFMPEG_INCLUDE_DIR})
 
+add_definitions(-g)
+
 add_library(dige
   dige/color_picker_control.cpp
   dige/color_picker.cpp
   dige/displaylist.cpp
   dige/gl_widget.cpp
+  dige/event_waiter.cpp
+  dige/pick_coords.cpp
+  dige/abstract_texture.cpp
   dige/panzoom_control.cpp
   dige/panzoom.cpp
   dige/window.cpp

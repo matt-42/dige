@@ -11,6 +11,8 @@ IF(CMAKE_HOST_WIN32)
   set(OGL_LIB opengl32 glu32)
 ENDIF(CMAKE_HOST_WIN32)
 
+add_definitions(-g)
+
 target_link_libraries(random ${CMAKE_SOURCE_DIR}/../../build/libdige.a
                              ${QT_LIBRARIES}
                              ${OGL_LIB})

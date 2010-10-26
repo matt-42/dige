@@ -80,6 +80,12 @@ namespace dg
     return currentWidget_->set_unresizable();
   }
 
+  point2d<int>
+  window::selected_coords() const
+  {
+    return currentWidget_->selected_coords();
+  }
+
   window& window::operator<<=(displaylist& l)
   {
     currentWidget_->show();
