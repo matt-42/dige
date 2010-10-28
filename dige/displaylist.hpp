@@ -38,20 +38,6 @@ namespace dg
     return *this - i;
   }
 
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& t)
-  {
-    return new internal_texture<T>(t);
-  }
-
-  template <typename T>
-  typename boost::enable_if_c<is_texture_type<T>::not_val, abstract_texture*>::type
-  displaylist::adapt_rec(const T& i)
-  {
-    return adapt_rec(adapt(i));
-  }
-
 } // end of namespace dg.
 
 #endif

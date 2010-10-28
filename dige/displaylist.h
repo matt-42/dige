@@ -119,7 +119,10 @@ namespace dg
     */
     template <typename T>
     typename boost::enable_if_c<is_texture_type<T>::val, abstract_texture*>::type
-    adapt_rec(const T& i);
+    adapt_rec(const T& t)
+    {
+      return new internal_texture<T>(t);
+    }
 
     /*!
     ** Recursivelly adapt the types until reaching a texture.
@@ -130,7 +133,10 @@ namespace dg
     */
     template <typename T>
     typename boost::enable_if_c<is_texture_type<T>::not_val, abstract_texture*>::type
-    adapt_rec(const T& t);
+    adapt_rec(const T& t)
+    {
+      return adapt_rec(adapt(t));
+    }
 
     boost::shared_ptr<std::vector<std::vector<abstract_texture*> > >
       textures_; /*!< 2d array of textures. */
