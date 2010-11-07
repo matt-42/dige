@@ -16,38 +16,40 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.cpp
+**\file   key_release.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Nov  7 16:04:24 2010
 **
-**\brief  pick_coords implemetation.
+**\brief  key release.
 **
 **
 */
 
-# include <QObject>
-# include <QApplication>
-# include <QEvent>
-# include <dige/window.h>
-# include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+#ifndef DIGE_KEY_RELEASE_H_
+# define DIGE_KEY_RELEASE_H_
+
+# include <dige/event/event.h>
+# include <dige/event/keycode.h>
+
+class QObject;
+class QEvent;
 
 namespace dg
 {
 
-  void wait_for_dblclick()
+  class key_release : public Event<key_release>
   {
-    //    assert(window::windows().size() > 0);
+  public:
+    key_release(keycode k);
 
-    wait(click_event(0));
+    bool operator==(const key_release& b);
 
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
-  }
+  private:
+    keycode k_;
+  };
+
+  any_event make_key_release_event(QObject *obj, QEvent *event);
 
 } // end of namespace dg.
 
+#endif

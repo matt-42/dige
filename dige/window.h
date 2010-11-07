@@ -42,7 +42,7 @@ namespace dg
   /*!
   ** The window class allow to display the content of a displaylist
   ** in an OpenGL context.
-  ** It uses a thread to listen to the window event (exposure, resizing...).
+  ** It listen to the window event (exposure, resizing...).
   */
   class window
   {

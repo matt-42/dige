@@ -19,8 +19,6 @@
 #ifndef DISPLAYLIST_HPP_
 # define DISPLAYLIST_HPP_
 
-# include <dige/internal_texture.h>
-
 namespace dg
 {
 

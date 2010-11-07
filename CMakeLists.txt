@@ -40,8 +40,13 @@ add_library(dige
   dige/color_picker_control.cpp
   dige/color_picker.cpp
   dige/displaylist.cpp
+  dige/event/event.cpp
+  dige/event/keycode.cpp
+  dige/event/click_event.cpp
+  dige/event/key_release.cpp
+  dige/event/event_waiter.cpp
+  dige/event/make_event.cpp
   dige/gl_widget.cpp
-  dige/event_waiter.cpp
   dige/pick_coords.cpp
   dige/abstract_texture.cpp
   dige/panzoom_control.cpp

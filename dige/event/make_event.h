@@ -16,38 +16,26 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.cpp
+**\file   make_event.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Nov  7 14:15:17 2010
 **
-**\brief  pick_coords implemetation.
+**\brief  make_event header.
 **
 **
 */
 
-# include <QObject>
-# include <QApplication>
-# include <QEvent>
-# include <dige/window.h>
-# include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+#ifndef DIGE_MAKE_EVENT_H_
+# define DIGE_MAKE_EVENT_H_
+
+class QObject;
+class QEvent;
 
 namespace dg
 {
 
-  void wait_for_dblclick()
-  {
-    //    assert(window::windows().size() > 0);
-
-    wait(click_event(0));
-
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
-  }
+  any_event make_event(QObject *obj, QEvent *event);
 
 } // end of namespace dg.
 
+#endif

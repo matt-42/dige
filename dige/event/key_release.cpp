@@ -16,38 +16,47 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.cpp
+**\file   key_release.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Nov  7 16:06:54 2010
 **
-**\brief  pick_coords implemetation.
+**\brief  key_release implementation
 **
 **
 */
 
 # include <QObject>
-# include <QApplication>
 # include <QEvent>
-# include <dige/window.h>
-# include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+# include <QKeyEvent>
+
+# include <dige/event/event.h>
+# include <dige/event/key_release.h>
+# include <dige/event/keycode.h>
 
 namespace dg
 {
 
-  void wait_for_dblclick()
+  key_release::key_release(keycode k)
+    : k_(k)
   {
-    //    assert(window::windows().size() > 0);
+  }
 
-    wait(click_event(0));
+  bool key_release::operator==(const key_release& b)
+  {
+    return b.k_ == k_;
+  }
 
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
+  any_event make_key_release_event(QObject *obj, QEvent *event)
+  {
+    if (event->type() == QEvent::KeyRelease)
+    {
+      QKeyEvent* e = (QKeyEvent*) event;
+      if (e->isAutoRepeat())
+        return any_event();
+
+      return key_release(qt_key_to_dige_key(e->key()));
+    }
+    return any_event();
   }
 
 } // end of namespace dg.
-

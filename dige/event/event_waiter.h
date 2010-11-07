@@ -16,38 +16,66 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.cpp
+**\file   event_waiter.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Sat Sep 11 22:37:43 2010
 **
-**\brief  pick_coords implemetation.
+**\brief  event_waiter header.
 **
 **
 */
 
+#ifndef DIGE_EVENT_WAITER_H_
+# define DIGE_EVENT_WAITER_H_
+
 # include <QObject>
-# include <QApplication>
-# include <QEvent>
-# include <dige/window.h>
-# include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+
+# include <dige/singleton.h>
+# include <dige/event/event.h>
+
+class QEvent;
 
 namespace dg
 {
 
-  void wait_for_dblclick()
+  /*!
+  ** Event_Waiter.
+  */
+  template <typename U>
+  class event_waiter : public QObject, public singleton<event_waiter<U> >
   {
-    //    assert(window::windows().size() > 0);
+  private:
+    /// Constructor.
+    event_waiter();
 
-    wait(click_event(0));
+  public:
+    friend class singleton<event_waiter<U> >;
 
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
-  }
+    /*!
+    ** Filter events.
+    **
+    ** \param obj watched object.
+    ** \param e event
+    **
+    ** \return true if the event has been catched.
+    */
+    bool eventFilter(QObject *obj, QEvent *event);
+
+    void start_waiting_for(const U& e);
+
+    bool event_match();
+
+    any_event event();
+
+  private:
+    U to_wait_;
+    bool b_;
+    any_event event_;
+  };
 
 } // end of namespace dg.
+
+# include <dige/event/event_waiter.hpp>
+
+#endif
 

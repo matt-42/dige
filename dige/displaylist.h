@@ -36,6 +36,7 @@
 # include <dige/abstract_texture.h>
 # include <dige/rect2d.h>
 # include <dige/is_texture_type.h>
+# include <dige/internal_texture.h>
 
 namespace dg
 {

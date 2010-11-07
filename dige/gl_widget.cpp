@@ -33,7 +33,6 @@
 
 #include <dige/color_picker.h>
 #include <dige/panzoom.h>
-#include <dige/event_waiter.h>
 
 namespace dg
 {
@@ -47,7 +46,7 @@ namespace dg
   {
     installEventFilter(&panzoom::instance());
     installEventFilter(&color_picker::instance());
-    installEventFilter(&event_waiter::instance());
+    setMouseTracking(true);
   }
 
   void
@@ -139,11 +138,18 @@ namespace dg
   }
 
   void
+  gl_widget::mouseMoveEvent(QMouseEvent* event)
+  {
+    selected_coords_ = window_to_image_coord(point2d<int>(event->x(), event->y()));
+    event->accept();
+  }
+
+  void
   gl_widget::mouseDoubleClickEvent(QMouseEvent* event)
   {
     selected_coords_ = window_to_image_coord(point2d<int>(event->x(), event->y()));
+    event->accept();
   }
-
 
   point2d<int>
   gl_widget::selected_coords() const

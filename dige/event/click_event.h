@@ -16,38 +16,40 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.cpp
+**\file   click_event.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Nov  7 13:44:07 2010
 **
-**\brief  pick_coords implemetation.
+**\brief  click_event header.
 **
 **
 */
 
-# include <QObject>
-# include <QApplication>
-# include <QEvent>
-# include <dige/window.h>
-# include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+#ifndef DIGE_CLICK_EVENT_H_
+# define DIGE_CLICK_EVENT_H_
+
+# include <dige/event/event.h>
+
+class QObject;
+class QEvent;
 
 namespace dg
 {
 
-  void wait_for_dblclick()
+  class click_event : public Event<click_event>
   {
-    //    assert(window::windows().size() > 0);
+  public:
+    click_event();
+    click_event(QObject* widget);
 
-    wait(click_event(0));
+    bool operator==(const click_event& b);
 
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
-  }
+  private:
+    QObject* widget_;
+  };
+
+  any_event make_click_event(QObject *obj, QEvent *event);
 
 } // end of namespace dg.
 
+#endif
