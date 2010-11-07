@@ -53,15 +53,15 @@ namespace dg
     return event_waiter<U>::instance().event();
   }
 
-#define for_each_event(E, C, U)              \
-  for (dg::any_event E = dg::wait(C | U);   \
-       !dg::event_match(U, E);                              \
+#define for_each_event_until(E, C, U)           \
+  for (dg::any_event E = dg::wait(C | U);       \
+       !dg::event_match(U, E);                  \
        E = dg::wait(C | U))
 
-#define for_each_event_(C)                      \
-  for (dg::any_event e = dg::wait(C);           \
+#define for_each_event(E, C)                    \
+  for (dg::any_event E = dg::wait(C);           \
        ;                                        \
-       e = dg::wait(C))
+       E = dg::wait(C))
 
 } // end of namespace dg.
 
