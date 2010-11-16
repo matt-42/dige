@@ -16,40 +16,49 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   click_event.h
+**\file   click.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 13:44:07 2010
+**\date   Sun Nov  7 14:23:15 2010
 **
-**\brief  click_event header.
+**\brief  click implementation.
 **
 **
 */
 
-#ifndef DIGE_CLICK_EVENT_H_
-# define DIGE_CLICK_EVENT_H_
+# include <iostream>
+# include <QObject>
+# include <QEvent>
 
-# include <dige/event/event.h>
-
-class QObject;
-class QEvent;
+# include <dige/event/click.h>
 
 namespace dg
 {
 
-  class click_event : public Event<click_event>
+  click::click()
+    : widget_(0)
   {
-  public:
-    click_event();
-    click_event(QObject* widget);
+  }
 
-    bool operator==(const click_event& b);
+  click::click(QObject* widget)
+    : widget_(widget)
+  {
+  }
 
-  private:
-    QObject* widget_;
-  };
+  bool click::operator==(const click& b)
+  {
+    if (!widget_ || !b.widget_)
+      return true;
+    else
+      return b.widget_ == widget_;
+  }
 
-  any_event make_click_event(QObject *obj, QEvent *event);
+  any_event make_click(QObject *obj, QEvent *event)
+  {
+    if (event->type() == QEvent::MouseButtonPress ||
+        event->type() == QEvent::MouseButtonDblClick)
+      return click(obj);
+
+    return any_event();
+  }
 
 } // end of namespace dg.
-
-#endif

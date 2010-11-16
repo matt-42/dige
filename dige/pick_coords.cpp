@@ -30,23 +30,15 @@
 # include <QEvent>
 # include <dige/window.h>
 # include <dige/event/wait.h>
-# include <dige/event/click_event.h>
+# include <dige/event/click.h>
 
 namespace dg
 {
 
   void wait_for_dblclick()
   {
-    //    assert(window::windows().size() > 0);
-
-    wait(click_event(0));
-
-    // event_waiter::instance().start_waiting_for(QEvent::MouseButtonDblClick);
-    // while (!event_waiter::instance().event_arrived())
-    // {
-    //   QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    //   QApplication::sendPostedEvents();
-    // }
+    assert(window::windows().size() > 0);
+    wait(click(0));
   }
 
 } // end of namespace dg.

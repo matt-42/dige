@@ -36,7 +36,7 @@
 namespace dg
 {
   /// Toggle fullscreen state of the active window.
-  void reset_panzoom(QObject* obj, QEvent*)
+  void reset_panzoom(QObject*, QEvent*)
   {
     gl_widget* w = panzoom::instance().focuswidget();
     if (!w)

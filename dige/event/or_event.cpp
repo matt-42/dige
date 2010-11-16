@@ -16,47 +16,54 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   key_release.cpp
+**\file   or_event.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 16:06:54 2010
+**\date   Tue Nov 16 21:46:01 2010
 **
-**\brief  key_release implementation
+**\brief  or_event implementation
 **
 **
 */
 
-# include <QObject>
-# include <QEvent>
-# include <QKeyEvent>
-
-# include <dige/event/event.h>
-# include <dige/event/key_release.h>
-# include <dige/event/keycode.h>
+#include <dige/event/or_event.h>
 
 namespace dg
 {
-
-  key_release::key_release(keycode k)
-    : k_(k)
+  or_event::or_event()
   {
   }
 
-  bool key_release::operator==(const key_release& b)
+  or_event::or_event(const or_event& o)
+    : events_(o.events_)
   {
-    return b.k_ == k_;
   }
 
-  any_event make_key_release_event(QObject*, QEvent* event)
+  or_event&
+  or_event::operator=(const or_event& o)
   {
-    if (event->type() == QEvent::KeyRelease)
+    events_ = o.events_;
+    return *this;
+  }
+
+  bool
+  or_event::matches(const any_event& e) const
+  {
+    for (unsigned i = 0; i < events_.size(); i++)
     {
-      QKeyEvent* e = (QKeyEvent*) event;
-      if (e->isAutoRepeat())
-        return any_event();
-
-      return key_release(qt_key_to_dige_key(e->key()));
+      if (events_[i] == e)
+        return true;
     }
-    return any_event();
+    return false;
+  }
+
+  bool event_match(const or_event& a, const any_event& b)
+  {
+    return a.matches(b);
+  }
+
+  bool event_match(const any_event& b, const or_event& a)
+  {
+    return a.matches(b);
   }
 
 } // end of namespace dg.

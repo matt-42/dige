@@ -25,7 +25,7 @@
 **
 */
 
-# include <dige/event/click_event.h>
+# include <dige/event/click.h>
 # include <dige/event/key_release.h>
 
 namespace dg
@@ -34,7 +34,7 @@ namespace dg
   typedef any_event (*event_factory)(QObject *obj, QEvent *event);
 
   event_factory factories[] =
-  { make_click_event,
+  { make_click,
     make_key_release_event
   };
 

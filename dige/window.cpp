@@ -37,7 +37,8 @@ namespace dg
     {
       static const char* dumy_argv = "";
       static int dumy_argc = 1;
-      QApplication* app = new QApplication(dumy_argc, (char**)&dumy_argv);
+      // Instanciate the main application object.
+      new QApplication(dumy_argc, (char**)&dumy_argv);
       currentWidget_ = new gl_widget(dlist_);
     }
     else
@@ -140,8 +141,8 @@ namespace dg
       buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
       buffer = new char[buffer_size];
     }
-    if (buffer_height != currentWidget_->height() ||
-        buffer_width != currentWidget_->width())
+    if (int(buffer_height) != currentWidget_->height() ||
+        int(buffer_width) != currentWidget_->width())
     {
       buffer_width = currentWidget_->width();
       buffer_height = currentWidget_->height();
@@ -156,10 +157,7 @@ namespace dg
     std::map<const std::string, window*>::const_iterator it
       = window::windows_.find(title);
     if (it != window::windows_.end())
-    {
-      window* win = (*it).second;
       return *((*it).second);
-    }
     else
     {
       window* window_ = new window(title, width, height);

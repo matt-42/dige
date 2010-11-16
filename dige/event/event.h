@@ -75,7 +75,7 @@ namespace dg
 
     bool operator==(const abstract_event& b) const
     {
-      type() == b.type() &&
+      return type() == b.type() &&
       ((generic_event<T>*) &b)->e_ == e_;
     }
 
@@ -110,7 +110,7 @@ namespace dg
     any_event& operator=(const T& e)
     {
       event_ = new T(e);
-      return &this;
+      return *this;
     }
 
     any_event& operator=(const any_event& e);
@@ -134,13 +134,13 @@ namespace dg
   template <typename T>
   bool operator==(const Event<T>& e, const generic_event<T>& f)
   {
-    e.subcast() == f.event();
+    return e.subcast() == f.event();
   }
 
   template <typename T>
   bool operator==(const generic_event<T>& e, const Event<T>& f)
   {
-    e.event() == f.subcast();
+    return e.event() == f.subcast();
   }
 
   bool event_match(const any_event& a, const any_event& b);

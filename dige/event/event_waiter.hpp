@@ -57,7 +57,7 @@ namespace dg
       b_ = true;
       event_ = e;
       QApplication::instance()->removeEventFilter(this);
-      return true;
+      return false;
     }
 
     return false;

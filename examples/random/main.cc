@@ -23,6 +23,9 @@
 #include <dige/window.h>
 #include <dige/image.h>
 #include <dige/pick_coords.h>
+#include <dige/event/wait.h>
+#include <dige/event/click.h>
+#include <dige/event/key_release.h>
 
 // A simple rgb image type
 struct rgb_image
@@ -67,13 +70,24 @@ int main()
 
   unsigned t = clock();
   //  while (clock() - t < 5 * CLOCKS_PER_SEC)
-  while (true)
+
+  int x = 0, y = 0;
+
+  display("random", 500, 300) <<= dl() - img;
+
+  //  while (true)
+  for_each_event_until(e, dg::click() |
+                    dg::key_release(dg::key_e) |
+                    dg::key_release(dg::key_r) |
+                    dg::key_release(dg::key_right) |
+                    dg::key_release(dg::key_y),
+                    dg::key_release(dg::key_return))
   {
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    int x = 0, y = 0;
     dg::pick_coords("random", x, y);
+
     if (x >= 0)
     {
       for (unsigned i = 0; i < 200; i++)
@@ -105,6 +119,7 @@ int main()
       <<=
       dl() - img - img +
                     img;
+
     //      <<= dl() - img;
 
     // int x = 0, y = 0;

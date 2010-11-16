@@ -138,7 +138,10 @@ namespace dg
     avcontext_->width = width;
     avcontext_->height = height;
     // frames per second
-    avcontext_->time_base= (AVRational){1,25};
+
+    avcontext_->time_base.den = 25;
+    avcontext_->time_base.num = 1;
+
     avcontext_->gop_size = 10; // emit one intra frame every ten frames
     avcontext_->max_b_frames=1;
     avcontext_->pix_fmt = FRAME_FORMAT;

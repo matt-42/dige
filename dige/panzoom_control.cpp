@@ -75,8 +75,8 @@ namespace dg
 
     if (w->isFullScreen())
     {
-      setWindowFlags(Qt::FramelessWindowHint |
-                     Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
+      // setWindowFlags(Qt::FramelessWindowHint |
+      //                Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
       l = 0;
       b = 0;
     }

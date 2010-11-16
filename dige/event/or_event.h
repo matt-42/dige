@@ -28,26 +28,20 @@
 #ifndef DIGE_OR_EVENT_H_
 # define DIGE_OR_EVENT_H_
 
+# include <vector>
+# include <dige/event/event.h>
+
 namespace dg
 {
 
   class or_event
   {
   public:
-    or_event()
-    {
-    }
+    or_event();
 
-    or_event(const or_event& o)
-      : events_(o.events_)
-    {
-    }
+    or_event(const or_event& o);
 
-    or_event& operator=(const or_event& o)
-    {
-      events_ = o.events_;
-      return *this;
-    }
+    or_event& operator=(const or_event& o);
 
     template  <typename T>
     or_event& operator|(const Event<T>& e)
@@ -56,15 +50,7 @@ namespace dg
       return *this;
     }
 
-    bool matches(const any_event& e) const
-    {
-      for (unsigned i = 0; i < events_.size(); i++)
-      {
-        if (events_[i] == e)
-          return true;
-      }
-      return false;
-    }
+    bool matches(const any_event& e) const;
 
   private:
     std::vector<any_event> events_;
@@ -76,15 +62,8 @@ namespace dg
     return or_event() | e.subcast() | f.subcast();
   }
 
-  bool event_match(const or_event& a, const any_event& b)
-  {
-    return a.matches(b);
-  }
-
-  bool event_match(const any_event& b, const or_event& a)
-  {
-    return a.matches(b);
-  }
+  bool event_match(const or_event& a, const any_event& b);
+  bool event_match(const any_event& b, const or_event& a);
 
 } // end of namespace dg.
 

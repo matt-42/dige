@@ -52,9 +52,9 @@ namespace dg
     int l = e->globalX() + 20;
     int b = e->globalY() + 20;
 
-    if (l + width_ >= s.width())
+    if (l + int(width_) >= int(s.width()))
       l -= width_ + 40;
-    if (b + height_ > s.height())
+    if (b + int(height_) > int(s.height()))
       b -= height_ + 40;
 
     setGeometry(l, b, width_, height_);

@@ -34,7 +34,7 @@ ENDIF(WITH_FFMPEG)
 
 include_directories(${FFMPEG_INCLUDE_DIR})
 
-add_definitions(-g)
+add_definitions(-g -W -Wall -Wextra)
 
 add_library(dige
   dige/color_picker_control.cpp
@@ -42,9 +42,9 @@ add_library(dige
   dige/displaylist.cpp
   dige/event/event.cpp
   dige/event/keycode.cpp
-  dige/event/click_event.cpp
+  dige/event/click.cpp
+  dige/event/or_event.cpp
   dige/event/key_release.cpp
-  dige/event/event_waiter.cpp
   dige/event/make_event.cpp
   dige/gl_widget.cpp
   dige/pick_coords.cpp

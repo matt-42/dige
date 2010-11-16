@@ -53,6 +53,8 @@ extern "C"
   struct AVFrame;
 }
 
+typedef unsigned __int8   uint8_t;
+
 namespace dg
 {
 
