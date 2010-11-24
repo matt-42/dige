@@ -43,6 +43,7 @@ add_library(dige
   dige/event/event.cpp
   dige/event/keycode.cpp
   dige/event/click.cpp
+  dige/event/mouse_move.cpp
   dige/event/or_event.cpp
   dige/event/key_release.cpp
   dige/event/make_event.cpp

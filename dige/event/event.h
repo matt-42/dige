@@ -134,13 +134,13 @@ namespace dg
   template <typename T>
   bool operator==(const Event<T>& e, const generic_event<T>& f)
   {
-    return e.subcast() == f.event();
+    return e.subcast().operator==(f.event());
   }
 
   template <typename T>
   bool operator==(const generic_event<T>& e, const Event<T>& f)
   {
-    return e.event() == f.subcast();
+    return f.subcast().operator==(e.event());
   }
 
   bool event_match(const any_event& a, const any_event& b);

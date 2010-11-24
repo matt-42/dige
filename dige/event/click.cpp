@@ -44,7 +44,7 @@ namespace dg
   {
   }
 
-  bool click::operator==(const click& b)
+  bool click::operator==(const click& b) const
   {
     if (!widget_ || !b.widget_)
       return true;

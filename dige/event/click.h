@@ -42,7 +42,7 @@ namespace dg
     click();
     click(QObject* widget);
 
-    bool operator==(const click& b);
+    bool operator==(const click& b) const;
 
   private:
     QObject* widget_;

@@ -41,7 +41,7 @@ namespace dg
   {
   }
 
-  bool key_release::operator==(const key_release& b)
+  bool key_release::operator==(const key_release& b) const
   {
     return b.k_ == k_;
   }

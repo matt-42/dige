@@ -42,7 +42,7 @@ namespace dg
   public:
     key_release(keycode k);
 
-    bool operator==(const key_release& b);
+    bool operator==(const key_release& b) const;
 
   private:
     keycode k_;

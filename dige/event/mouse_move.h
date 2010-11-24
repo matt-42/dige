@@ -16,41 +16,40 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   make_event.cpp
+**\file   mouse_move.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 14:15:17 2010
+**\date   Sun Nov  7 13:44:07 2010
 **
-**\brief  make_event implementation.
+**\brief  mouse_move header.
 **
 **
 */
 
-# include <dige/event/click.h>
-# include <dige/event/mouse_move.h>
-# include <dige/event/key_release.h>
+#ifndef DIGE_MOUSE_MOVE_H_
+# define DIGE_MOUSE_MOVE_H_
+
+# include <dige/event/event.h>
+
+class QObject;
+class QEvent;
 
 namespace dg
 {
 
-  typedef any_event (*event_factory)(QObject *obj, QEvent *event);
-
-  event_factory factories[] =
+  class mouse_move : public Event<mouse_move>
   {
-    make_click,
-    make_mouse_move,
-    make_key_release_event
+  public:
+    mouse_move();
+    mouse_move(QObject* widget);
+
+    bool operator==(const mouse_move& b) const;
+
+  private:
+    QObject* widget_;
   };
 
-  any_event make_event(QObject *obj, QEvent *event)
-  {
-    any_event res;
-    for (unsigned i = 0; i < sizeof(factories) / sizeof(event_factory); i++)
-    {
-      res = factories[i](obj, event);
-      if (res.event())
-        return res;
-    }
-    return res;
-  }
+  any_event make_mouse_move(QObject *obj, QEvent *event);
 
 } // end of namespace dg.
+
+#endif
