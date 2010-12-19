@@ -15,43 +15,51 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
 /*!
-**\file   pick_coords.h
+**\file   layout.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Dec 12 17:55:44 2010
 **
-**\brief  pick_coords header.
+**\brief  Layout header
 **
 **
 */
 
-#ifndef DIGE_PICK_COORDS_H_
-# define DIGE_PICK_COORDS_H_
+#ifndef DIGE_LAYOUT_H_
+# define DIGE_LAYOUT_H_
 
-# include <dige/point2d.h>
-# include <dige/image_view.h>
+# include <stack>
+# include <boost/shared_ptr.hpp>
+# include <dige/dsl.h>
+
+class QBoxLayout;
 
 namespace dg
 {
 
-  template <typename C>
-  void pick_coords(const std::string& window, C& x, C& y)
+  class layout
   {
-    point2d<int> p = display(window).selected_coords();
-    x = p[0];
-    y = p[1];
-  }
+  public:
+    layout();
 
-  void wait_for_dblclick();
+    ~layout();
 
-  template <typename C>
-  void pick_coords_pause(const std::string& window, C& x, C& y)
-  {
-    wait_for_dblclick();
-    pick_coords(window, x, y);
-  }
+    template <typename T>
+    layout& operator-();
+
+    layout& operator-(const vbox_start_&);
+    layout& operator-(const vbox_end_&);
+    layout& operator-(const hbox_start_&);
+    layout& operator-(const hbox_end_&);
+
+    QBoxLayout* root();
+
+  private:
+    QBoxLayout* root_;
+    std::stack<QBoxLayout*> stack_;
+  };
 
 } // end of namespace dg.
 
 #endif
-

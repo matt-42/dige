@@ -16,42 +16,27 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.h
+**\file   pause.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Dec 12 17:15:04 2010
 **
-**\brief  pick_coords header.
+**\brief  Pause header.
 **
 **
 */
 
-#ifndef DIGE_PICK_COORDS_H_
-# define DIGE_PICK_COORDS_H_
-
-# include <dige/point2d.h>
-# include <dige/image_view.h>
+#ifndef DIGE_PAUSE_H_
+# define DIGE_PAUSE_H_
 
 namespace dg
 {
 
-  template <typename C>
-  void pick_coords(const std::string& window, C& x, C& y)
-  {
-    point2d<int> p = display(window).selected_coords();
-    x = p[0];
-    y = p[1];
-  }
-
-  void wait_for_dblclick();
-
-  template <typename C>
-  void pick_coords_pause(const std::string& window, C& x, C& y)
-  {
-    wait_for_dblclick();
-    pick_coords(window, x, y);
-  }
+  /*!
+  ** Pause the current thread until the user press the space key in any of the
+  ** window. It need at least one created window.
+  */
+  void pause();
 
 } // end of namespace dg.
 
 #endif
-

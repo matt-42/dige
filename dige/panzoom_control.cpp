@@ -28,14 +28,14 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-#include <dige/window.h>
+#include <dige/image_view.h>
 #include <dige/panzoom_control.h>
 
 namespace dg
 {
 
   panzoom_control::panzoom_control()
-    : QGLWidget(0, window::windows().begin()->second->widget(),
+    : QGLWidget(0, image_view::image_views().begin()->second->widget(),
                 Qt::FramelessWindowHint),
       widget_(0)
   {

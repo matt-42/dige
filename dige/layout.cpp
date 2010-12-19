@@ -16,42 +16,67 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.h
+**\file   ui_layout.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Dec 12 18:10:28 2010
 **
-**\brief  pick_coords header.
+**\brief  ui_layout implementation
 **
 **
 */
 
-#ifndef DIGE_PICK_COORDS_H_
-# define DIGE_PICK_COORDS_H_
-
-# include <dige/point2d.h>
-# include <dige/image_view.h>
+#include <QHBoxLayout>
+#include <dige/ui_layout.h>
 
 namespace dg
 {
 
-  template <typename C>
-  void pick_coords(const std::string& window, C& x, C& y)
+  ui_layout::ui_layout()
+    : root_(new QHBoxLayout())
   {
-    point2d<int> p = display(window).selected_coords();
-    x = p[0];
-    y = p[1];
+    stack_.push(root_);
   }
 
-  void wait_for_dblclick();
-
-  template <typename C>
-  void pick_coords_pause(const std::string& window, C& x, C& y)
+  template <typename T>
+  ui_layout& ui_layout::operator-(T& w)
   {
-    wait_for_dblclick();
-    pick_coords(window, x, y);
+    stack_.top()->addWidget(w.widget());
+    return *this;
+  }
+
+  ui_layout& ui_layout::operator-(const vbox_start_&)
+  {
+    QBoxLayout* l = stack_.top();
+    QVBoxLayout* n = new QVBoxLayout();
+
+    l->addLayout(n);
+    stack_.push(n);
+  }
+
+  ui_layout& ui_layout::operator-(const vbox_end_&)
+  {
+    stack_.pop();
+  }
+
+  ui_layout& ui_layout::operator-(const hbox_start_&)
+  {
+    QBoxLayout* l = stack_.top();
+    QHBoxLayout* n = new QHBoxLayout();
+
+    l->addLayout(n);
+    stack_.push(n);
+  }
+
+  ui_layout& ui_layout::operator-(const hbox_end_&)
+  {
+    stack_.pop();
+  }
+
+  QBoxLayout* ui_layout::root()
+  {
+    return root_;
   }
 
 } // end of namespace dg.
 
 #endif
-

@@ -28,6 +28,7 @@
 #ifndef DIGE_ERROR
 # define DIGE_ERROR
 
+# include <iostream>
 # include <GL/glu.h>
 
 namespace dg

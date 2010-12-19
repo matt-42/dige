@@ -16,42 +16,30 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   pick_coords.h
+**\file   need_qapp.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
+**\date   Sun Dec 19 18:55:57 2010
 **
-**\brief  pick_coords header.
+**\brief  need_qapp implementation.
 **
 **
 */
 
-#ifndef DIGE_PICK_COORDS_H_
-# define DIGE_PICK_COORDS_H_
-
-# include <dige/point2d.h>
-# include <dige/image_view.h>
+#include <QApplication>
 
 namespace dg
 {
 
-  template <typename C>
-  void pick_coords(const std::string& window, C& x, C& y)
+  void need_qapp()
   {
-    point2d<int> p = display(window).selected_coords();
-    x = p[0];
-    y = p[1];
-  }
+    if (!qApp)
+    {
+      static const char* dumy_argv = "";
+      static int dumy_argc = 1;
+      // Instanciate the main application object.
+      new QApplication(dumy_argc, (char**)&dumy_argv);
+    }
 
-  void wait_for_dblclick();
-
-  template <typename C>
-  void pick_coords_pause(const std::string& window, C& x, C& y)
-  {
-    wait_for_dblclick();
-    pick_coords(window, x, y);
   }
 
 } // end of namespace dg.
-
-#endif
-

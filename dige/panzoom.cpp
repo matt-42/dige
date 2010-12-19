@@ -34,6 +34,8 @@
 #include <dige/panzoom_control.h>
 #include <dige/gl_widget.h>
 
+//#define WITH_PANZOOM_CTRL
+
 namespace dg
 {
   panzoom::panzoom()
@@ -55,10 +57,13 @@ namespace dg
       w->pan() += QPointF(e->x() * (c-1) / (c * w->scale()),
                           float(w->height() - e->y()) * (c-1) / (c * w->scale()));
       w->scale() *= c;
+
+      #ifdef WITH_PANZOOM_CTRL
       if (focuswidget_ != w || ! w->isActiveWindow())
         panzoom_control::instance().place(w);
       else
         panzoom_control::instance().update(w);
+      #endif
 
       focuswidget_ = w;
       w->updateGL();
@@ -72,6 +77,7 @@ namespace dg
       if (w->scale() == 1 && w->pan() == QPointF(0,0))
         return false;
 
+      #ifdef WITH_PANZOOM_CTRL
       if (focuswidget_ != w)
         panzoom_control::instance().place(w);
       else
@@ -80,6 +86,7 @@ namespace dg
         panzoom_control::instance().activateWindow();
         w->activateWindow();
       }
+      #endif
 
       focuswidget_ = w;
       return true;
@@ -99,7 +106,9 @@ namespace dg
 
       w->pan() -= QPointF(delta.x() / w->scale(),
                           -delta.y() / w->scale());
+      #ifdef WITH_PANZOOM_CTRL
       panzoom_control::instance().update(w);
+      #endif
       w->updateGL();
       focuswidget_ = w;
       return true;
@@ -111,7 +120,9 @@ namespace dg
     {
       if (w->scale() == 1 && w->pan() == QPointF(0,0))
         return false;
+      #ifdef WITH_PANZOOM_CTRL
       panzoom_control::instance().place(w);
+      #endif
       focuswidget_ = w;
     }
 
@@ -120,7 +131,9 @@ namespace dg
       if ((w->scale() == 1 && w->pan() == QPointF(0,0)) ||
           focuswidget_ == w)
         return false;
+      #ifdef WITH_PANZOOM_CTRL
       panzoom_control::instance().place(w);
+      #endif
       focuswidget_ = w;
     }
 

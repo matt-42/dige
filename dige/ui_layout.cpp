@@ -16,51 +16,70 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   key_release.cpp
+**\file   ui_layout.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 16:06:54 2010
+**\date   Sun Dec 12 18:10:28 2010
 **
-**\brief  key_release implementation
+**\brief  ui_layout implementation.
 **
 **
 */
 
-# include <QObject>
-# include <QEvent>
-# include <QKeyEvent>
-
-# include <dige/event/event.h>
-# include <dige/event/key_release.h>
-# include <dige/event/keycode.h>
+#include <QHBoxLayout>
+#include <dige/ui_layout.h>
+#include <dige/need_qapp.h>
 
 namespace dg
 {
 
-  key_release::key_release(keycode k)
-    : k_(k)
+  ui_layout::ui_layout()
+    : root_(new QHBoxLayout())
   {
+    need_qapp();
+
+    stack_.push(root_);
   }
 
-  key_release::key_release()
+  ui_layout& ui_layout::operator-(const vbox_start_)
   {
+    QBoxLayout* l = stack_.top();
+    QVBoxLayout* n = new QVBoxLayout();
+
+    l->addLayout(n);
+    stack_.push(n);
+    return *this;
   }
 
-  bool key_release::operator==(const key_release& b) const
+  ui_layout& ui_layout::operator-(const vbox_end_)
   {
-    return b.k_ == k_;
+    stack_.pop();
+    return *this;
   }
 
-  any_event make_key_release_event(QObject*, QEvent* event)
+  ui_layout& ui_layout::operator-(const hbox_start_)
   {
-    if (event->type() == QEvent::KeyRelease)
-    {
-      QKeyEvent* e = (QKeyEvent*) event;
-      if (e->isAutoRepeat())
-        return any_event();
+    QBoxLayout* l = stack_.top();
+    QHBoxLayout* n = new QHBoxLayout();
 
-      return key_release(qt_key_to_dige_key(e->key()));
-    }
-    return any_event();
+    l->addLayout(n);
+    stack_.push(n);
+    return *this;
+  }
+
+  ui_layout& ui_layout::operator-(const hbox_end_)
+  {
+    stack_.pop();
+    return *this;
+  }
+
+  void ui_layout::add(QWidget* w)
+  {
+    stack_.top()->addWidget(w);
+  }
+
+  QBoxLayout* ui_layout::root()
+  {
+    return root_;
   }
 
 } // end of namespace dg.

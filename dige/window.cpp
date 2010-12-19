@@ -17,51 +17,32 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QApplication>
+#include <QFrame>
+#include <iostream>
+
 #include <dige/window.h>
 
-#include <dige/displaylist.h>
+#include <dige/named_object.h>
 #include <dige/window_placer.h>
-#include <dige/shortcuts/shortcut_manager.h>
-#include <dige/shortcuts/pause_watcher.h>
-#include <dige/gl_widget.h>
+#include <dige/need_qapp.h>
 
 namespace dg
 {
-  std::map<const std::string, window*> window::windows_;
   QRect window_placer::screen_(0,0,0,0);
-
 
   window::window(const std::string& title, unsigned width, unsigned height)
   {
-    if (window::windows().size() == 0)
-    {
-      static const char* dumy_argv = "";
-      static int dumy_argc = 1;
-      // Instanciate the main application object.
-      new QApplication(dumy_argc, (char**)&dumy_argv);
-      currentWidget_ = new gl_widget(dlist_);
-    }
-    else
-    {
-      currentWidget_ = new gl_widget(dlist_,
-                                     window::windows().begin()->second->widget());
-    }
+    need_qapp();
+
+    currentWidget_ = new QFrame();
 
     currentWidget_->setGeometry(window_placer::place(width, height));
     currentWidget_->setWindowTitle(QString::fromStdString(title));
-
-    if (window::windows().size() == 0)
-    {
-      currentWidget_->grabKeyboard();
-      currentWidget_->installEventFilter(&shortcut_filter);
-    }
-
+    currentWidget_->show();
   }
 
   window::~window()
   {
-    currentWidget_->makeCurrent();
-    dlist_.unload();
     delete currentWidget_;
   }
 
@@ -75,107 +56,22 @@ namespace dg
     return currentWidget_->height();
   }
 
-  void
-  window::set_unresizable()
+  window& window::operator<<=(ui_layout& l)
   {
-    return currentWidget_->set_unresizable();
-  }
-
-  point2d<int>
-  window::selected_coords() const
-  {
-    return currentWidget_->selected_coords();
-  }
-
-  window& window::operator<<=(displaylist& l)
-  {
-    currentWidget_->show();
-    currentWidget_->makeCurrent();
-    dlist_.unload();
-    dlist_ = l;
-    dlist_.load();
-    refresh();
-    if (!pause_manager)
-    {
-      QApplication::processEvents();
-      QApplication::sendPostedEvents();
-    }
-    else
-      pause();
-
+    ui_layout_ = l;
+    currentWidget_->setLayout((QLayout*)l.root());
     return *this;
   }
 
-  void window::refresh()
-  {
-    currentWidget_->updateGL();
-  }
-
-  gl_widget* window::widget()
-  {
-    return currentWidget_;
-  }
-
-  displaylist& window::dlist()
-  {
-    return dlist_;
-  }
-
-  std::map<const std::string, window*>&
+  const std::map<const std::string, window*>&
   window::windows()
   {
-    return windows_;
+    return named_object<window>::instances();
   }
 
-  void
-  window::dump_rgb_frame_buffer(char*& buffer,
-                                unsigned& buffer_size,
-                                unsigned& buffer_width,
-                                unsigned& buffer_height)
+  window& Window(const std::string& title, unsigned width, unsigned height)
   {
-    currentWidget_->makeCurrent();
-
-    if (int(buffer_size) < currentWidget_->width() * currentWidget_->height() * 3)
-    {
-      delete[] buffer;
-      buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
-      buffer = new char[buffer_size];
-    }
-    if (int(buffer_height) != currentWidget_->height() ||
-        int(buffer_width) != currentWidget_->width())
-    {
-      buffer_width = currentWidget_->width();
-      buffer_height = currentWidget_->height();
-    }
-
-    glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
-                 GL_RGB, GL_UNSIGNED_BYTE, buffer);
-  }
-
-  window& display(const std::string& title, unsigned width, unsigned height)
-  {
-    std::map<const std::string, window*>::const_iterator it
-      = window::windows_.find(title);
-    if (it != window::windows_.end())
-      return *((*it).second);
-    else
-    {
-      window* window_ = new window(title, width, height);
-      window::windows_[title] = window_;
-      return *window_;
-    }
-  }
-
-  void pause()
-  {
-    assert(window::windows().size() > 0);
-
-    pause_manager.set(true);
-    while (pause_manager)
-    {
-      QApplication::processEvents(QEventLoop::WaitForMoreEvents);
-      QApplication::sendPostedEvents();
-    }
+    return named_instance<window>(title, width, height);
   }
 
 } // end of namespace dg.

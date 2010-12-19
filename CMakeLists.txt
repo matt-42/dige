@@ -20,7 +20,6 @@ ENDIF(EXISTS $ENV{INSTALL_PREFIX})
 message(STATUS "Install prefix: " ${CMAKE_INSTALL_PREFIX})
 
 
-
 set(WITH_FFMPEG CACHE BOOL "Enable video recording (need FFmpeg)")
 IF(WITH_FFMPEG)
   find_package(FFmpeg)
@@ -48,10 +47,14 @@ add_library(dige
   dige/event/key_release.cpp
   dige/event/make_event.cpp
   dige/gl_widget.cpp
+  dige/need_qapp.cpp
   dige/pick_coords.cpp
   dige/abstract_texture.cpp
   dige/panzoom_control.cpp
   dige/panzoom.cpp
+  dige/image_view.cpp
+  dige/ui_layout.cpp
+  dige/pause.cpp
   dige/window.cpp
   dige/shortcuts/reset_panzoom.cpp
   dige/shortcuts/shortcuts.cpp

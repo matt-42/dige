@@ -15,43 +15,19 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-/*!
-**\file   pick_coords.h
-**\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Sep 11 22:37:43 2010
-**
-**\brief  pick_coords header.
-**
-**
-*/
 
-#ifndef DIGE_PICK_COORDS_H_
-# define DIGE_PICK_COORDS_H_
+#include <QApplication>
+#include <dige/window.h>
 
-# include <dige/point2d.h>
-# include <dige/image_view.h>
+#include <dige/event/wait.h>
+#include <dige/event/key_release.h>
 
 namespace dg
 {
 
-  template <typename C>
-  void pick_coords(const std::string& window, C& x, C& y)
+  void pause()
   {
-    point2d<int> p = display(window).selected_coords();
-    x = p[0];
-    y = p[1];
-  }
-
-  void wait_for_dblclick();
-
-  template <typename C>
-  void pick_coords_pause(const std::string& window, C& x, C& y)
-  {
-    wait_for_dblclick();
-    pick_coords(window, x, y);
+    wait(key_release(key_space));
   }
 
 } // end of namespace dg.
-
-#endif
-

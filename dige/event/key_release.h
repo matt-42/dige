@@ -40,6 +40,7 @@ namespace dg
   class key_release : public Event<key_release>
   {
   public:
+    key_release();
     key_release(keycode k);
 
     bool operator==(const key_release& b) const;

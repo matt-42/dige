@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-
 /*!
 **\file   window.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
@@ -32,12 +31,12 @@
 # include <map>
 # include <string>
 
-# include <dige/displaylist.h>
+# include <dige/ui_layout.h>
+
+class QFrame;
 
 namespace dg
 {
-  // Forward declaration.
-  class gl_widget;
 
   /*!
   ** The window class allow to display the content of a displaylist
@@ -46,9 +45,9 @@ namespace dg
   */
   class window
   {
-  private:
+  public:
     /*!
-    ** Private Constructor.
+    ** Constructor.
     ** Initialize a new window.
     **
     ** \param title The title of the window
@@ -59,8 +58,6 @@ namespace dg
     window(const std::string& title, unsigned width = 800, unsigned height = 600);
     /// Destructor.
     ~window();
-
-  public:
 
     /// \return width of the window.
     unsigned width() const;
@@ -75,68 +72,16 @@ namespace dg
     **
     ** \return the window.
     */
-    window& operator<<=(displaylist& l);
+    window& operator<<=(ui_layout& l);
 
-    /// Refresh the window content.
-    void refresh();
-
-    gl_widget* widget();
-
-    /// Displaylist accessor.
-    displaylist& dlist();
-
-    /// Set unresizable
-    void set_unresizable();
-
-    point2d<int> selected_coords() const;
-
-    /*!
-    ** Dump the window content to \p buffer.
-    ** Resize it if needed
-    **
-    ** \param buffer
-    ** \param buffer_size
-    ** \param buffer_width
-    ** \param buffer_height
-    **
-    ** \todo The size of the buffer should stay constant even during
-    ** window resizing. We may need to use opengl FBO.
-    */
-    void dump_rgb_frame_buffer(char*& buffer,
-                                      unsigned& buffer_size,
-                                      unsigned& buffer_width,
-                                      unsigned& buffer_height);
-
-    /// Associate all the created windows with theis names.
-    static std::map<const std::string, window*>& windows();
+    static const std::map<const std::string, window*>& windows();
 
   private:
-    gl_widget* currentWidget_; /*!< Underlying sfml window. */
-    displaylist dlist_;         /*!< Current displaylist. */
-
-    static std::map<const std::string, window*> windows_; /*!< List all the created windows. */
-
-    friend window& display(const std::string& title, unsigned width,
-                           unsigned height);
+    QFrame* currentWidget_; /*!< Underlying sfml window. */
+    ui_layout ui_layout_;         /*!< Current displaylist. */
   };
 
-  /*!
-  ** window factory. Retrieve the window named \p title. Create it if
-  ** it doesn't exists.
-  **
-  ** \param width window width in pixel.
-  ** \param height window height in pixel.
-  **
-  ** \return the window.
-  */
-  window& display(const std::string& title, unsigned width = 400,
-                         unsigned height = 400);
-
-  /*!
-  ** Pause the current thread until the user press the space key in any of the
-  ** window. It need at least one created window.
-  */
-  void pause();
+  window& Window(const std::string& title, unsigned width, unsigned height);
 
 } // end of namespace dg.
 
