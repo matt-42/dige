@@ -29,7 +29,7 @@
 # define DIGE_PICK_COORDS_H_
 
 # include <dige/point2d.h>
-# include <dige/image_view.h>
+# include <dige/widgets/image_view.h>
 
 namespace dg
 {

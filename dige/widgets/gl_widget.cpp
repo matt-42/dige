@@ -29,7 +29,7 @@
 #include <QMouseEvent>
 
 #include <dige/displaylist.h>
-#include <dige/gl_widget.h>
+#include <dige/widgets/gl_widget.h>
 
 #include <dige/color_picker.h>
 #include <dige/panzoom.h>

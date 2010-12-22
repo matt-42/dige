@@ -27,7 +27,7 @@ extern "C"
 }
 
 #include <dige/recorder.h>
-#include <dige/window.h>
+#include <dige/widgets/image_view.h>
 
 namespace dg
 {
@@ -232,7 +232,7 @@ namespace dg
   }
 
   void
-  recorder::operator<<=(window& w)
+  recorder::operator<<=(image_view& w)
   {
     if (!avcontext_ && !init_failed_)
       init_context(w.width(), w.height());
@@ -264,7 +264,8 @@ namespace dg
     unsigned s = -window_capture_width_ * 3;
     uint8_t* tmp[1] = { data };
     int stride[1] = { s };
-    int r = sws_scale(swcontext_, tmp, stride, 0,
+    // int r =
+      sws_scale(swcontext_, tmp, stride, 0,
                       window_capture_height_, yuvframe_->data, yuvframe_->linesize);
 
     // Encode video.

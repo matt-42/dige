@@ -21,6 +21,7 @@
 
 // Dige includes.
 #include <dige/window.h>
+#include <dige/widgets/image_view.h>
 #include <dige/image.h>
 #include <dige/pick_coords.h>
 #include <dige/event/wait.h>
@@ -73,7 +74,12 @@ int main()
 
   int x = 0, y = 0;
 
-  display("random", 500, 300) <<= dl() - img;
+  dg::Window("Random test [Press enter to quit]", 500, 300) <<=
+    (dg::hbox_start -
+     display("random") -
+     dg::hbox_end);
+
+  display("random") <<= dl() - img;
 
   //  while (true)
   for_each_event_until(e, dg::click() |

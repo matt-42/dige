@@ -28,7 +28,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-#include <dige/image_view.h>
+#include <dige/widgets/image_view.h>
 #include <dige/panzoom_control.h>
 
 namespace dg

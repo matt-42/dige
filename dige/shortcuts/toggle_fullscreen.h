@@ -30,7 +30,7 @@
 
 # include <QApplication>
 # include <QWidget>
-# include <dige/gl_widget.h>
+# include <dige/widgets/gl_widget.h>
 
 namespace dg
 {

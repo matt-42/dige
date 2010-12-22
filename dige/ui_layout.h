@@ -51,6 +51,7 @@ namespace dg
     ui_layout& operator-(const vbox_end_);
     ui_layout& operator-(const hbox_start_);
     ui_layout& operator-(const hbox_end_);
+    ui_layout& operator-(ui_layout& l);
 
     void add(QWidget* w);
     QBoxLayout* root();
@@ -63,7 +64,7 @@ namespace dg
   template <typename T>
   ui_layout& ui_layout::operator-(T& w)
   {
-    add(w.widget());
+    add((QWidget*)w.widget());
     return *this;
   }
 

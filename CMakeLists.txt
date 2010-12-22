@@ -36,28 +36,28 @@ include_directories(${FFMPEG_INCLUDE_DIR})
 add_definitions(-g -W -Wall -Wextra)
 
 add_library(dige
-  dige/color_picker_control.cpp
-  dige/color_picker.cpp
-  dige/displaylist.cpp
-  dige/event/event.cpp
-  dige/event/keycode.cpp
-  dige/event/click.cpp
-  dige/event/mouse_move.cpp
   dige/event/or_event.cpp
+  dige/event/click.cpp
   dige/event/key_release.cpp
+  dige/event/event.cpp
   dige/event/make_event.cpp
-  dige/gl_widget.cpp
-  dige/need_qapp.cpp
-  dige/pick_coords.cpp
-  dige/abstract_texture.cpp
-  dige/panzoom_control.cpp
-  dige/panzoom.cpp
-  dige/image_view.cpp
-  dige/ui_layout.cpp
-  dige/pause.cpp
-  dige/window.cpp
+  dige/event/mouse_move.cpp
+  dige/event/keycode.cpp
   dige/shortcuts/reset_panzoom.cpp
   dige/shortcuts/shortcuts.cpp
+  dige/pause.cpp
+  dige/widgets/gl_widget.cpp
+  dige/widgets/image_view.cpp
+  dige/abstract_texture.cpp
+  dige/color_picker.cpp
+  dige/need_qapp.cpp
+  dige/window.cpp
+  dige/panzoom.cpp
+  dige/ui_layout.cpp
+  dige/pick_coords.cpp
+  dige/displaylist.cpp
+  dige/color_picker_control.cpp
+  dige/panzoom_control.cpp
   ${RECORDING_SRC})
 
 

@@ -1,5 +1,6 @@
 // Dige includes.
 #include <dige/window.h>
+#include <dige/widgets/image_view.h>
 #include <dige/image.h>
 #include <dige/pick_coords.h>
 #include <dige/event/wait.h>
@@ -49,7 +50,12 @@ int main()
     img.data[i] = 0;
 
 
-  display("event", 500, 500) <<= dl() - img;
+  dg::Window("Event demo [Press enter to exit]", 500, 500) <<=
+    (dg::hbox_start -
+     display("event") -
+     dg::hbox_end);
+
+  display("event") <<= dl() - img;
 
   for_each_event_until(e, dg::mouse_move() | dg::key_release(dg::key_d),
                        dg::key_release(dg::key_return))

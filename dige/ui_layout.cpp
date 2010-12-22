@@ -72,6 +72,13 @@ namespace dg
     return *this;
   }
 
+  ui_layout& ui_layout::operator-(ui_layout& n)
+  {
+    QBoxLayout* l = stack_.top();
+    l->addLayout(n.root());
+    return *this;
+  }
+
   void ui_layout::add(QWidget* w)
   {
     stack_.top()->addWidget(w);

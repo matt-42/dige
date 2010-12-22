@@ -31,6 +31,7 @@
 # include <map>
 # include <string>
 
+# include <dige/keywords.h>
 # include <dige/ui_layout.h>
 
 class QFrame;

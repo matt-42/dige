@@ -32,7 +32,7 @@
 # include <fstream>
 # include <boost/shared_ptr.hpp>
 
-# include <dige/window.h>
+# include <dige/widgets/image_view.h>
 
 /* extern "C" */
 /* { */
@@ -53,7 +53,8 @@ extern "C"
   struct AVFrame;
 }
 
-typedef unsigned __int8   uint8_t;
+//typedef unsigned __int8   uint8_t;
+typedef unsigned char   uint8_t;
 
 namespace dg
 {
@@ -86,9 +87,9 @@ namespace dg
     /*!
     ** Append a capture of \p w to the video.
     **
-    ** \param w a window.
+    ** \param w an image_view.
     */
-    void operator<<=(window& w);
+    void operator<<=(image_view& w);
 
     /// Associate all the created recorder with theirs video filepath.
     static std::map<const std::string, boost::shared_ptr<recorder> >& recorders();

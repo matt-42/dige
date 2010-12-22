@@ -21,8 +21,10 @@
 
 // Dige includes.
 #include <dige/window.h>
+#include <dige/widgets/image_view.h>
 #include <dige/recorder.h>
 #include <dige/image.h>
+#include <dige/pause.h>
 
 // A simple rgb image type
 struct rgb_image
@@ -66,6 +68,11 @@ int main()
   srand(time(0));
   rgb_image img(20, 20);
 
+  dg::Window("Random test", 500, 300) <<=
+    (dg::hbox_start -
+     display("random") -
+     dg::hbox_end);
+
   unsigned t = clock();
   // while (true)
   while (clock() - t < 5 * CLOCKS_PER_SEC)
@@ -84,7 +91,7 @@ int main()
     //  |-------------|
     //
     record("random.avi")
-      <<= display("random", 300, 200)
+      <<= display("random")
       <<= dl() - img - img +
                     img;
   }

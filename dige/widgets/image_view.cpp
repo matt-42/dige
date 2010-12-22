@@ -17,14 +17,14 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QApplication>
-#include <dige/image_view.h>
+#include <dige/widgets/image_view.h>
 
 #include <dige/displaylist.h>
 #include <dige/named_object.h>
 #include <dige/window_placer.h>
 #include <dige/shortcuts/shortcut_manager.h>
 #include <dige/shortcuts/pause_watcher.h>
-#include <dige/gl_widget.h>
+#include <dige/widgets/gl_widget.h>
 #include <dige/need_qapp.h>
 
 namespace dg
