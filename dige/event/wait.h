@@ -34,6 +34,7 @@
 # include <dige/window.h>
 # include <dige/event/event_waiter.h>
 # include <dige/event/or_event.h>
+# include <dige/event/or_event.h>
 
 namespace dg
 {
@@ -41,8 +42,6 @@ namespace dg
   template <typename U>
   any_event wait(const U& e)
   {
-    assert(window::windows().size() > 0);
-
     event_waiter<U>::instance().start_waiting_for(e);
     while (!event_waiter<U>::instance().event_match())
     {

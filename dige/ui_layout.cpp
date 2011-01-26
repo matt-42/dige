@@ -26,6 +26,7 @@
 */
 
 #include <QHBoxLayout>
+#include <QWidget>
 #include <dige/ui_layout.h>
 #include <dige/need_qapp.h>
 
@@ -45,7 +46,7 @@ namespace dg
     QBoxLayout* l = stack_.top();
     QVBoxLayout* n = new QVBoxLayout();
 
-    l->addLayout(n);
+    l->addLayout(n, 1000);
     stack_.push(n);
     return *this;
   }
@@ -61,7 +62,7 @@ namespace dg
     QBoxLayout* l = stack_.top();
     QHBoxLayout* n = new QHBoxLayout();
 
-    l->addLayout(n);
+    l->addLayout(n, 1000);
     stack_.push(n);
     return *this;
   }
@@ -81,7 +82,8 @@ namespace dg
 
   void ui_layout::add(QWidget* w)
   {
-    stack_.top()->addWidget(w);
+    w->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
+    stack_.top()->addWidget(w, 1000);
   }
 
   QBoxLayout* ui_layout::root()

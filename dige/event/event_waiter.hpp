@@ -33,6 +33,7 @@
 #include <dige/displaylist.h>
 #include <dige/singleton.h>
 #include <dige/gl_widget.h>
+#include <dige/need_qapp.h>
 #include <dige/event/event.h>
 #include <dige/event/or_event.h>
 #include <dige/event/event_waiter.h>
@@ -67,6 +68,7 @@ namespace dg
   void
   event_waiter<U>::start_waiting_for(const U& e)
   {
+    need_qapp();
     to_wait_ = e;
     b_ = false;
     QApplication::instance()->installEventFilter(this);

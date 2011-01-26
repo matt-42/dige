@@ -69,7 +69,7 @@ namespace dg
   {
     typename std::map<const std::string, T*>::const_iterator it
       = named_object<T>::instances_.find(name);
-    if (it != named_object<T>::instancess_.end())
+    if (it != named_object<T>::instances_.end())
       return *((*it).second);
     else
     {
