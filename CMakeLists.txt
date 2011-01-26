@@ -52,6 +52,7 @@ add_library(dige
   dige/widgets/tracer_accu.cpp
   dige/widgets/tracer_view.cpp
   dige/widgets/push_button.cpp
+  dige/widgets/slider.cpp
   dige/abstract_texture.cpp
   dige/color_picker.cpp
   dige/need_qapp.cpp

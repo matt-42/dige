@@ -68,6 +68,16 @@ namespace dg
     return *this;
   }
 
+  inline ui_layout operator-(const vbox_start_ x, const hbox_start_ e)
+  {
+    return ui_layout() - x - e;
+  }
+
+  inline ui_layout operator-(const hbox_start_ x, const vbox_start_ e)
+  {
+    return ui_layout() - x - e;
+  }
+
   template <typename T>
   ui_layout operator-(const vbox_start_ x, T& e)
   {

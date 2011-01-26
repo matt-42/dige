@@ -16,64 +16,61 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   tracer_view.cpp
+**\file   slider.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Jan  2 19:31:39 2011
+**\date   Wed Jan 26 21:55:12 2011
 **
-**\brief  tracer_view implementation
+**\brief  slider implementation
 **
 **
 */
 
-# include <QDebug>
-# include <QGLWidget>
-# include <dige/widgets/tracer_view.h>
+# include <string>
+
+# include <QSlider>
+
+# include <dige/named_object.h>
+# include <dige/widgets/slider.h>
+
 
 namespace dg
 {
 
-  tracer_view::tracer_view(QGraphicsScene* s)
-    : QGraphicsView(s),
-      dt_(1),
-      dy_(1)
+  slider::slider(const std::string&, slider::orientation o)
   {
-    setAlignment(Qt::AlignLeft);
-    //setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-    //view_->setViewport(new QGLWidget());
+    if (o == slider::horizontal)
+      slider_ = new QSlider(Qt::Horizontal);
+    else
+      slider_ = new QSlider(Qt::Vertical);
   }
 
-  void tracer_view::set_view_dtime(float f)
+  void slider::set_min_max(int min, int max)
   {
-    dt_ = f;
+    slider_->setMinimum(min);
+    slider_->setMaximum(max);
   }
 
-  void tracer_view::set_view_dy(float f)
+  int
+  slider::value() const
   {
-    dy_ = f;
+    return slider_->value();
   }
 
-  float tracer_view::dt()
+  slider::~slider()
   {
-    return dt_;
+    delete slider_;
   }
 
-  float tracer_view::dy()
+  QWidget*
+  slider::widget()
   {
-    return dy_;
+    return slider_;
   }
 
-  void tracer_view::update_scale()
+  slider& Slider(const std::string& title, slider::orientation o)
   {
-    resetMatrix();
-    scale(width() / dt_, height() / dy_);
-  }
-
-  void tracer_view::resizeEvent(QResizeEvent*)
-  {
-    update_scale();
+    return named_instance<slider>(title, o);
   }
 
 } // end of namespace dg.
+
