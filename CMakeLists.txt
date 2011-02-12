@@ -5,12 +5,15 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 project (dige)
 
 find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+find_package(Boost REQUIRED)
 
 include(${QT_USE_FILE})
 
 SET(CMAKE_VERBOSE_MAKEFILE off)
 
-include_directories(${CMAKE_SOURCE_DIR} $ENV{HOME}/local/include)
+include_directories(${CMAKE_SOURCE_DIR}
+                    $ENV{HOME}/local/include
+                    ${Boost_INCLUDE_DIRS})
 
 link_directories($ENV{HOME}/local/lib)
 
@@ -65,7 +68,6 @@ add_library(dige
   dige/color_picker_control.cpp
   dige/panzoom_control.cpp
   ${RECORDING_SRC})
-
 
 install(TARGETS dige DESTINATION lib)
 install(DIRECTORY dige DESTINATION include
