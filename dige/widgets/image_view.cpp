@@ -24,6 +24,7 @@
 #include <dige/window_placer.h>
 #include <dige/shortcuts/shortcut_manager.h>
 #include <dige/shortcuts/pause_watcher.h>
+#include <dige/pause.h>
 #include <dige/widgets/gl_widget.h>
 #include <dige/need_qapp.h>
 

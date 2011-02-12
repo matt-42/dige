@@ -32,7 +32,7 @@
 
 #include <dige/panzoom.h>
 #include <dige/panzoom_control.h>
-#include <dige/gl_widget.h>
+#include <dige/widgets/gl_widget.h>
 
 //#define WITH_PANZOOM_CTRL
 

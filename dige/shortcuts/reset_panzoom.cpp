@@ -31,7 +31,7 @@
 # include <dige/panzoom.h>
 # include <dige/panzoom_control.h>
 # include <dige/shortcuts/reset_panzoom.h>
-# include <dige/gl_widget.h>
+# include <dige/widgets/gl_widget.h>
 
 namespace dg
 {

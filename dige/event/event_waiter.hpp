@@ -32,7 +32,7 @@
 
 #include <dige/displaylist.h>
 #include <dige/singleton.h>
-#include <dige/gl_widget.h>
+#include <dige/widgets/gl_widget.h>
 #include <dige/need_qapp.h>
 #include <dige/event/event.h>
 #include <dige/event/or_event.h>
