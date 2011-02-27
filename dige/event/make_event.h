@@ -28,6 +28,8 @@
 #ifndef DIGE_MAKE_EVENT_H_
 # define DIGE_MAKE_EVENT_H_
 
+# include <dige/event/event.h>
+
 class QObject;
 class QEvent;
 

@@ -28,11 +28,10 @@
 #ifndef DIGE_EVENT_WAITER_H_
 # define DIGE_EVENT_WAITER_H_
 
-# include <QObject>
-
-# include <dige/singleton.h>
 # include <dige/event/event.h>
+# include <dige/event/event_set.h>
 
+class QObject;
 class QEvent;
 
 namespace dg
@@ -58,14 +57,15 @@ namespace dg
     */
     bool eventFilter(QObject *obj, QEvent *event);
 
-    void start_waiting_for(const U& e);
+    void start_waiting_for(const any_event_set& e);
+    void start_waiting_for(const any_event& e);
 
     bool event_match();
 
     any_event event();
 
   private:
-    U to_wait_;
+    any_event_set to_wait_;
     bool b_;
     any_event event_;
   };

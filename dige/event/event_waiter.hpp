@@ -25,17 +25,11 @@
 **
 */
 
-#include <QObject>
-#include <QEvent>
 #include <QApplication>
-#include <QMouseEvent>
 
 #include <dige/displaylist.h>
-#include <dige/singleton.h>
-#include <dige/widgets/gl_widget.h>
 #include <dige/need_qapp.h>
 #include <dige/event/event.h>
-#include <dige/event/or_event.h>
 #include <dige/event/event_waiter.h>
 #include <dige/event/make_event.h>
 
@@ -66,10 +60,20 @@ namespace dg
 
   template <typename U>
   void
-  event_waiter<U>::start_waiting_for(const U& e)
+  event_waiter<U>::start_waiting_for(const any_event_set& e)
   {
     need_qapp();
     to_wait_ = e;
+    b_ = false;
+    QApplication::instance()->installEventFilter(this);
+  }
+
+  template <typename U>
+  void
+  event_waiter<U>::start_waiting_for(const any_event& e)
+  {
+    need_qapp();
+    to_wait_ = any_event_set(e);
     b_ = false;
     QApplication::instance()->installEventFilter(this);
   }

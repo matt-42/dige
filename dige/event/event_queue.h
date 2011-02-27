@@ -30,6 +30,7 @@
 
 # include <queue>
 # include <dige/event/event.h>
+# include <dige/event/event_set.h>
 
 class QObject;
 class QEvent;
@@ -40,6 +41,7 @@ namespace dg
   class event_queue : public QObject
   {
   public:
+    event_queue(const any_event_set& e);
     event_queue(const any_event& e);
 
     bool is_empty() const;
@@ -49,7 +51,7 @@ namespace dg
 
   private:
     std::queue<any_event> queue_;
-    any_event e_;
+    any_event_set s_;
   };
 
 } // end of namespace dg.

@@ -25,6 +25,7 @@
 **
 */
 
+#include <iostream>
 #include <dige/event/or_event.h>
 
 namespace dg
@@ -45,6 +46,13 @@ namespace dg
     return *this;
   }
 
+
+  bool
+  or_event::operator==(const or_event&) const
+  {
+    return false;
+  }
+
   bool
   or_event::matches(const any_event& e) const
   {
@@ -54,6 +62,13 @@ namespace dg
         return true;
     }
     return false;
+  }
+
+  or_event&
+  or_event::operator|(const any_event& e)
+  {
+    events_.push_back(e);
+    return *this;
   }
 
   bool event_match(const or_event& a, const any_event& b)

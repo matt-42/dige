@@ -16,58 +16,57 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   or_event.h
+**\file   event_set.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 12:23:27 2010
+**\date   Sun Feb 27 23:04:12 2011
 **
-**\brief  or_event header.
+**\brief  event_set implementation.
 **
 **
 */
 
-#ifndef DIGE_OR_EVENT_H_
-# define DIGE_OR_EVENT_H_
-
-# include <vector>
 # include <dige/event/event_set.h>
+# include <dige/event/or_event.h>
 
 namespace dg
 {
 
-  class or_event : public Event_Set<or_event>
+  any_event_set::any_event_set()
   {
-  public:
-    or_event();
-
-    or_event(const or_event& o);
-
-    or_event& operator=(const or_event& o);
-
-    template  <typename T>
-    or_event& operator|(const Event<T>& e)
-    {
-      events_.push_back(any_event(e.subcast()));
-      return *this;
-    }
-
-    or_event& operator|(const any_event& e);
-
-    bool matches(const any_event& e) const;
-    bool operator==(const or_event& e) const;
-
-  private:
-    std::vector<any_event> events_;
-  };
-
-  template <typename T, typename U>
-  or_event operator|(const Event<T>& e, const Event<U>& f)
-  {
-    return or_event() | e.subcast() | f.subcast();
   }
 
-  bool event_match(const or_event& a, const any_event& b);
-  bool event_match(const any_event& b, const or_event& a);
+  any_event_set::any_event_set(const any_event_set& e)
+    : event_set_(e.event_set_)
+  {
+  }
+
+  any_event_set::any_event_set(const any_event& e)
+    : event_set_(new generic_event_set<or_event>(or_event() | e))
+  {
+  }
+
+  any_event_set& any_event_set::operator=(const any_event_set& e)
+  {
+    event_set_ = e.event_set_;
+    return *this;
+  }
+
+  const abstract_event_set* any_event_set::event_set() const
+  {
+    return event_set_.get();
+  }
+
+  bool event_match(const any_event_set& s, const any_event& e)
+  {
+    if (s.event_set() && e.event())
+      return s.event_set()->matches(e);
+    else
+      return false;
+  }
+
+  bool event_match(const any_event& e, const any_event_set& s)
+  {
+    return event_match(s, e);
+  }
 
 } // end of namespace dg.
-
-#endif

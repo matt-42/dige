@@ -130,7 +130,6 @@ namespace dg
       *(generic_event<T>*)a.event() == b;
   }
 
-
   template <typename T>
   bool operator==(const Event<T>& e, const generic_event<T>& f)
   {
@@ -156,7 +155,6 @@ namespace dg
   {
     return a == b;
   }
-
 
 } // end of namespace dg.
 

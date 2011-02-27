@@ -32,8 +32,14 @@
 
 namespace dg
 {
+  event_queue::event_queue(const any_event_set& s)
+    : s_(s)
+  {
+    QApplication::instance()->installEventFilter(this);
+  }
+
   event_queue::event_queue(const any_event& e)
-    : e_(e)
+    : s_(any_event(e))
   {
     QApplication::instance()->installEventFilter(this);
   }
@@ -64,7 +70,7 @@ namespace dg
   {
     any_event e = make_event(obj, event);
 
-    if (dg::event_match(e_, e))
+    if (dg::event_match(s_, e))
     {
       queue_.push(e);
       return false;
