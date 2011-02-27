@@ -76,7 +76,7 @@ namespace dg
   ui_layout& ui_layout::operator-(ui_layout& n)
   {
     QBoxLayout* l = stack_.top();
-    l->addLayout(n.root());
+    l->addLayout(n.root(), 1000);
     return *this;
   }
 
