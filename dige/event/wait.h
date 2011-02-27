@@ -42,14 +42,15 @@ namespace dg
   template <typename U>
   any_event wait(const U& e)
   {
-    event_waiter<U>::instance().start_waiting_for(e);
-    while (!event_waiter<U>::instance().event_match())
+    event_waiter<U> w;
+    w.start_waiting_for(e);
+    while (!w.event_match())
     {
       QApplication::processEvents(QEventLoop::WaitForMoreEvents | QEventLoop::AllEvents);
       QApplication::sendPostedEvents();
     }
 
-    return event_waiter<U>::instance().event();
+    return w.event();
   }
 
 #define for_each_event_until(E, C, U)           \

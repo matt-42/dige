@@ -42,14 +42,11 @@ namespace dg
   ** Event_Waiter.
   */
   template <typename U>
-  class event_waiter : public QObject, public singleton<event_waiter<U> >
+  class event_waiter : public QObject
   {
-  private:
+  public:
     /// Constructor.
     event_waiter();
-
-  public:
-    friend class singleton<event_waiter<U> >;
 
     /*!
     ** Filter events.
