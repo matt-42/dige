@@ -73,7 +73,7 @@ namespace dg
 
     bool is_checked();
 
-    dg::click click();
+    any_event click();
 
   private:
     QPushButton* button_;

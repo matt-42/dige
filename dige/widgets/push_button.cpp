@@ -55,7 +55,7 @@ namespace dg
     return button_;
   }
 
-  click
+  any_event
   push_button::click()
   {
     return dg::click(button_);

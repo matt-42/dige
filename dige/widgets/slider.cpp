@@ -31,7 +31,7 @@
 
 # include <dige/named_object.h>
 # include <dige/widgets/slider.h>
-
+# include <dige/event/custom_events.h>
 
 namespace dg
 {
@@ -39,15 +39,17 @@ namespace dg
   slider::slider(const std::string&, slider::orientation o)
   {
     if (o == slider::horizontal)
-      slider_ = new QSlider(Qt::Horizontal);
+      slider_ = new slider_impl(Qt::Horizontal);
     else
-      slider_ = new QSlider(Qt::Vertical);
+      slider_ = new slider_impl(Qt::Vertical);
   }
 
   void slider::set_min_max(int min, int max)
   {
     slider_->setMinimum(min);
     slider_->setMaximum(max);
+    slider_->setTickInterval((max-min)/10);
+    slider_->setTickPosition(QSlider::TicksAbove);
   }
 
   int
@@ -67,9 +69,38 @@ namespace dg
     return slider_;
   }
 
+  any_event
+  slider::changed_event() const
+  {
+    return slider_changed_event(slider_);
+  }
+
   slider& Slider(const std::string& title, slider::orientation o)
   {
     return named_instance<slider>(title, o);
+  }
+
+  slider_changed_event::slider_changed_event(QObject* s)
+    : slider_(s)
+  {
+    std::cout << s << std::endl;
+  }
+
+  bool
+  slider_changed_event::operator==(const slider_changed_event& e)
+  {
+    return !slider_ || e.slider_ == slider_;
+  }
+
+  any_event make_slider_changed_event(QObject *obj, QEvent *event)
+  {
+
+    if (event->type() == static_cast<QEvent::Type>(slider_changed))
+    {
+      return slider_changed_event(obj);
+    }
+    else
+      return any_event();
   }
 
 } // end of namespace dg.

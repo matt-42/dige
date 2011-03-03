@@ -43,9 +43,11 @@ add_library(dige
   dige/event/click.cpp
   dige/event/key_release.cpp
   dige/event/event.cpp
+  dige/event/event_set.cpp
   dige/event/make_event.cpp
   dige/event/mouse_move.cpp
   dige/event/keycode.cpp
+  dige/event/event_queue.cpp
   dige/shortcuts/reset_panzoom.cpp
   dige/shortcuts/shortcuts.cpp
   dige/pause.cpp
@@ -56,6 +58,7 @@ add_library(dige
   dige/widgets/tracer_view.cpp
   dige/widgets/push_button.cpp
   dige/widgets/slider.cpp
+  dige/widgets/slider_impl.cpp
   dige/abstract_texture.cpp
   dige/color_picker.cpp
   dige/need_qapp.cpp

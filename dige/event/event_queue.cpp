@@ -44,6 +44,13 @@ namespace dg
     QApplication::instance()->installEventFilter(this);
   }
 
+  void
+  event_queue::clear()
+  {
+    while (!queue_.empty())
+      queue_.pop();
+  }
+
   bool
   event_queue::is_empty() const
   {

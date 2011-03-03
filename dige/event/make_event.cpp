@@ -28,6 +28,7 @@
 # include <dige/event/click.h>
 # include <dige/event/mouse_move.h>
 # include <dige/event/key_release.h>
+# include <dige/widgets/slider.h>
 
 namespace dg
 {
@@ -38,7 +39,8 @@ namespace dg
   {
     make_click,
     make_mouse_move,
-    make_key_release_event
+    make_key_release_event,
+    make_slider_changed_event
   };
 
   any_event make_event(QObject *obj, QEvent *event)

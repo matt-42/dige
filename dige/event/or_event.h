@@ -65,6 +65,18 @@ namespace dg
     return or_event() | e.subcast() | f.subcast();
   }
 
+  template <typename U>
+  or_event operator|(const any_event& e, const Event<U>& f)
+  {
+    return or_event() | e | f.subcast();
+  }
+
+  template <typename U>
+  or_event operator|(const Event<U>& e, const any_event& f)
+  {
+    return or_event() | e.subcast() | f;
+  }
+
   bool event_match(const or_event& a, const any_event& b);
   bool event_match(const any_event& b, const or_event& a);
 

@@ -16,45 +16,37 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   event_queue.h
+**\file   slider_impl.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Feb 26 19:35:43 2011
+**\date   Mon Feb 28 15:43:35 2011
 **
-**\brief  event_queue header.
+**\brief  slider_impl implementation.
 **
 **
 */
 
-#ifndef DIGE_EVENT_QUEUE_H_
-# define DIGE_EVENT_QUEUE_H_
+#include <QApplication>
+#include <QEvent>
+#include <QWidget>
+#include <QSlider>
 
-# include <queue>
-# include <dige/event/event.h>
-# include <dige/event/event_set.h>
-
-class QObject;
-class QEvent;
+#include <dige/event/custom_events.h>
+#include <dige/widgets/slider_impl.h>
 
 namespace dg
 {
 
-  class event_queue : public QObject
+  slider_impl::slider_impl(Qt::Orientation orientation, QWidget* parent)
+    : QSlider(orientation, parent)
   {
-  public:
-    event_queue(const any_event_set& e);
-    event_queue(const any_event& e);
+  }
 
-    bool is_empty() const;
-    unsigned size() const;
-    any_event pop_front();
-    void clear();
-    bool eventFilter(QObject *obj, QEvent *event);
-
-  private:
-    std::queue<any_event> queue_;
-    any_event_set s_;
-  };
+  void slider_impl::sliderChange(SliderChange change)
+  {
+    QSlider::sliderChange(change);
+    QEvent e(static_cast<QEvent::Type>(int(slider_changed)));
+    QApplication::sendEvent(this, &e);
+  }
 
 } // end of namespace dg.
 
-#endif

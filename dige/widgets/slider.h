@@ -30,6 +30,8 @@
 
 # include <map>
 # include <string>
+# include <dige/event/event.h>
+# include <dige/widgets/slider_impl.h>
 
 // Forward declaration.
 class QWidget;
@@ -67,9 +69,23 @@ namespace dg
 
     QWidget* widget();
 
+    any_event changed_event() const;
+
   private:
-    QSlider* slider_;
+    slider_impl* slider_;
   };
+
+  class slider_changed_event : public Event<slider_changed_event>
+  {
+  public:
+    slider_changed_event(QObject* s);
+    bool operator==(const slider_changed_event& e);
+
+  private:
+    QObject* slider_;
+  };
+
+  any_event make_slider_changed_event(QObject *obj, QEvent *event);
 
   /*!
   ** slider factory. Retrieve the slider named \p title. Create it if

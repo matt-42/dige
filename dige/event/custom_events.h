@@ -16,43 +16,33 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   event_queue.h
+**\file   custom_events.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sat Feb 26 19:35:43 2011
+**\date   Mon Feb 28 15:24:35 2011
 **
-**\brief  event_queue header.
+**\brief  custom events declaration.
 **
 **
 */
 
-#ifndef DIGE_EVENT_QUEUE_H_
-# define DIGE_EVENT_QUEUE_H_
+#ifndef DIGE_CUSTOM_EVENTS_H_
+# define DIGE_CUSTOM_EVENTS_H_
 
-# include <queue>
-# include <dige/event/event.h>
-# include <dige/event/event_set.h>
-
-class QObject;
-class QEvent;
+# include <QObject>
+# include <QApplication>
+# include <QEvent>
+# include <dige/window.h>
+# include <dige/event/event_waiter.h>
+# include <dige/event/or_event.h>
+# include <dige/event/or_event.h>
 
 namespace dg
 {
 
-  class event_queue : public QObject
+  enum custom_event
   {
-  public:
-    event_queue(const any_event_set& e);
-    event_queue(const any_event& e);
-
-    bool is_empty() const;
-    unsigned size() const;
-    any_event pop_front();
-    void clear();
-    bool eventFilter(QObject *obj, QEvent *event);
-
-  private:
-    std::queue<any_event> queue_;
-    any_event_set s_;
+    start = QEvent::User,
+    slider_changed
   };
 
 } // end of namespace dg.
