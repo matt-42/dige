@@ -44,6 +44,12 @@ namespace dg
     QApplication::instance()->installEventFilter(this);
   }
 
+
+  event_queue::~event_queue()
+  {
+    QApplication::instance()->removeEventFilter(this);
+  }
+
   void
   event_queue::clear()
   {

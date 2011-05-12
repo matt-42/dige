@@ -43,6 +43,7 @@ namespace dg
   public:
     event_queue(const any_event_set& e);
     event_queue(const any_event& e);
+    ~event_queue();
 
     bool is_empty() const;
     unsigned size() const;
