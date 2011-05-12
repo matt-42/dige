@@ -50,12 +50,19 @@ namespace dg
     slider_->setMaximum(max);
     slider_->setTickInterval((max-min)/10);
     slider_->setTickPosition(QSlider::TicksAbove);
+    slider_->setSingleStep(1);
   }
 
   int
   slider::value() const
   {
     return slider_->value();
+  }
+
+  int
+  slider::set_value(int value)
+  {
+    return slider_->set_value(value);
   }
 
   slider::~slider()

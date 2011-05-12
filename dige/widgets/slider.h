@@ -62,6 +62,7 @@ namespace dg
     slider(const std::string& title, orientation o);
 
     void set_min_max(int min, int max);
+    void set_value(int value);
     int value() const;
 
     /// Destructor.
