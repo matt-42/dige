@@ -62,9 +62,7 @@ namespace dg
   void
   tracer_accu::line_to(double x, double y)
   {
-    QPointF pp = painter_->currentPosition();
     painter_->lineTo(x, y);
-    QPointF p = painter_->currentPosition();
     item_->setPath(*painter_);
   }
 
