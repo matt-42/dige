@@ -36,19 +36,24 @@ class QEvent;
 namespace dg
 {
 
-  class click : public Event<click>
+  namespace event
   {
-  public:
-    click();
-    click(QObject* widget);
 
-    bool operator==(const click& b) const;
+    class click : public Event<click>
+    {
+    public:
+      click();
+      click(QObject* widget);
 
-  private:
-    QObject* widget_;
-  };
+      bool operator==(const click& b) const;
 
-  any_event make_click(QObject *obj, QEvent *event);
+    private:
+      QObject* widget_;
+    };
+
+    any_event make_click(QObject *obj, QEvent *event);
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

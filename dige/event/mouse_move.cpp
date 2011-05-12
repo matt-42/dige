@@ -34,30 +34,35 @@
 namespace dg
 {
 
-  mouse_move::mouse_move()
-    : widget_(0)
+  namespace event
   {
-  }
 
-  mouse_move::mouse_move(QObject* widget)
-    : widget_(widget)
-  {
-  }
+    mouse_move::mouse_move()
+      : widget_(0)
+    {
+    }
 
-  bool mouse_move::operator==(const mouse_move& b) const
-  {
-    if (!widget_ || !b.widget_)
-      return true;
-    else
-      return b.widget_ == widget_;
-  }
+    mouse_move::mouse_move(QObject* widget)
+      : widget_(widget)
+    {
+    }
 
-  any_event make_mouse_move(QObject *obj, QEvent *event)
-  {
-    if (event->type() == QEvent::MouseMove)
-      return mouse_move(obj);
+    bool mouse_move::operator==(const mouse_move& b) const
+    {
+      if (!widget_ || !b.widget_)
+        return true;
+      else
+        return b.widget_ == widget_;
+    }
 
-    return any_event();
-  }
+    any_event make_mouse_move(QObject *obj, QEvent *event)
+    {
+      if (event->type() == QEvent::MouseMove)
+        return mouse_move(obj);
+
+      return any_event();
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

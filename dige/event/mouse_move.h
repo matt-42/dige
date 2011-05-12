@@ -36,19 +36,24 @@ class QEvent;
 namespace dg
 {
 
-  class mouse_move : public Event<mouse_move>
+  namespace event
   {
-  public:
-    mouse_move();
-    mouse_move(QObject* widget);
 
-    bool operator==(const mouse_move& b) const;
+    class mouse_move : public Event<mouse_move>
+    {
+    public:
+      mouse_move();
+      mouse_move(QObject* widget);
 
-  private:
-    QObject* widget_;
-  };
+      bool operator==(const mouse_move& b) const;
 
-  any_event make_mouse_move(QObject *obj, QEvent *event);
+    private:
+      QObject* widget_;
+    };
+
+    any_event make_mouse_move(QObject *obj, QEvent *event);
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

@@ -40,54 +40,59 @@ class QPushButton;
 namespace dg
 {
 
-  /*!
-  ** The push_button class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the push_button event (exposure, resizing...).
-  */
-  class push_button
+  namespace widgets
   {
-  public:
+
     /*!
-    ** Constructor.
-    ** Initialize a new push_button.
-    **
-    ** \param title The title of the push_button
-    ** \param width width in pixels.
-    ** \param height height in pixels.
-    **
+    ** The push_button class allow to display the content of a displaylist
+    ** in an OpenGL context.
+    ** It listen to the push_button event (exposure, resizing...).
     */
-    push_button(const std::string& title, bool checkable);
-
-    /// Destructor.
-    ~push_button();
-
-    template <typename T>
-      const T& operator()(const T& if_checked,
-                          const T& if_unchecked)
+    class push_button
     {
-      return is_checked() ? if_checked : if_unchecked;
-    }
+    public:
+      /*!
+      ** Constructor.
+      ** Initialize a new push_button.
+      **
+      ** \param title The title of the push_button
+      ** \param width width in pixels.
+      ** \param height height in pixels.
+      **
+      */
+      push_button(const std::string& title, bool checkable);
 
-    QWidget* widget();
+      /// Destructor.
+      ~push_button();
 
-    bool is_checked();
+      template <typename T>
+        const T& operator()(const T& if_checked,
+                            const T& if_unchecked)
+      {
+        return is_checked() ? if_checked : if_unchecked;
+      }
 
-    any_event click();
+      QWidget* widget();
 
-  private:
-    QPushButton* button_;
-  };
+      bool is_checked();
 
-  /*!
-  ** push_button factory. Retrieve the push_button named \p title. Create it if
-  ** it doesn't exists.
-  **
-  ** \param checkable push_button checkable state.
-  **
-  ** \return the push_button.
-  */
-  push_button& Push_button(const std::string& title, bool checkable = false);
+      event::any_event click();
+
+    private:
+      QPushButton* button_;
+    };
+
+    /*!
+    ** push_button factory. Retrieve the push_button named \p title. Create it if
+    ** it doesn't exists.
+    **
+    ** \param checkable push_button checkable state.
+    **
+    ** \return the push_button.
+    */
+    push_button& Push_button(const std::string& title, bool checkable = false);
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

@@ -31,42 +31,47 @@
 namespace dg
 {
 
-  any_event_set::any_event_set()
+  namespace event
   {
-  }
 
-  any_event_set::any_event_set(const any_event_set& e)
-    : event_set_(e.event_set_)
-  {
-  }
+    any_event_set::any_event_set()
+    {
+    }
 
-  any_event_set::any_event_set(const any_event& e)
-    : event_set_(new generic_event_set<or_event>(or_event() | e))
-  {
-  }
+    any_event_set::any_event_set(const any_event_set& e)
+      : event_set_(e.event_set_)
+    {
+    }
 
-  any_event_set& any_event_set::operator=(const any_event_set& e)
-  {
-    event_set_ = e.event_set_;
-    return *this;
-  }
+    any_event_set::any_event_set(const any_event& e)
+      : event_set_(new generic_event_set<or_event>(or_event() | e))
+    {
+    }
 
-  const abstract_event_set* any_event_set::event_set() const
-  {
-    return event_set_.get();
-  }
+    any_event_set& any_event_set::operator=(const any_event_set& e)
+    {
+      event_set_ = e.event_set_;
+      return *this;
+    }
 
-  bool event_match(const any_event_set& s, const any_event& e)
-  {
-    if (s.event_set() && e.event())
-      return s.event_set()->matches(e);
-    else
-      return false;
-  }
+    const abstract_event_set* any_event_set::event_set() const
+    {
+      return event_set_.get();
+    }
 
-  bool event_match(const any_event& e, const any_event_set& s)
-  {
-    return event_match(s, e);
-  }
+    bool event_match(const any_event_set& s, const any_event& e)
+    {
+      if (s.event_set() && e.event())
+        return s.event_set()->matches(e);
+      else
+        return false;
+    }
+
+    bool event_match(const any_event& e, const any_event_set& s)
+    {
+      return event_match(s, e);
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

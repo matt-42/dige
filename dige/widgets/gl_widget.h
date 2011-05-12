@@ -29,50 +29,55 @@
 namespace dg
 {
 
-  class gl_widget : public QGLWidget
+  namespace widgets
   {
-  public:
-    gl_widget(displaylist& dlist, gl_widget* share = 0);
 
-    point2d<int> window_to_image_coord(const point2d<int>& p);
-    point2d<float> window_to_dlist_coord(const point2d<int>& p);
+    class gl_widget : public QGLWidget
+    {
+    public:
+      gl_widget(displaylist& dlist, gl_widget* share = 0);
 
-  protected:
+      point2d<int> window_to_image_coord(const point2d<int>& p);
+      point2d<float> window_to_dlist_coord(const point2d<int>& p);
 
-    void initializeGL();
+    protected:
 
-    void resizeGL(int w, int h);
+      void initializeGL();
 
-    void paintGL();
+      void resizeGL(int w, int h);
 
-    void mouseMoveEvent(QMouseEvent* event);
+      void paintGL();
 
-    void mouseDoubleClickEvent(QMouseEvent* event);
+      void mouseMoveEvent(QMouseEvent* event);
 
-  public:
-    QColor pick_color(unsigned x, unsigned y);
+      void mouseDoubleClickEvent(QMouseEvent* event);
 
-    float& scale();
+    public:
+      QColor pick_color(unsigned x, unsigned y);
 
-    QPointF& pan();
+      float& scale();
 
-    /// Displaylist accessor.
-    displaylist* dlist();
+      QPointF& pan();
 
-    void set_unresizable();
+      /// Displaylist accessor.
+      displaylist* dlist();
 
-    bool unresizable() const;
+      void set_unresizable();
 
-    point2d<int> selected_coords() const;
+      bool unresizable() const;
 
-  private:
-    displaylist* dlist_;         /*!< Current displaylist. */
-    std::vector<std::vector<rect2d> > layout_;       /*!< 2d layout. */
-    float scale_;                /*!< Zoom factor. */
-    QPointF pan_;                /*!< Pan. */
-    point2d<int> selected_coords_;
-    bool unresizable_;
-  };
+      point2d<int> selected_coords() const;
+
+    private:
+      displaylist* dlist_;         /*!< Current displaylist. */
+      std::vector<std::vector<rect2d> > layout_;       /*!< 2d layout. */
+      float scale_;                /*!< Zoom factor. */
+      QPointF pan_;                /*!< Pan. */
+      point2d<int> selected_coords_;
+      bool unresizable_;
+    };
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

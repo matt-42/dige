@@ -35,7 +35,7 @@ namespace dg
 {
 
   panzoom_control::panzoom_control()
-    : QGLWidget(0, image_view::image_views().begin()->second->widget(),
+    : QGLWidget(0, widgets::image_view::image_views().begin()->second->widget(),
                 Qt::FramelessWindowHint),
       widget_(0)
   {
@@ -52,7 +52,7 @@ namespace dg
   }
 
   void
-  panzoom_control::place(gl_widget* w)
+  panzoom_control::place(widgets::gl_widget* w)
   {
     QRect s = QApplication::desktop()->availableGeometry();
     QRect wg = w->frameGeometry();
@@ -126,7 +126,7 @@ namespace dg
   }
 
   void
-  panzoom_control::update(gl_widget* w)
+  panzoom_control::update(widgets::gl_widget* w)
   {
     if (widget_ != w)
     {

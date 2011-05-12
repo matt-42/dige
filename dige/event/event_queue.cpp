@@ -32,64 +32,70 @@
 
 namespace dg
 {
-  event_queue::event_queue(const any_event_set& s)
-    : s_(s)
+
+  namespace event
   {
-    QApplication::instance()->installEventFilter(this);
-  }
 
-  event_queue::event_queue(const any_event& e)
-    : s_(any_event(e))
-  {
-    QApplication::instance()->installEventFilter(this);
-  }
-
-
-  event_queue::~event_queue()
-  {
-    QApplication::instance()->removeEventFilter(this);
-  }
-
-  void
-  event_queue::clear()
-  {
-    while (!queue_.empty())
-      queue_.pop();
-  }
-
-  bool
-  event_queue::is_empty() const
-  {
-    return queue_.empty();
-  }
-
-  unsigned
-  event_queue::size() const
-  {
-    return queue_.size();
-  }
-
-  any_event
-  event_queue::pop_front()
-  {
-    assert(!is_empty());
-    any_event r = queue_.front();
-    queue_.pop();
-    return r;
-  }
-
-  bool
-  event_queue::eventFilter(QObject *obj, QEvent *event)
-  {
-    any_event e = make_event(obj, event);
-
-    if (dg::event_match(s_, e))
+    event_queue::event_queue(const any_event_set& s)
+      : s_(s)
     {
-      queue_.push(e);
+      QApplication::instance()->installEventFilter(this);
+    }
+
+    event_queue::event_queue(const any_event& e)
+      : s_(any_event(e))
+    {
+      QApplication::instance()->installEventFilter(this);
+    }
+
+
+    event_queue::~event_queue()
+    {
+      QApplication::instance()->removeEventFilter(this);
+    }
+
+    void
+    event_queue::clear()
+    {
+      while (!queue_.empty())
+        queue_.pop();
+    }
+
+    bool
+    event_queue::is_empty() const
+    {
+      return queue_.empty();
+    }
+
+    unsigned
+    event_queue::size() const
+    {
+      return queue_.size();
+    }
+
+    any_event
+    event_queue::pop_front()
+    {
+      assert(!is_empty());
+      any_event r = queue_.front();
+      queue_.pop();
+      return r;
+    }
+
+    bool
+    event_queue::eventFilter(QObject *obj, QEvent *event)
+    {
+      any_event e = make_event(obj, event);
+
+      if (dg::event::event_match(s_, e))
+      {
+        queue_.push(e);
+        return false;
+      }
+
       return false;
     }
 
-    return false;
-  }
+  } // end of namespace event.
 
 } // end of namespace dg.

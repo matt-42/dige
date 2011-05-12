@@ -37,42 +37,47 @@
 namespace dg
 {
 
-  push_button::push_button(const std::string& title, bool checkable)
-    : button_(new QPushButton())
+  namespace widgets
   {
-    button_->setText(QString::fromStdString(title));
-    button_->setCheckable(checkable);
-  }
 
-  push_button::~push_button()
-  {
-    delete button_;
-  }
+    push_button::push_button(const std::string& title, bool checkable)
+      : button_(new QPushButton())
+    {
+      button_->setText(QString::fromStdString(title));
+      button_->setCheckable(checkable);
+    }
 
-  QWidget*
-  push_button::widget()
-  {
-    return button_;
-  }
+    push_button::~push_button()
+    {
+      delete button_;
+    }
 
-  any_event
-  push_button::click()
-  {
-    return dg::click(button_);
-  }
+    QWidget*
+    push_button::widget()
+    {
+      return button_;
+    }
 
-  bool
-  push_button::is_checked()
-  {
-    return button_->isChecked();
-  }
+    event::any_event
+    push_button::click()
+    {
+      return dg::event::click(button_);
+    }
+
+    bool
+    push_button::is_checked()
+    {
+      return button_->isChecked();
+    }
 
 
-  push_button&
-  Push_button(const std::string& title, bool checkable)
-  {
-    return named_instance<push_button>(title, checkable);
-  }
+    push_button&
+    Push_button(const std::string& title, bool checkable)
+    {
+      return named_instance<push_button>(title, checkable);
+    }
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

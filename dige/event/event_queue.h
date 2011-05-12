@@ -38,23 +38,28 @@ class QEvent;
 namespace dg
 {
 
-  class event_queue : public QObject
+  namespace event
   {
-  public:
-    event_queue(const any_event_set& e);
-    event_queue(const any_event& e);
-    ~event_queue();
 
-    bool is_empty() const;
-    unsigned size() const;
-    any_event pop_front();
-    void clear();
-    bool eventFilter(QObject *obj, QEvent *event);
+    class event_queue : public QObject
+    {
+    public:
+      event_queue(const any_event_set& e);
+      event_queue(const any_event& e);
+      ~event_queue();
 
-  private:
-    std::queue<any_event> queue_;
-    any_event_set s_;
-  };
+      bool is_empty() const;
+      unsigned size() const;
+      any_event pop_front();
+      void clear();
+      bool eventFilter(QObject *obj, QEvent *event);
+
+    private:
+      std::queue<any_event> queue_;
+      any_event_set s_;
+    };
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

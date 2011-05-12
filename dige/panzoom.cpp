@@ -46,7 +46,7 @@ namespace dg
   bool
   panzoom::eventFilter(QObject *obj, QEvent *event)
   {
-    gl_widget* w = dynamic_cast<gl_widget*>(obj);
+    widgets::gl_widget* w = dynamic_cast<widgets::gl_widget*>(obj);
     if (!w)
       return false;
 
@@ -140,7 +140,7 @@ namespace dg
     return false;
   }
 
-  gl_widget* panzoom::focuswidget()
+  widgets::gl_widget* panzoom::focuswidget()
   {
     return focuswidget_;
   }

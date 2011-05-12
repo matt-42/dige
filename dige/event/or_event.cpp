@@ -30,55 +30,60 @@
 
 namespace dg
 {
-  or_event::or_event()
-  {
-  }
 
-  or_event::or_event(const or_event& o)
-    : events_(o.events_)
+  namespace event
   {
-  }
-
-  or_event&
-  or_event::operator=(const or_event& o)
-  {
-    events_ = o.events_;
-    return *this;
-  }
-
-
-  bool
-  or_event::operator==(const or_event&) const
-  {
-    return false;
-  }
-
-  bool
-  or_event::matches(const any_event& e) const
-  {
-    for (unsigned i = 0; i < events_.size(); i++)
+    or_event::or_event()
     {
-      if (events_[i] == e)
-        return true;
     }
-    return false;
-  }
 
-  or_event&
-  or_event::operator|(const any_event& e)
-  {
-    events_.push_back(e);
-    return *this;
-  }
+    or_event::or_event(const or_event& o)
+      : events_(o.events_)
+    {
+    }
 
-  bool event_match(const or_event& a, const any_event& b)
-  {
-    return a.matches(b);
-  }
+    or_event&
+    or_event::operator=(const or_event& o)
+    {
+      events_ = o.events_;
+      return *this;
+    }
 
-  bool event_match(const any_event& b, const or_event& a)
-  {
-    return a.matches(b);
-  }
+
+    bool
+    or_event::operator==(const or_event&) const
+    {
+      return false;
+    }
+
+    bool
+    or_event::matches(const any_event& e) const
+    {
+      for (unsigned i = 0; i < events_.size(); i++)
+      {
+        if (events_[i] == e)
+          return true;
+      }
+      return false;
+    }
+
+    or_event&
+    or_event::operator|(const any_event& e)
+    {
+      events_.push_back(e);
+      return *this;
+    }
+
+    bool event_match(const or_event& a, const any_event& b)
+    {
+      return a.matches(b);
+    }
+
+    bool event_match(const any_event& b, const or_event& a)
+    {
+      return a.matches(b);
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

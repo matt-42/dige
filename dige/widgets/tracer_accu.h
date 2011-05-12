@@ -42,57 +42,62 @@ class QGraphicsPathItem;
 namespace dg
 {
 
-  /*!
-  ** The tracer_accu class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the tracer_accu event (exposure, resizing...).
-  */
-  class tracer_accu
+  namespace widgets
   {
-  public:
+
     /*!
-    ** Constructor.
-    ** Initialize a new tracer_accu.
-    **
-    ** \param title The title of the tracer_accu
-    **
+    ** The tracer_accu class allow to display the content of a displaylist
+    ** in an OpenGL context.
+    ** It listen to the tracer_accu event (exposure, resizing...).
     */
-    tracer_accu();
-
-    /// Destructor.
-    ~tracer_accu();
-
-    template <typename T>
-    tracer_accu& operator<<(const T& elt)
+    class tracer_accu
     {
-      double t = clock() / double(CLOCKS_PER_SEC);
-      line_to(t, double(elt));
-      //process_events();
-      return *this;
-    }
+    public:
+      /*!
+      ** Constructor.
+      ** Initialize a new tracer_accu.
+      **
+      ** \param title The title of the tracer_accu
+      **
+      */
+      tracer_accu();
 
-    template <typename T>
-    tracer_accu& operator<<(const point2d<T>& p)
-    {
-      line_to(p[0], p[1]);
-      //process_events();
-      return *this;
-    }
+      /// Destructor.
+      ~tracer_accu();
 
-    QGraphicsPathItem* graphic_item();
+      template <typename T>
+        tracer_accu& operator<<(const T& elt)
+      {
+        double t = clock() / double(CLOCKS_PER_SEC);
+        line_to(t, double(elt));
+        //process_events();
+        return *this;
+      }
 
-    QPainterPath* painter();
+      template <typename T>
+        tracer_accu& operator<<(const point2d<T>& p)
+      {
+        line_to(p[0], p[1]);
+        //process_events();
+        return *this;
+      }
 
-    std::pair<float, float>
-    minmax_since(float t) const;
+      QGraphicsPathItem* graphic_item();
+
+      QPainterPath* painter();
+
+      std::pair<float, float>
+        minmax_since(float t) const;
 
 
-  private:
-    void line_to(double x, double y);
+    private:
+      void line_to(double x, double y);
 
-    boost::shared_ptr<QPainterPath> painter_;
-    boost::shared_ptr<QGraphicsPathItem> item_;
-  };
+      boost::shared_ptr<QPainterPath> painter_;
+      boost::shared_ptr<QGraphicsPathItem> item_;
+    };
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

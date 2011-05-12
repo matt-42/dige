@@ -36,31 +36,36 @@
 namespace dg
 {
 
-  key_release::key_release(keycode k)
-    : k_(k)
+  namespace event
   {
-  }
 
-  key_release::key_release()
-  {
-  }
-
-  bool key_release::operator==(const key_release& b) const
-  {
-    return b.k_ == k_;
-  }
-
-  any_event make_key_release_event(QObject*, QEvent* event)
-  {
-    if (event->type() == QEvent::KeyRelease)
+    key_release::key_release(keycode k)
+      : k_(k)
     {
-      QKeyEvent* e = (QKeyEvent*) event;
-      if (e->isAutoRepeat())
-        return any_event();
-
-      return key_release(qt_key_to_dige_key(e->key()));
     }
-    return any_event();
-  }
+
+    key_release::key_release()
+    {
+    }
+
+    bool key_release::operator==(const key_release& b) const
+    {
+      return b.k_ == k_;
+    }
+
+    any_event make_key_release_event(QObject*, QEvent* event)
+    {
+      if (event->type() == QEvent::KeyRelease)
+      {
+        QKeyEvent* e = (QKeyEvent*) event;
+        if (e->isAutoRepeat())
+          return any_event();
+
+        return key_release(qt_key_to_dige_key(e->key()));
+      }
+      return any_event();
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

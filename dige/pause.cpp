@@ -27,7 +27,7 @@ namespace dg
 
   void pause()
   {
-    wait(key_release(key_space));
+    event::wait(event::key_release(event::key_space));
   }
 
 } // end of namespace dg.

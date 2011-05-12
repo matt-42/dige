@@ -34,31 +34,36 @@
 namespace dg
 {
 
-  click::click()
-    : widget_(0)
+  namespace event
   {
-  }
 
-  click::click(QObject* widget)
-    : widget_(widget)
-  {
-  }
+    click::click()
+      : widget_(0)
+    {
+    }
 
-  bool click::operator==(const click& b) const
-  {
-    if (!widget_ || !b.widget_)
-      return true;
-    else
-      return b.widget_ == widget_;
-  }
+    click::click(QObject* widget)
+      : widget_(widget)
+    {
+    }
 
-  any_event make_click(QObject *obj, QEvent *event)
-  {
-    if (event->type() == QEvent::MouseButtonPress ||
-        event->type() == QEvent::MouseButtonDblClick)
-      return click(obj);
+    bool click::operator==(const click& b) const
+    {
+      if (!widget_ || !b.widget_)
+        return true;
+      else
+        return b.widget_ == widget_;
+    }
 
-    return any_event();
-  }
+    any_event make_click(QObject *obj, QEvent *event)
+    {
+      if (event->type() == QEvent::MouseButtonPress ||
+          event->type() == QEvent::MouseButtonDblClick)
+        return click(obj);
+
+      return any_event();
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

@@ -39,11 +39,16 @@
 namespace dg
 {
 
-  enum custom_event
+  namespace event
   {
-    start = QEvent::User,
-    slider_changed
-  };
+
+    enum custom_event
+    {
+      start = QEvent::User,
+      slider_changed
+    };
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

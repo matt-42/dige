@@ -31,116 +31,121 @@
 namespace dg
 {
 
-  image_view::image_view(const std::string& title, unsigned width, unsigned height)
+  namespace widgets
   {
-    need_qapp();
-    if (image_views().size() == 0)
-      currentWidget_ = new gl_widget(dlist_);
-    else
-      currentWidget_ = new gl_widget(dlist_,
-                                     image_view::image_views().begin()->second->widget());
 
-    currentWidget_->setGeometry(window_placer::place(width, height));
-    currentWidget_->setWindowTitle(QString::fromStdString(title));
-  }
-
-  image_view::~image_view()
-  {
-    currentWidget_->makeCurrent();
-    dlist_.unload();
-    delete currentWidget_;
-  }
-
-  unsigned image_view::width() const
-  {
-    return currentWidget_->width();
-  }
-
-  unsigned image_view::height() const
-  {
-    return currentWidget_->height();
-  }
-
-  void
-  image_view::set_unresizable()
-  {
-    return currentWidget_->set_unresizable();
-  }
-
-  point2d<int>
-  image_view::selected_coords() const
-  {
-    return currentWidget_->selected_coords();
-  }
-
-  image_view& image_view::operator<<=(displaylist& l)
-  {
-    currentWidget_->show();
-    currentWidget_->makeCurrent();
-    dlist_.unload();
-    dlist_ = l;
-    dlist_.load();
-    refresh();
-    if (!pause_manager)
+    image_view::image_view(const std::string& title, unsigned width, unsigned height)
     {
-      QApplication::processEvents();
-      QApplication::sendPostedEvents();
-    }
-    else
-      pause();
+      need_qapp();
+      if (image_views().size() == 0)
+        currentWidget_ = new gl_widget(dlist_);
+      else
+        currentWidget_ = new gl_widget(dlist_,
+                                       image_view::image_views().begin()->second->widget());
 
-    return *this;
-  }
-
-  void image_view::refresh()
-  {
-    currentWidget_->updateGL();
-  }
-
-  gl_widget* image_view::widget()
-  {
-    return currentWidget_;
-  }
-
-  displaylist& image_view::dlist()
-  {
-    return dlist_;
-  }
-
-  const std::map<const std::string, image_view*>&
-  image_view::image_views()
-  {
-    return named_object<image_view>::instances();
-  }
-
-  void
-  image_view::dump_rgb_frame_buffer(char*& buffer,
-                                unsigned& buffer_size,
-                                unsigned& buffer_width,
-                                unsigned& buffer_height)
-  {
-    currentWidget_->makeCurrent();
-
-    if (int(buffer_size) < currentWidget_->width() * currentWidget_->height() * 3)
-    {
-      delete[] buffer;
-      buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
-      buffer = new char[buffer_size];
-    }
-    if (int(buffer_height) != currentWidget_->height() ||
-        int(buffer_width) != currentWidget_->width())
-    {
-      buffer_width = currentWidget_->width();
-      buffer_height = currentWidget_->height();
+      currentWidget_->setGeometry(window_placer::place(width, height));
+      currentWidget_->setWindowTitle(QString::fromStdString(title));
     }
 
-    glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
-                 GL_RGB, GL_UNSIGNED_BYTE, buffer);
-  }
+    image_view::~image_view()
+    {
+      currentWidget_->makeCurrent();
+      dlist_.unload();
+      delete currentWidget_;
+    }
 
-  image_view& display(const std::string& title, unsigned width, unsigned height)
-  {
-    return named_instance<image_view>(title, width, height);
-  }
+    unsigned image_view::width() const
+    {
+      return currentWidget_->width();
+    }
+
+    unsigned image_view::height() const
+    {
+      return currentWidget_->height();
+    }
+
+    void
+    image_view::set_unresizable()
+    {
+      return currentWidget_->set_unresizable();
+    }
+
+    point2d<int>
+    image_view::selected_coords() const
+    {
+      return currentWidget_->selected_coords();
+    }
+
+    image_view& image_view::operator<<=(displaylist& l)
+    {
+      currentWidget_->show();
+      currentWidget_->makeCurrent();
+      dlist_.unload();
+      dlist_ = l;
+      dlist_.load();
+      refresh();
+      if (!pause_manager)
+      {
+        QApplication::processEvents();
+        QApplication::sendPostedEvents();
+      }
+      else
+        pause();
+
+      return *this;
+    }
+
+    void image_view::refresh()
+    {
+      currentWidget_->updateGL();
+    }
+
+    gl_widget* image_view::widget()
+    {
+      return currentWidget_;
+    }
+
+    displaylist& image_view::dlist()
+    {
+      return dlist_;
+    }
+
+    const std::map<const std::string, image_view*>&
+    image_view::image_views()
+    {
+      return named_object<image_view>::instances();
+    }
+
+    void
+    image_view::dump_rgb_frame_buffer(char*& buffer,
+                                      unsigned& buffer_size,
+                                      unsigned& buffer_width,
+                                      unsigned& buffer_height)
+    {
+      currentWidget_->makeCurrent();
+
+      if (int(buffer_size) < currentWidget_->width() * currentWidget_->height() * 3)
+      {
+        delete[] buffer;
+        buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
+        buffer = new char[buffer_size];
+      }
+      if (int(buffer_height) != currentWidget_->height() ||
+          int(buffer_width) != currentWidget_->width())
+      {
+        buffer_width = currentWidget_->width();
+        buffer_height = currentWidget_->height();
+      }
+
+      glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
+                   GL_RGB, GL_UNSIGNED_BYTE, buffer);
+    }
+
+    image_view& display(const std::string& title, unsigned width, unsigned height)
+    {
+      return named_instance<image_view>(title, width, height);
+    }
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.

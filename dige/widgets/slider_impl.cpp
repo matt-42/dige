@@ -36,17 +36,22 @@
 namespace dg
 {
 
-  slider_impl::slider_impl(Qt::Orientation orientation, QWidget* parent)
-    : QSlider(orientation, parent)
+  namespace widgets
   {
-  }
 
-  void slider_impl::sliderChange(SliderChange change)
-  {
-    QSlider::sliderChange(change);
-    QEvent e(static_cast<QEvent::Type>(int(slider_changed)));
-    QApplication::sendEvent(this, &e);
-  }
+    slider_impl::slider_impl(Qt::Orientation orientation, QWidget* parent)
+      : QSlider(orientation, parent)
+    {
+    }
+
+    void slider_impl::sliderChange(SliderChange change)
+    {
+      QSlider::sliderChange(change);
+      QEvent e(static_cast<QEvent::Type>(int(event::slider_changed)));
+      QApplication::sendEvent(this, &e);
+    }
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

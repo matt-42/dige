@@ -43,7 +43,7 @@ namespace dg
 
   bool color_picker::eventFilter(QObject *obj, QEvent *event)
   {
-    gl_widget* w = (gl_widget*)(obj);
+    widgets::gl_widget* w = (widgets::gl_widget*)(obj);
 
     if (event->type() == QEvent::MouseButtonPress ||
         event->type() == QEvent::MouseMove)

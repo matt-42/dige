@@ -43,87 +43,92 @@
 namespace dg
 {
 
-  tracer::tracer(const std::string&)
+  namespace widgets
   {
-    need_qapp();
-    scene_ = new QGraphicsScene();
-    view_ = new tracer_view(scene_);
-    view_->set_view_dtime(5);
-    view_->set_view_dy(1);
-  }
 
-  tracer::~tracer()
-  {
-    delete scene_;
-    delete view_;
-  }
-
-  void
-  tracer::set_dtime(float t)
-  {
-    view_->set_view_dtime(t);
-  }
-
-  std::pair<float, float>
-  tracer::minmax_since(float t)
-  {
-    if (accus_.size())
+    tracer::tracer(const std::string&)
     {
-      std::map<std::string, tracer_accu>::const_iterator it = accus_.begin();
-      std::pair<float, float> res = accus_.begin()->second.minmax_since(t);
-      it++;
-      for (;it != accus_.end();it++)
+      need_qapp();
+      scene_ = new QGraphicsScene();
+      view_ = new tracer_view(scene_);
+      view_->set_view_dtime(5);
+      view_->set_view_dy(1);
+    }
+
+    tracer::~tracer()
+    {
+      delete scene_;
+      delete view_;
+    }
+
+    void
+    tracer::set_dtime(float t)
+    {
+      view_->set_view_dtime(t);
+    }
+
+    std::pair<float, float>
+    tracer::minmax_since(float t)
+    {
+      if (accus_.size())
       {
-        std::pair<float, float> tmp = it->second.minmax_since(t);
-        if (res.first > tmp.first) res.first = tmp.first;
-        if (res.second < tmp.second) res.second = tmp.second;
+        std::map<std::string, tracer_accu>::const_iterator it = accus_.begin();
+        std::pair<float, float> res = accus_.begin()->second.minmax_since(t);
+        it++;
+        for (;it != accus_.end();it++)
+        {
+          std::pair<float, float> tmp = it->second.minmax_since(t);
+          if (res.first > tmp.first) res.first = tmp.first;
+          if (res.second < tmp.second) res.second = tmp.second;
+        }
+        return res;
       }
-      return res;
+      return std::pair<float, float>(0,1);
     }
-    return std::pair<float, float>(0,1);
-  }
 
-  tracer_accu&
-  tracer::operator[](const std::string& id)
-  {
-    static clock_t prev_update = clock();
-
-    if (accus_.find(id) == accus_.end())
+    tracer_accu&
+    tracer::operator[](const std::string& id)
     {
-      tracer_accu& a = accus_[id];
-      scene_->addItem((QGraphicsItem*)a.graphic_item());
+      static clock_t prev_update = clock();
+
+      if (accus_.find(id) == accus_.end())
+      {
+        tracer_accu& a = accus_[id];
+        scene_->addItem((QGraphicsItem*)a.graphic_item());
+      }
+
+      static float max_visible_t = 0.f;
+      float t = clock() / float(CLOCKS_PER_SEC);
+
+      if (t > max_visible_t)
+        max_visible_t = t + view_->dt();
+
+      if (clock() - prev_update > (CLOCKS_PER_SEC/100.))
+      {
+        prev_update = clock();
+        std::pair<float, float> mm = minmax_since(max_visible_t - view_->dt());
+        view_->set_view_dy(mm.second - mm.first);
+        view_->update_scale();
+        scene_->setSceneRect(max_visible_t - view_->dt(), mm.first,
+                             view_->dt(), mm.second - mm.first);
+        scene_->update();
+        process_events();
+      }
+
+      return accus_[id];
     }
 
-    static float max_visible_t = 0.f;
-    float t = clock() / float(CLOCKS_PER_SEC);
-
-    if (t > max_visible_t)
-      max_visible_t = t + view_->dt();
-
-    if (clock() - prev_update > (CLOCKS_PER_SEC/100.))
+    QWidget*
+    tracer::widget()
     {
-      prev_update = clock();
-      std::pair<float, float> mm = minmax_since(max_visible_t - view_->dt());
-      view_->set_view_dy(mm.second - mm.first);
-      view_->update_scale();
-      scene_->setSceneRect(max_visible_t - view_->dt(), mm.first,
-                           view_->dt(), mm.second - mm.first);
-      scene_->update();
-      process_events();
+      return view_;
     }
 
-    return accus_[id];
-  }
+    tracer& Tracer(const std::string& title)
+    {
+      return named_instance<tracer>(title);
+    }
 
-  QWidget*
-  tracer::widget()
-  {
-    return view_;
-  }
-
-  tracer& Tracer(const std::string& title)
-  {
-    return named_instance<tracer>(title);
-  }
+  } // end of namespace widgets.
 
 } // end of namespace dg.

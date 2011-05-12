@@ -49,7 +49,7 @@ namespace dg
     **
     ** \param e a mouse event.
     */
-    void place(gl_widget* w);
+    void place(widgets::gl_widget* w);
 
     /*!
     ** Update control.
@@ -57,7 +57,7 @@ namespace dg
     ** \param p a position.
     ** \param c a color.
     */
-    void update(gl_widget* w);
+    void update(widgets::gl_widget* w);
 
     /*!
     ** Draw the window content.
@@ -87,7 +87,7 @@ namespace dg
     */
     panzoom_control();
 
-    gl_widget* widget_;              /*!< current gl_widget. */
+    widgets::gl_widget* widget_;              /*!< current gl_widget. */
 
     static const unsigned width_ = 200;
     static const unsigned height_ = 200;

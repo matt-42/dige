@@ -39,7 +39,8 @@ namespace dg
   {
     if (QApplication::activeWindow())
     {
-      gl_widget* w = dynamic_cast<gl_widget*> (QApplication::activeWindow());
+      widgets::gl_widget* w = dynamic_cast<widgets::gl_widget*>
+        (QApplication::activeWindow());
       if (!w || w->unresizable())
         return;
 

@@ -40,54 +40,59 @@ class tracer_view;
 namespace dg
 {
 
-  /*!
-  ** The tracer class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the tracer event (exposure, resizing...).
-  */
-  class tracer
+  namespace widgets
   {
-  public:
+
     /*!
-    ** Constructor.
-    ** Initialize a new tracer.
-    **
-    ** \param title The title of the tracer
-    ** \param width width in pixels.
-    ** \param height height in pixels.
-    **
+    ** The tracer class allow to display the content of a displaylist
+    ** in an OpenGL context.
+    ** It listen to the tracer event (exposure, resizing...).
     */
-    tracer(const std::string& title);
+    class tracer
+    {
+    public:
+      /*!
+      ** Constructor.
+      ** Initialize a new tracer.
+      **
+      ** \param title The title of the tracer
+      ** \param width width in pixels.
+      ** \param height height in pixels.
+      **
+      */
+      tracer(const std::string& title);
 
-    /// Destructor.
-    ~tracer();
+      /// Destructor.
+      ~tracer();
 
-    void set_dtime(float t);
+      void set_dtime(float t);
 
-    tracer_accu&
-      operator[](const std::string& id);
+      tracer_accu&
+        operator[](const std::string& id);
 
-    QWidget* widget();
+      QWidget* widget();
 
-  private:
-    std::pair<float, float> minmax_since(float t);
+    private:
+      std::pair<float, float> minmax_since(float t);
 
-    QGraphicsScene* scene_;
-    tracer_view* view_;
+      QGraphicsScene* scene_;
+      tracer_view* view_;
 
-    std::map<std::string, tracer_accu> accus_;
-  };
+      std::map<std::string, tracer_accu> accus_;
+    };
 
-  /*!
-  ** tracer factory. Retrieve the tracer named \p title. Create it if
-  ** it doesn't exists.
-  **
-  ** \param width tracer width in pixel.
-  ** \param height tracer height in pixel.
-  **
-  ** \return the tracer.
-  */
-  tracer& Tracer(const std::string& title);
+    /*!
+    ** tracer factory. Retrieve the tracer named \p title. Create it if
+    ** it doesn't exists.
+    **
+    ** \param width tracer width in pixel.
+    ** \param height tracer height in pixel.
+    **
+    ** \return the tracer.
+    */
+    tracer& Tracer(const std::string& title);
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

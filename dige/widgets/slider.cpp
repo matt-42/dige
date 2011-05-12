@@ -36,79 +36,89 @@
 namespace dg
 {
 
-  slider::slider(const std::string&, slider::orientation o)
-  {
-    if (o == slider::horizontal)
-      slider_ = new slider_impl(Qt::Horizontal);
-    else
-      slider_ = new slider_impl(Qt::Vertical);
-  }
-
-  void slider::set_min_max(int min, int max)
-  {
-    slider_->setMinimum(min);
-    slider_->setMaximum(max);
-    slider_->setTickInterval((max-min)/10);
-    slider_->setTickPosition(QSlider::TicksAbove);
-    slider_->setSingleStep(1);
-  }
-
-  int
-  slider::value() const
-  {
-    return slider_->value();
-  }
-
-  int
-  slider::set_value(int value)
-  {
-    return slider_->set_value(value);
-  }
-
-  slider::~slider()
-  {
-    delete slider_;
-  }
-
-  QWidget*
-  slider::widget()
-  {
-    return slider_;
-  }
-
-  any_event
-  slider::changed_event() const
-  {
-    return slider_changed_event(slider_);
-  }
-
-  slider& Slider(const std::string& title, slider::orientation o)
-  {
-    return named_instance<slider>(title, o);
-  }
-
-  slider_changed_event::slider_changed_event(QObject* s)
-    : slider_(s)
-  {
-    std::cout << s << std::endl;
-  }
-
-  bool
-  slider_changed_event::operator==(const slider_changed_event& e)
-  {
-    return !slider_ || e.slider_ == slider_;
-  }
-
-  any_event make_slider_changed_event(QObject *obj, QEvent *event)
+  namespace widgets
   {
 
-    if (event->type() == static_cast<QEvent::Type>(slider_changed))
+    slider::slider(const std::string&, slider::orientation o)
     {
-      return slider_changed_event(obj);
+      if (o == slider::horizontal)
+        slider_ = new slider_impl(Qt::Horizontal);
+      else
+        slider_ = new slider_impl(Qt::Vertical);
     }
-    else
-      return any_event();
-  }
+
+    void slider::set_min_max(int min, int max)
+    {
+      slider_->setMinimum(min);
+      slider_->setMaximum(max);
+      slider_->setTickInterval((max-min)/10);
+      slider_->setTickPosition(QSlider::TicksAbove);
+      slider_->setSingleStep(1);
+    }
+
+    int
+    slider::value() const
+    {
+      return slider_->value();
+    }
+
+    void
+    slider::set_value(int value)
+    {
+      slider_->setValue(value);
+    }
+
+    slider::~slider()
+    {
+      delete slider_;
+    }
+
+    QWidget*
+    slider::widget()
+    {
+      return slider_;
+    }
+
+    event::any_event
+    slider::changed_event() const
+    {
+      return event::slider_changed_event(slider_);
+    }
+
+    slider& Slider(const std::string& title, slider::orientation o)
+    {
+      return named_instance<slider>(title, o);
+    }
+
+  } // end of namespace widgets.
+
+  namespace event
+  {
+
+    slider_changed_event::slider_changed_event(QObject* s)
+      : slider_(s)
+    {
+      std::cout << s << std::endl;
+    }
+
+    bool
+    slider_changed_event::operator==(const slider_changed_event& e)
+    {
+      return !slider_ || e.slider_ == slider_;
+    }
+
+    any_event make_slider_changed_event(QObject *obj, QEvent *event)
+    {
+
+      if (event->type() == static_cast<QEvent::Type>(slider_changed))
+      {
+        return slider_changed_event(obj);
+      }
+      else
+        return any_event();
+    }
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

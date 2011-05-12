@@ -37,38 +37,43 @@ class QEvent;
 namespace dg
 {
 
-  /*!
-  ** Event_Waiter.
-  */
-  template <typename U>
-  class event_waiter : public QObject
+  namespace event
   {
-  public:
-    /// Constructor.
-    event_waiter();
 
     /*!
-    ** Filter events.
-    **
-    ** \param obj watched object.
-    ** \param e event
-    **
-    ** \return true if the event has been catched.
+    ** Event_Waiter.
     */
-    bool eventFilter(QObject *obj, QEvent *event);
+    template <typename U>
+    class event_waiter : public QObject
+    {
+    public:
+      /// Constructor.
+      event_waiter();
 
-    void start_waiting_for(const any_event_set& e);
-    void start_waiting_for(const any_event& e);
+      /*!
+      ** Filter events.
+      **
+      ** \param obj watched object.
+      ** \param e event
+      **
+      ** \return true if the event has been catched.
+      */
+      bool eventFilter(QObject *obj, QEvent *event);
 
-    bool event_match();
+      void start_waiting_for(const any_event_set& e);
+      void start_waiting_for(const any_event& e);
 
-    any_event event();
+      bool event_match();
 
-  private:
-    any_event_set to_wait_;
-    bool b_;
-    any_event event_;
-  };
+      any_event event();
+
+    private:
+      any_event_set to_wait_;
+      bool b_;
+      any_event event_;
+    };
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

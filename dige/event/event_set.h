@@ -33,104 +33,109 @@
 
 namespace dg
 {
-  template <typename T>
-  class Event_Set
+
+  namespace event
   {
-  public:
-    const T& subcast() const
+    template <typename T>
+    class Event_Set
     {
-      return *(const T*)this;
-    }
+    public:
+      const T& subcast() const
+      {
+        return *(const T*)this;
+      }
 
-    T& subcast()
+      T& subcast()
+      {
+        return *(T*)this;
+      }
+    };
+
+    class abstract_event_set;
+    template <typename T>
+    class generic_event_set;
+
+    /*!
+    ** abstract event_set class
+    */
+    class abstract_event_set
     {
-      return *(T*)this;
-    }
-  };
+    public:
+      virtual bool matches(const any_event& e) const = 0;
+    };
 
-  class abstract_event_set;
-  template <typename T>
-  class generic_event_set;
-
-  /*!
-  ** abstract event_set class
-  */
-  class abstract_event_set
-  {
-  public:
-    virtual bool matches(const any_event& e) const = 0;
-  };
-
-  /*!
-  ** generic_event_set class.
-  */
-  template <typename T>
-  class generic_event_set : public abstract_event_set
-  {
-  public:
-    generic_event_set(const T& e)
-      : e_(e)
+    /*!
+    ** generic_event_set class.
+    */
+    template <typename T>
+    class generic_event_set : public abstract_event_set
     {
-    }
+    public:
+      generic_event_set(const T& e)
+        : e_(e)
+      {
+      }
 
-    bool matches(const any_event& b) const
+      bool matches(const any_event& b) const
+      {
+        return e_.matches(b);
+      }
+
+      const T& event_set() const
+      {
+        return e_;
+      }
+
+    private:
+      T e_;
+    };
+
+
+    class any_event_set
     {
-      return e_.matches(b);
-    }
+    public:
+      any_event_set();
 
-    const T& event_set() const
-    {
-      return e_;
-    }
+      any_event_set(const any_event_set& e);
+      any_event_set(const any_event& e);
 
-  private:
-    T e_;
-  };
+      template <typename T>
+      any_event_set(const Event_Set<T>& e)
+        : event_set_(new generic_event_set<T>(e.subcast()))
+      {
+      }
 
+      template <typename T>
+      any_event_set& operator=(const T& e)
+      {
+        event_set_ = new T(e);
+        return *this;
+      }
 
-  class any_event_set
-  {
-  public:
-    any_event_set();
+      any_event_set& operator=(const any_event_set& e);
 
-    any_event_set(const any_event_set& e);
-    any_event_set(const any_event& e);
+      const abstract_event_set* event_set() const;
+
+    private:
+      boost::shared_ptr<abstract_event_set> event_set_;
+    };
+
+    bool event_match(const any_event_set& s, const any_event& e);
+    bool event_match(const any_event& e, const any_event_set& s);
 
     template <typename T>
-    any_event_set(const Event_Set<T>& e)
-      : event_set_(new generic_event_set<T>(e.subcast()))
+    bool event_match(const Event_Set<T>& a, const any_event& b)
     {
+      return a.subcast().matches(b);
     }
 
     template <typename T>
-    any_event_set& operator=(const T& e)
+    bool event_match(const any_event& a, const Event_Set<T>& b)
     {
-      event_set_ = new T(e);
-      return *this;
+      return b.subcast().matches(a);
     }
 
-    any_event_set& operator=(const any_event_set& e);
-
-    const abstract_event_set* event_set() const;
-
-  private:
-    boost::shared_ptr<abstract_event_set> event_set_;
-  };
-
-  bool event_match(const any_event_set& s, const any_event& e);
-  bool event_match(const any_event& e, const any_event_set& s);
-
-  template <typename T>
-  bool event_match(const Event_Set<T>& a, const any_event& b)
-  {
-    return a.subcast().matches(b);
-  }
-
-  template <typename T>
-  bool event_match(const any_event& a, const Event_Set<T>& b)
-  {
-    return b.subcast().matches(a);
-  }
+  } // end of namespace event.
 
 } // end of namespace dg.
 

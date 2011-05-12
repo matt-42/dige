@@ -35,98 +35,104 @@
 
 namespace dg
 {
-  // Forward declaration.
-  class gl_widget;
 
-  /*!
-  ** The image_view class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the image_view event (exposure, resizing...).
-  */
-  class image_view
+  namespace widgets
   {
-  public:
+
+    // Forward declaration.
+    class gl_widget;
+
     /*!
-    ** Constructor.
-    ** Initialize a new image_view.
-    **
-    ** \param title The title of the image_view
-    ** \param width width in pixels.
-    ** \param height height in pixels.
-    **
+    ** The image_view class allow to display the content of a displaylist
+    ** in an OpenGL context.
+    ** It listen to the image_view event (exposure, resizing...).
     */
-    image_view(const std::string& title, unsigned width = 800, unsigned height = 600);
-    /// Destructor.
-    ~image_view();
+    class image_view
+    {
+    public:
+      /*!
+      ** Constructor.
+      ** Initialize a new image_view.
+      **
+      ** \param title The title of the image_view
+      ** \param width width in pixels.
+      ** \param height height in pixels.
+      **
+      */
+      image_view(const std::string& title, unsigned width = 800, unsigned height = 600);
+      /// Destructor.
+      ~image_view();
 
 
-    /// \return width of the image_view.
-    unsigned width() const;
+      /// \return width of the image_view.
+      unsigned width() const;
 
-    /// \return height of the image_view.
-    unsigned height() const;
+      /// \return height of the image_view.
+      unsigned height() const;
+
+      /*!
+      ** Set \p l to be drawn in the image_view.
+      **
+      ** \param l a displaylist
+      **
+      ** \return the image_view.
+      */
+      image_view& operator<<=(displaylist& l);
+
+      /// Refresh the image_view content.
+      void refresh();
+
+      gl_widget* widget();
+
+      /// Displaylist accessor.
+      displaylist& dlist();
+
+      /// Set unresizable
+      void set_unresizable();
+
+      point2d<int> selected_coords() const;
+
+      /*!
+      ** Dump the image_view content to \p buffer.
+      ** Resize it if needed
+      **
+      ** \param buffer
+      ** \param buffer_size
+      ** \param buffer_width
+      ** \param buffer_height
+      **
+      ** \todo The size of the buffer should stay constant even during
+      ** image_view resizing. We may need to use opengl FBO.
+      */
+      void dump_rgb_frame_buffer(char*& buffer,
+                                 unsigned& buffer_size,
+                                 unsigned& buffer_width,
+                                 unsigned& buffer_height);
+
+      /// Associate all the created image_views with theis names.
+      static const std::map<const std::string, image_view*>& image_views();
+
+    private:
+      gl_widget* currentWidget_; /*!< Underlying qt widget. */
+      displaylist dlist_;         /*!< Current displaylist. */
+
+      friend image_view& display(const std::string& title, unsigned width,
+                                 unsigned height);
+    };
 
     /*!
-    ** Set \p l to be drawn in the image_view.
+    ** image_view factory. Retrieve the image_view named \p title. Create it if
+    ** it doesn't exists.
     **
-    ** \param l a displaylist
+    ** \param width image_view width in pixel.
+    ** \param height image_view height in pixel.
     **
     ** \return the image_view.
     */
-    image_view& operator<<=(displaylist& l);
+    image_view& display(const std::string& title, unsigned width = 400,
+                        unsigned height = 400);
 
-    /// Refresh the image_view content.
-    void refresh();
-
-    gl_widget* widget();
-
-    /// Displaylist accessor.
-    displaylist& dlist();
-
-    /// Set unresizable
-    void set_unresizable();
-
-    point2d<int> selected_coords() const;
-
-    /*!
-    ** Dump the image_view content to \p buffer.
-    ** Resize it if needed
-    **
-    ** \param buffer
-    ** \param buffer_size
-    ** \param buffer_width
-    ** \param buffer_height
-    **
-    ** \todo The size of the buffer should stay constant even during
-    ** image_view resizing. We may need to use opengl FBO.
-    */
-    void dump_rgb_frame_buffer(char*& buffer,
-                                      unsigned& buffer_size,
-                                      unsigned& buffer_width,
-                                      unsigned& buffer_height);
-
-    /// Associate all the created image_views with theis names.
-    static const std::map<const std::string, image_view*>& image_views();
-
-  private:
-    gl_widget* currentWidget_; /*!< Underlying qt widget. */
-    displaylist dlist_;         /*!< Current displaylist. */
-
-    friend image_view& display(const std::string& title, unsigned width,
-                           unsigned height);
-  };
-
-  /*!
-  ** image_view factory. Retrieve the image_view named \p title. Create it if
-  ** it doesn't exists.
-  **
-  ** \param width image_view width in pixel.
-  ** \param height image_view height in pixel.
-  **
-  ** \return the image_view.
-  */
-  image_view& display(const std::string& title, unsigned width = 400,
-                      unsigned height = 400);
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

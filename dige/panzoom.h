@@ -36,7 +36,7 @@
 namespace dg
 {
 
-  class gl_widget;
+  namespace widgets { class gl_widget; }
 
   /*!
   ** Panzoom.
@@ -52,11 +52,11 @@ namespace dg
   public:
     bool eventFilter(QObject *obj, QEvent *event);
 
-    gl_widget* focuswidget();
+    widgets::gl_widget* focuswidget();
 
   private:
     QPointF previous_pos_;
-    gl_widget* focuswidget_;
+    widgets::gl_widget* focuswidget_;
   };
 
 } // end of namespace dg.

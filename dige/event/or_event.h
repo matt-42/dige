@@ -34,51 +34,56 @@
 namespace dg
 {
 
-  class or_event : public Event_Set<or_event>
+  namespace event
   {
-  public:
-    or_event();
 
-    or_event(const or_event& o);
-
-    or_event& operator=(const or_event& o);
-
-    template  <typename T>
-    or_event& operator|(const Event<T>& e)
+    class or_event : public Event_Set<or_event>
     {
-      events_.push_back(any_event(e.subcast()));
-      return *this;
+    public:
+      or_event();
+
+      or_event(const or_event& o);
+
+      or_event& operator=(const or_event& o);
+
+      template  <typename T>
+      or_event& operator|(const Event<T>& e)
+      {
+        events_.push_back(any_event(e.subcast()));
+        return *this;
+      }
+
+      or_event& operator|(const any_event& e);
+
+      bool matches(const any_event& e) const;
+      bool operator==(const or_event& e) const;
+
+    private:
+      std::vector<any_event> events_;
+    };
+
+    template <typename T, typename U>
+    or_event operator|(const Event<T>& e, const Event<U>& f)
+    {
+      return or_event() | e.subcast() | f.subcast();
     }
 
-    or_event& operator|(const any_event& e);
+    template <typename U>
+    or_event operator|(const any_event& e, const Event<U>& f)
+    {
+      return or_event() | e | f.subcast();
+    }
 
-    bool matches(const any_event& e) const;
-    bool operator==(const or_event& e) const;
+    template <typename U>
+    or_event operator|(const Event<U>& e, const any_event& f)
+    {
+      return or_event() | e.subcast() | f;
+    }
 
-  private:
-    std::vector<any_event> events_;
-  };
+    bool event_match(const or_event& a, const any_event& b);
+    bool event_match(const any_event& b, const or_event& a);
 
-  template <typename T, typename U>
-  or_event operator|(const Event<T>& e, const Event<U>& f)
-  {
-    return or_event() | e.subcast() | f.subcast();
-  }
-
-  template <typename U>
-  or_event operator|(const any_event& e, const Event<U>& f)
-  {
-    return or_event() | e | f.subcast();
-  }
-
-  template <typename U>
-  or_event operator|(const Event<U>& e, const any_event& f)
-  {
-    return or_event() | e.subcast() | f;
-  }
-
-  bool event_match(const or_event& a, const any_event& b);
-  bool event_match(const any_event& b, const or_event& a);
+  } // end of namespace event.
 
 } // end of namespace dg.
 

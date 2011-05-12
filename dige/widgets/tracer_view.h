@@ -35,32 +35,37 @@
 namespace dg
 {
 
-  /*!
-  ** Fixme
-  */
-  class tracer_view : public QGraphicsView
+  namespace widgets
   {
-  public:
+
     /*!
-    ** Constructor.
-    ** Initialize a new tracer_view.
+    ** Fixme
     */
-    tracer_view(QGraphicsScene* s);
+    class tracer_view : public QGraphicsView
+    {
+    public:
+      /*!
+      ** Constructor.
+      ** Initialize a new tracer_view.
+      */
+      tracer_view(QGraphicsScene* s);
 
-    void set_view_dtime(float dt);
-    void set_view_dy(float dy);
+      void set_view_dtime(float dt);
+      void set_view_dy(float dy);
 
-    float dt();
-    float dy();
+      float dt();
+      float dy();
 
-    void update_scale();
+      void update_scale();
 
-  protected:
-    void resizeEvent(QResizeEvent* event);
+    protected:
+      void resizeEvent(QResizeEvent* event);
 
-    float dt_;
-    float dy_;
-  };
+      float dt_;
+      float dy_;
+    };
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

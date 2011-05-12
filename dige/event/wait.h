@@ -39,29 +39,34 @@
 namespace dg
 {
 
-  template <typename U>
-  any_event wait(const U& e)
+  namespace event
   {
-    event_waiter<U> w;
-    w.start_waiting_for(e);
-    while (!w.event_match())
+
+    template <typename U>
+    any_event wait(const U& e)
     {
-      QApplication::processEvents(QEventLoop::WaitForMoreEvents | QEventLoop::AllEvents);
-      QApplication::sendPostedEvents();
+      event_waiter<U> w;
+      w.start_waiting_for(e);
+      while (!w.event_match())
+      {
+        QApplication::processEvents(QEventLoop::WaitForMoreEvents | QEventLoop::AllEvents);
+        QApplication::sendPostedEvents();
+      }
+
+      return w.event();
     }
 
-    return w.event();
-  }
-
 #define for_each_event_until(E, C, U)           \
-  for (dg::any_event E = dg::wait(C | U);       \
-       !dg::event_match(U, E);                  \
-       E = dg::wait(C | U))
+    for (dg::any_event E = dg::wait(C | U);     \
+         !dg::event_match(U, E);                \
+         E = dg::wait(C | U))
 
 #define for_each_event(E, C)                    \
-  for (dg::any_event E = dg::wait(C);           \
-       ;                                        \
-       E = dg::wait(C))
+    for (dg::any_event E = dg::wait(C);         \
+         ;                                      \
+         E = dg::wait(C))
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

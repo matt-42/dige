@@ -37,12 +37,17 @@ class QSlider;
 namespace dg
 {
 
-  class slider_impl : public QSlider
+  namespace widgets
   {
-  public:
-    slider_impl(Qt::Orientation orientation, QWidget* parent = 0);
-    void sliderChange(SliderChange change);
-  };
+
+    class slider_impl : public QSlider
+    {
+    public:
+      slider_impl(Qt::Orientation orientation, QWidget* parent = 0);
+      void sliderChange(SliderChange change);
+    };
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
 

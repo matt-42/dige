@@ -37,19 +37,24 @@ class QEvent;
 namespace dg
 {
 
-  class key_release : public Event<key_release>
+  namespace event
   {
-  public:
-    key_release();
-    key_release(keycode k);
 
-    bool operator==(const key_release& b) const;
+    class key_release : public Event<key_release>
+    {
+    public:
+      key_release();
+      key_release(keycode k);
 
-  private:
-    keycode k_;
-  };
+      bool operator==(const key_release& b) const;
 
-  any_event make_key_release_event(QObject *obj, QEvent *event);
+    private:
+      keycode k_;
+    };
+
+    any_event make_key_release_event(QObject *obj, QEvent *event);
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

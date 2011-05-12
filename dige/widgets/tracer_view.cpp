@@ -32,48 +32,53 @@
 namespace dg
 {
 
-  tracer_view::tracer_view(QGraphicsScene* s)
-    : QGraphicsView(s),
-      dt_(1),
-      dy_(1)
+  namespace widgets
   {
-    setAlignment(Qt::AlignLeft);
-    //setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-    //view_->setViewport(new QGLWidget());
-  }
 
-  void tracer_view::set_view_dtime(float f)
-  {
-    dt_ = f;
-  }
+    tracer_view::tracer_view(QGraphicsScene* s)
+      : QGraphicsView(s),
+        dt_(1),
+        dy_(1)
+    {
+      setAlignment(Qt::AlignLeft);
+      //setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+      setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+      //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+      //view_->setViewport(new QGLWidget());
+    }
 
-  void tracer_view::set_view_dy(float f)
-  {
-    dy_ = f;
-  }
+    void tracer_view::set_view_dtime(float f)
+    {
+      dt_ = f;
+    }
 
-  float tracer_view::dt()
-  {
-    return dt_;
-  }
+    void tracer_view::set_view_dy(float f)
+    {
+      dy_ = f;
+    }
 
-  float tracer_view::dy()
-  {
-    return dy_;
-  }
+    float tracer_view::dt()
+    {
+      return dt_;
+    }
 
-  void tracer_view::update_scale()
-  {
-    resetMatrix();
-    scale(width() / dt_, height() / dy_);
-  }
+    float tracer_view::dy()
+    {
+      return dy_;
+    }
 
-  void tracer_view::resizeEvent(QResizeEvent*)
-  {
-    update_scale();
-  }
+    void tracer_view::update_scale()
+    {
+      resetMatrix();
+      scale(width() / dt_, height() / dy_);
+    }
+
+    void tracer_view::resizeEvent(QResizeEvent*)
+    {
+      update_scale();
+    }
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.

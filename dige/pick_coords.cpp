@@ -38,7 +38,7 @@ namespace dg
   void wait_for_dblclick()
   {
     assert(window::windows().size() > 0);
-    wait(click(0));
+    event::wait(event::click(0));
   }
 
 } // end of namespace dg.

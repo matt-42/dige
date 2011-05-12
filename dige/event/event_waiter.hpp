@@ -35,61 +35,66 @@
 
 namespace dg
 {
-  template <typename U>
-  event_waiter<U>::event_waiter()
-    : b_(false)
-  {
-  }
 
-  template <typename U>
-  bool
-  event_waiter<U>::eventFilter(QObject *obj, QEvent *event)
+  namespace event
   {
-    any_event e = make_event(obj, event);
-
-    if (dg::event_match(to_wait_, e))
+    template <typename U>
+    event_waiter<U>::event_waiter()
+      : b_(false)
     {
-      b_ = true;
-      event_ = e;
-      QApplication::instance()->removeEventFilter(this);
+    }
+
+    template <typename U>
+    bool
+    event_waiter<U>::eventFilter(QObject *obj, QEvent *event)
+    {
+      any_event e = make_event(obj, event);
+
+      if (dg::event::event_match(to_wait_, e))
+      {
+        b_ = true;
+        event_ = e;
+        QApplication::instance()->removeEventFilter(this);
+        return false;
+      }
+
       return false;
     }
 
-    return false;
-  }
+    template <typename U>
+    void
+    event_waiter<U>::start_waiting_for(const any_event_set& e)
+    {
+      need_qapp();
+      to_wait_ = e;
+      b_ = false;
+      QApplication::instance()->installEventFilter(this);
+    }
 
-  template <typename U>
-  void
-  event_waiter<U>::start_waiting_for(const any_event_set& e)
-  {
-    need_qapp();
-    to_wait_ = e;
-    b_ = false;
-    QApplication::instance()->installEventFilter(this);
-  }
+    template <typename U>
+    void
+    event_waiter<U>::start_waiting_for(const any_event& e)
+    {
+      need_qapp();
+      to_wait_ = any_event_set(e);
+      b_ = false;
+      QApplication::instance()->installEventFilter(this);
+    }
 
-  template <typename U>
-  void
-  event_waiter<U>::start_waiting_for(const any_event& e)
-  {
-    need_qapp();
-    to_wait_ = any_event_set(e);
-    b_ = false;
-    QApplication::instance()->installEventFilter(this);
-  }
+    template <typename U>
+    bool
+    event_waiter<U>::event_match()
+    {
+      return b_;
+    }
 
-  template <typename U>
-  bool
-  event_waiter<U>::event_match()
-  {
-    return b_;
-  }
+    template <typename U>
+    any_event
+    event_waiter<U>::event()
+    {
+      return event_;
+    }
 
-  template <typename U>
-  any_event
-  event_waiter<U>::event()
-  {
-    return event_;
-  }
+  } // end of namespace event.
 
 } // end of namespace dg.

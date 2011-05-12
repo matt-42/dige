@@ -30,38 +30,43 @@
 namespace dg
 {
 
-  any_event::any_event()
+  namespace event
   {
-  }
 
-  any_event::any_event(const any_event& e)
-    : event_(e.event_)
-  {
-  }
+    any_event::any_event()
+    {
+    }
 
-  any_event& any_event::operator=(const any_event& e)
-  {
-    event_ = e.event_;
-    return *this;
-  }
+    any_event::any_event(const any_event& e)
+      : event_(e.event_)
+    {
+    }
 
-  const abstract_event* any_event::event() const
-  {
-    return event_.get();
-  }
+    any_event& any_event::operator=(const any_event& e)
+    {
+      event_ = e.event_;
+      return *this;
+    }
 
-  bool operator==(const any_event& a, const any_event& b)
-  {
-    if (a.event() && b.event())
-      return a.event()->operator==(*b.event());
-    else
-      return a.event() == b.event();
-  }
+    const abstract_event* any_event::event() const
+    {
+      return event_.get();
+    }
 
-  bool event_match(const any_event& a, const any_event& b)
-  {
-    return a == b;
-  }
+    bool operator==(const any_event& a, const any_event& b)
+    {
+      if (a.event() && b.event())
+        return a.event()->operator==(*b.event());
+      else
+        return a.event() == b.event();
+    }
 
+    bool event_match(const any_event& a, const any_event& b)
+    {
+      return a == b;
+    }
+
+
+  } // end of namespace event.
 
 } // end of namespace dg.

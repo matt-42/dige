@@ -36,7 +36,12 @@ class QEvent;
 namespace dg
 {
 
-  any_event make_event(QObject *obj, QEvent *event);
+  namespace event
+  {
+
+    any_event make_event(QObject *obj, QEvent *event);
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

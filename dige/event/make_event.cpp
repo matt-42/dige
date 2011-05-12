@@ -33,26 +33,31 @@
 namespace dg
 {
 
-  typedef any_event (*event_factory)(QObject *obj, QEvent *event);
-
-  event_factory factories[] =
+  namespace event
   {
-    make_click,
-    make_mouse_move,
-    make_key_release_event,
-    make_slider_changed_event
-  };
 
-  any_event make_event(QObject *obj, QEvent *event)
-  {
-    any_event res;
-    for (unsigned i = 0; i < sizeof(factories) / sizeof(event_factory); i++)
+    typedef any_event (*event_factory)(QObject *obj, QEvent *event);
+
+    event_factory factories[] =
     {
-      res = factories[i](obj, event);
-      if (res.event())
-        return res;
+      make_click,
+      make_mouse_move,
+      make_key_release_event,
+      make_slider_changed_event
+    };
+
+    any_event make_event(QObject *obj, QEvent *event)
+    {
+      any_event res;
+      for (unsigned i = 0; i < sizeof(factories) / sizeof(event_factory); i++)
+      {
+        res = factories[i](obj, event);
+        if (res.event())
+          return res;
+      }
+      return res;
     }
-    return res;
-  }
+
+  } // end of namespace event.
 
 } // end of namespace dg.

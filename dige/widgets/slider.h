@@ -40,62 +40,72 @@ class QSlider;
 namespace dg
 {
 
-  /*!
-  ** The slider class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the slider event (exposure, resizing...).
-  */
-  class slider
+  namespace widgets
   {
-  public:
-    enum orientation { horizontal, vertical };
+    
+    /*!
+    ** The slider class allow to display the content of a displaylist
+    ** in an OpenGL context.
+    ** It listen to the slider event (exposure, resizing...).
+    */
+    class slider
+    {
+    public:
+      enum orientation { horizontal, vertical };
+
+      /*!
+      ** Constructor.
+      ** Initialize a new slider.
+      **
+      ** \param title The title of the slider
+      ** \param width width in pixels.
+      ** \param height height in pixels.
+      **
+      */
+      slider(const std::string& title, orientation o);
+
+      void set_min_max(int min, int max);
+      void set_value(int value);
+      int value() const;
+
+      /// Destructor.
+      ~slider();
+
+      QWidget* widget();
+
+      event::any_event changed_event() const;
+
+    private:
+      slider_impl* slider_;
+    };
 
     /*!
-    ** Constructor.
-    ** Initialize a new slider.
+    ** slider factory. Retrieve the slider named \p title. Create it if
+    ** it doesn't exists.
     **
-    ** \param title The title of the slider
-    ** \param width width in pixels.
-    ** \param height height in pixels.
-    **
+    ** \return the slider.
     */
-    slider(const std::string& title, orientation o);
+    slider& Slider(const std::string& title,
+                   slider::orientation o = slider::horizontal);
 
-    void set_min_max(int min, int max);
-    void set_value(int value);
-    int value() const;
+  } // end of namespace widgets.
 
-    /// Destructor.
-    ~slider();
-
-    QWidget* widget();
-
-    any_event changed_event() const;
-
-  private:
-    slider_impl* slider_;
-  };
-
-  class slider_changed_event : public Event<slider_changed_event>
+  namespace event
   {
-  public:
-    slider_changed_event(QObject* s);
-    bool operator==(const slider_changed_event& e);
 
-  private:
-    QObject* slider_;
-  };
+    class slider_changed_event : public event::Event<slider_changed_event>
+    {
+    public:
+      slider_changed_event(QObject* s);
+      bool operator==(const slider_changed_event& e);
 
-  any_event make_slider_changed_event(QObject *obj, QEvent *event);
+    private:
+      QObject* slider_;
+    };
 
-  /*!
-  ** slider factory. Retrieve the slider named \p title. Create it if
-  ** it doesn't exists.
-  **
-  ** \return the slider.
-  */
-  slider& Slider(const std::string& title,
-                 slider::orientation o = slider::horizontal);
+    any_event make_slider_changed_event(QObject *obj, QEvent *event);
+
+  } // end of namespace event.
 
 } // end of namespace dg.
 

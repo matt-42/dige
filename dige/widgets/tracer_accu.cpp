@@ -36,58 +36,63 @@
 namespace dg
 {
 
-  tracer_accu::tracer_accu()
-    : painter_(new QPainterPath(QPointF(clock() / float(CLOCKS_PER_SEC), 0.0))),
-      item_(new QGraphicsPathItem(*painter_))
+  namespace widgets
   {
-  }
 
-  tracer_accu::~tracer_accu()
-  {
-  }
-
-
-  QGraphicsPathItem*
-  tracer_accu::graphic_item()
-  {
-    return item_.get();
-  }
-
-  QPainterPath*
-  tracer_accu::painter()
-  {
-    return painter_.get();
-  }
-
-  void
-  tracer_accu::line_to(double x, double y)
-  {
-    painter_->lineTo(x, y);
-    item_->setPath(*painter_);
-  }
-
-  std::pair<float, float>
-  tracer_accu::minmax_since(float t) const
-  {
-    int size = painter_->elementCount();
-    int c = size - 1;
-
-    if (!size) return std::pair<float, float>(0, 0);
-
-    float x = t;
-    float min = painter_->elementAt(c).y;
-    float max = painter_->elementAt(c).y;
-    while (c >= 0 && x >= t)
+    tracer_accu::tracer_accu()
+      : painter_(new QPainterPath(QPointF(clock() / float(CLOCKS_PER_SEC), 0.0))),
+        item_(new QGraphicsPathItem(*painter_))
     {
-      assert(c >= 0 && c < painter_->elementCount());
-      float y = painter_->elementAt(c).y;
-      if (y > max) max = y;
-      if (y < min) min = y;
-
-      x = painter_->elementAt(c).x;
-      c--;
     }
-    return std::pair<float, float>(min, max);
-  }
+
+    tracer_accu::~tracer_accu()
+    {
+    }
+
+
+    QGraphicsPathItem*
+    tracer_accu::graphic_item()
+    {
+      return item_.get();
+    }
+
+    QPainterPath*
+    tracer_accu::painter()
+    {
+      return painter_.get();
+    }
+
+    void
+    tracer_accu::line_to(double x, double y)
+    {
+      painter_->lineTo(x, y);
+      item_->setPath(*painter_);
+    }
+
+    std::pair<float, float>
+    tracer_accu::minmax_since(float t) const
+    {
+      int size = painter_->elementCount();
+      int c = size - 1;
+
+      if (!size) return std::pair<float, float>(0, 0);
+
+      float x = t;
+      float min = painter_->elementAt(c).y;
+      float max = painter_->elementAt(c).y;
+      while (c >= 0 && x >= t)
+      {
+        assert(c >= 0 && c < painter_->elementCount());
+        float y = painter_->elementAt(c).y;
+        if (y > max) max = y;
+        if (y < min) min = y;
+
+        x = painter_->elementAt(c).x;
+        c--;
+      }
+      return std::pair<float, float>(min, max);
+    }
+
+  } // end of namespace widgets.
 
 } // end of namespace dg.
