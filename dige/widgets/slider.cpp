@@ -47,6 +47,20 @@ namespace dg
         slider_ = new slider_impl(Qt::Vertical);
     }
 
+
+    slider::slider(const std::string&,
+                   int min, int max, int value,
+                   slider::orientation o)
+    {
+      if (o == slider::horizontal)
+        slider_ = new slider_impl(Qt::Horizontal);
+      else
+        slider_ = new slider_impl(Qt::Vertical);
+
+      set_min_max(min, max);
+      set_value(value);
+    }
+
     void slider::set_min_max(int min, int max)
     {
       slider_->setMinimum(min);
@@ -88,6 +102,12 @@ namespace dg
     slider& Slider(const std::string& title, slider::orientation o)
     {
       return named_instance<slider>(title, o);
+    }
+
+    slider& Slider(const std::string& title,
+                   int min, int max, int value, slider::orientation o)
+    {
+      return named_instance<slider>(title, min, max, value, o);
     }
 
   } // end of namespace widgets.

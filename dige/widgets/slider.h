@@ -42,7 +42,7 @@ namespace dg
 
   namespace widgets
   {
-    
+
     /*!
     ** The slider class allow to display the content of a displaylist
     ** in an OpenGL context.
@@ -63,6 +63,8 @@ namespace dg
       **
       */
       slider(const std::string& title, orientation o);
+      slider(const std::string& title, int min, int max,
+             int value, orientation o);
 
       void set_min_max(int min, int max);
       void set_value(int value);
@@ -86,6 +88,10 @@ namespace dg
     ** \return the slider.
     */
     slider& Slider(const std::string& title,
+                   slider::orientation o = slider::horizontal);
+
+    slider& Slider(const std::string& title,
+                   int min, int max, int value,
                    slider::orientation o = slider::horizontal);
 
   } // end of namespace widgets.

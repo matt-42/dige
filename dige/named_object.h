@@ -59,6 +59,8 @@ namespace dg
     friend U& named_instance(const std::string& name, A1& a1, A2& a2);
     template <typename U, typename A1, typename A2, typename A3>
     friend U& named_instance(const std::string& name, A1& a1, A2& a2, A3& a3);
+    template <typename U, typename A1, typename A2, typename A3, typename A4>
+    friend U& named_instance(const std::string& name, A1& a1, A2& a2, A3& a3, A4& a4);
   };
 
   template <typename T>
@@ -125,6 +127,26 @@ namespace dg
     else
     {
       T* e = new T(name, a1, a2, a3);
+      named_object<T>::instances_[name] = e;
+      return *e;
+    }
+  }
+
+
+  template <typename T, typename A1, typename A2, typename A3, typename A4>
+  T& named_instance(const std::string& name,
+                    A1& a1,
+                    A2& a2,
+                    A3& a3,
+                    A4& a4)
+  {
+    typename std::map<const std::string, T*>::const_iterator it
+      = named_object<T>::instances_.find(name);
+    if (it != named_object<T>::instances_.end())
+      return *((*it).second);
+    else
+    {
+      T* e = new T(name, a1, a2, a3, a4);
       named_object<T>::instances_[name] = e;
       return *e;
     }
