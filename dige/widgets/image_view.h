@@ -116,8 +116,8 @@ namespace dg
       gl_widget* currentWidget_; /*!< Underlying qt widget. */
       displaylist dlist_;         /*!< Current displaylist. */
 
-      friend image_view& display(const std::string& title, unsigned width,
-                                 unsigned height);
+      friend image_view& ImageView(const std::string& title, unsigned width,
+                                   unsigned height);
     };
 
     /*!
@@ -129,8 +129,8 @@ namespace dg
     **
     ** \return the image_view.
     */
-    image_view& display(const std::string& title, unsigned width = 400,
-                        unsigned height = 400);
+    image_view& ImageView(const std::string& title, unsigned width = 400,
+                          unsigned height = 400);
 
   } // end of namespace widgets.
 

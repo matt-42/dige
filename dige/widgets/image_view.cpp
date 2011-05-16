@@ -141,7 +141,7 @@ namespace dg
                    GL_RGB, GL_UNSIGNED_BYTE, buffer);
     }
 
-    image_view& display(const std::string& title, unsigned width, unsigned height)
+    image_view& ImageView(const std::string& title, unsigned width, unsigned height)
     {
       return named_instance<image_view>(title, width, height);
     }
