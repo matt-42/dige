@@ -37,7 +37,7 @@ namespace dg
   namespace event
   {
     template <typename T>
-    class Event_Set
+    class event_set
     {
     public:
       const T& subcast() const
@@ -100,7 +100,7 @@ namespace dg
       any_event_set(const any_event& e);
 
       template <typename T>
-      any_event_set(const Event_Set<T>& e)
+      any_event_set(const event_set<T>& e)
         : event_set_(new generic_event_set<T>(e.subcast()))
       {
       }
@@ -124,13 +124,13 @@ namespace dg
     bool event_match(const any_event& e, const any_event_set& s);
 
     template <typename T>
-    bool event_match(const Event_Set<T>& a, const any_event& b)
+    bool event_match(const event_set<T>& a, const any_event& b)
     {
       return a.subcast().matches(b);
     }
 
     template <typename T>
-    bool event_match(const any_event& a, const Event_Set<T>& b)
+    bool event_match(const any_event& a, const event_set<T>& b)
     {
       return b.subcast().matches(a);
     }

@@ -37,7 +37,7 @@ namespace dg
   namespace event
   {
 
-    class or_event : public Event_Set<or_event>
+    class or_event : public event_set<or_event>
     {
     public:
       or_event();
