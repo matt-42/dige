@@ -89,7 +89,7 @@ namespace dg
     **
     ** \param w an image_view.
     */
-    void operator<<=(image_view& w);
+    void operator<<=(widgets::image_view& w);
 
     /// Associate all the created recorder with theirs video filepath.
     static std::map<const std::string, boost::shared_ptr<recorder> >& recorders();

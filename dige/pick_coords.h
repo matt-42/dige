@@ -37,7 +37,7 @@ namespace dg
   template <typename C>
   void pick_coords(const std::string& window, C& x, C& y)
   {
-    point2d<int> p = display(window).selected_coords();
+    point2d<int> p = widgets::ImageView(window).selected_coords();
     x = p[0];
     y = p[1];
   }

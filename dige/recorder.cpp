@@ -232,7 +232,7 @@ namespace dg
   }
 
   void
-  recorder::operator<<=(image_view& w)
+  recorder::operator<<=(widgets::image_view& w)
   {
     if (!avcontext_ && !init_failed_)
       init_context(w.width(), w.height());
