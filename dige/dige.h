@@ -45,5 +45,7 @@
 # include <dige/value_traits.h>
 # include <dige/window.h>
 # include <dige/window_placer.h>
+# include <dige/event/all.h>
+# include <dige/widgets/all.h>
 
 #endif
