@@ -29,6 +29,7 @@
 # define DIGE_IMAGE_H_
 
 #include <dige/texture.h>
+#include <dige/displaylist.h>
 
 namespace dg
 {
@@ -100,7 +101,7 @@ namespace dg
   **
   ** \return the corresponding texture.
   */
-  template <typename F, typename C, unsigned S>
+  template <typename F, typename C>
   texture adapt(const image<F, C>& i);
 
 } // end of namespace dg.
