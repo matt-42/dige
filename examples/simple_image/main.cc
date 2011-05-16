@@ -20,10 +20,7 @@
 #include <ctime>
 
 // Dige includes.
-#include <dige/window.h>
-#include <dige/image.h>
-#include <dige/widgets/all.h>
-#include <dige/event/all.h>
+#include <dige/dige.h>
 
 // A simple rgb image type
 struct rgb_image
