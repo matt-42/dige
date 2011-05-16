@@ -45,12 +45,13 @@ namespace dg
     }
 
     key_release::key_release()
+      : k_(key_any)
     {
     }
 
     bool key_release::operator==(const key_release& b) const
     {
-      return b.k_ == k_;
+      return b.k_ == k_ || k_ == key_any || b.k_ == key_any;
     }
 
     any_event make_key_release_event(QObject*, QEvent* event)
