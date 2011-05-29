@@ -31,6 +31,7 @@
 # include <map>
 # include <string>
 
+# include <dige/widgets/widget.h>
 # include <dige/displaylist.h>
 
 namespace dg
@@ -45,9 +46,8 @@ namespace dg
     /*!
     ** The image_view class allow to display the content of a displaylist
     ** in an OpenGL context.
-    ** It listen to the image_view event (exposure, resizing...).
     */
-    class image_view
+    class image_view : public Widget<image_view>
     {
     public:
       /*!
@@ -82,7 +82,7 @@ namespace dg
       /// Refresh the image_view content.
       void refresh();
 
-      gl_widget* widget();
+      gl_widget* widget() const;
 
       /// Displaylist accessor.
       displaylist& dlist();

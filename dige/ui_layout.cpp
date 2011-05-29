@@ -41,54 +41,81 @@ namespace dg
     stack_.push(root_);
   }
 
-  ui_layout& ui_layout::operator-(const vbox_start_)
+  ui_layout& ui_layout::operator<<(const Literal<vbox_start_>&)
   {
     QBoxLayout* l = stack_.top();
     QVBoxLayout* n = new QVBoxLayout();
 
-    l->addLayout(n, 1000);
+    l->addLayout(n, 1);
     stack_.push(n);
     return *this;
   }
 
-  ui_layout& ui_layout::operator-(const vbox_end_)
+  ui_layout& ui_layout::operator<<(const Literal<vbox_end_>&)
   {
     stack_.pop();
     return *this;
   }
 
-  ui_layout& ui_layout::operator-(const hbox_start_)
+  ui_layout& ui_layout::operator<<(const Literal<hbox_start_>&)
   {
     QBoxLayout* l = stack_.top();
     QHBoxLayout* n = new QHBoxLayout();
 
     l->addLayout(n, 1000);
+    set_stretch_for_last_item(1);
     stack_.push(n);
     return *this;
   }
 
-  ui_layout& ui_layout::operator-(const hbox_end_)
+  ui_layout& ui_layout::operator<<(const Literal<hbox_end_>&)
   {
     stack_.pop();
     return *this;
   }
 
-  ui_layout& ui_layout::operator-(ui_layout& n)
+  ui_layout& ui_layout::operator<<(ui_layout& n)
   {
     QBoxLayout* l = stack_.top();
     l->addLayout(n.root(), 1000);
     return *this;
   }
 
+  ui_layout& ui_layout::operator<<(stretched_layout e)
+  {
+    *this << e.l_;
+    set_stretch_for_last_item(e.s_);
+    return *this;
+  }
+
+  stretched_layout operator/(ui_layout w, unsigned s)
+  {
+    return stretched_layout(w, s);
+  }
+
   void ui_layout::add(QWidget* w)
   {
     w->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     stack_.top()->addWidget(w, 1000);
+    set_stretch_for_last_item(1);
   }
 
   QBoxLayout* ui_layout::root()
   {
     return root_;
+  }
+
+  void ui_layout::set_stretch_for_last_item(unsigned s)
+  {
+    QBoxLayout* l = stack_.top();
+    l->setStretch(l->count() - 1, s);
+  }
+
+  stretched_layout::stretched_layout(ui_layout layout,
+                                     unsigned stretch_factor)
+    : l_(layout),
+      s_(stretch_factor)
+  {
   }
 
 } // end of namespace dg.

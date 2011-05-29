@@ -75,6 +75,12 @@ namespace dg
     */
     window& operator<<=(ui_layout& l);
 
+    template <typename T>
+    window& operator<<=(T& x)
+    {
+      return *this <<= hbox_start << x << hbox_end;
+    }
+
     static const std::map<const std::string, window*>& windows();
 
   private:

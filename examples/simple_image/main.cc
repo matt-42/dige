@@ -22,7 +22,7 @@
 // Dige includes.
 #include <dige/dige.h>
 
-// A simple rgb image type
+// Our simple rgb image type
 struct rgb_image
 {
   rgb_image(unsigned w, unsigned h)
@@ -67,10 +67,7 @@ int main()
   srand(time(0));
   rgb_image img(20, 20);
 
-  dg::Window("simple_image", 500, 300) <<=
-    dg::hbox_start -
-    ImageView("random") -
-    dg::hbox_end;
+  dg::Window("simple_image", 500, 300) <<= ImageView("random");
 
   unsigned t = clock();
   while (clock() - t < 5 * CLOCKS_PER_SEC)

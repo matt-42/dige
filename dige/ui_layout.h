@@ -32,6 +32,7 @@
 # include <stack>
 # include <boost/shared_ptr.hpp>
 # include <dige/keywords.h>
+# include <dige/widgets/widget.h>
 
 class QBoxLayout;
 class QWidget;
@@ -39,67 +40,87 @@ class QWidget;
 namespace dg
 {
 
+
+  template <typename T>
+  struct stretched_widget
+  {
+    stretched_widget(T& widget, unsigned stretch_factor)
+      : w_(&widget),
+        s_(stretch_factor)
+    {
+    }
+
+    T* w_;
+    unsigned s_;
+  };
+
+  struct stretched_layout;
+
   class ui_layout
   {
   public:
     ui_layout();
 
     template <typename T>
-    ui_layout& operator-(T& w);
+    ui_layout& operator<<(T& w);
 
-    ui_layout& operator-(const vbox_start_);
-    ui_layout& operator-(const vbox_end_);
-    ui_layout& operator-(const hbox_start_);
-    ui_layout& operator-(const hbox_end_);
-    ui_layout& operator-(ui_layout& l);
+    ui_layout& operator<<(const Literal<vbox_start_>&);
+    ui_layout& operator<<(const Literal<vbox_end_>&);
+    ui_layout& operator<<(const Literal<hbox_start_>&);
+    ui_layout& operator<<(const Literal<hbox_end_>&);
+    ui_layout& operator<<(ui_layout& l);
+
+    template <typename T>
+    ui_layout& operator<<(stretched_widget<T> e)
+    {
+      *this << *(e.w_);
+      set_stretch_for_last_item(e.s_);
+      return *this;
+    }
+
+    ui_layout& operator<<(stretched_layout e);
 
     void add(QWidget* w);
     QBoxLayout* root();
 
   private:
+    void set_stretch_for_last_item(unsigned s);
+
     QBoxLayout* root_;
     std::stack<QBoxLayout*> stack_;
   };
 
+  struct stretched_layout
+  {
+    stretched_layout(ui_layout layout, unsigned stretch_factor);
+
+    ui_layout l_;
+    unsigned s_;
+  };
+
+  namespace widgets
+  {
+    template <typename T>
+    stretched_widget<T> operator/(Widget<T>& w, unsigned s)
+    {
+      T& e = exact(w);
+      return stretched_widget<T>(e, s);
+    }
+  }
+
+  stretched_layout operator/(ui_layout l, unsigned s);
+
   template <typename T>
-  ui_layout& ui_layout::operator-(T& w)
+  ui_layout& ui_layout::operator<<(T& w)
   {
     add((QWidget*)w.widget());
     return *this;
   }
 
-  inline ui_layout operator-(const vbox_start_ x, const hbox_start_ e)
+  template <typename T, typename U>
+  inline ui_layout operator<<(const Literal<T>& a, const U& b)
   {
-    return ui_layout() - x - e;
-  }
-
-  inline ui_layout operator-(const hbox_start_ x, const vbox_start_ e)
-  {
-    return ui_layout() - x - e;
-  }
-
-  template <typename T>
-  ui_layout operator-(const vbox_start_ x, T& e)
-  {
-    return ui_layout() - x - e;
-  }
-
-  template <typename T>
-  ui_layout operator-(const vbox_end_ x, T& e)
-  {
-    return ui_layout() - x - e;
-  }
-
-  template <typename T>
-  ui_layout operator-(const hbox_start_ x, T& e)
-  {
-    return ui_layout() - x - e;
-  }
-
-  template <typename T>
-  ui_layout operator-(const hbox_end_ x, T& e)
-  {
-    return ui_layout() - x - e;
+    return ui_layout() << a << b;
   }
 
 } // end of namespace dg.

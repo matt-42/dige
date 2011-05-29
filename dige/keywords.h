@@ -31,11 +31,26 @@
 namespace dg
 {
 
-  enum vbox_start_ { vbox_start };
-  enum vbox_end_   { vbox_end };
 
-  enum hbox_start_ { hbox_start };
-  enum hbox_end_   { hbox_end };
+  // enum vbox_start_ { vbox_start };
+  // enum vbox_end_   { vbox_end };
+
+  // enum hbox_start_ { hbox_start };
+  // enum hbox_end_   { hbox_end };
+
+  template <typename T>
+  struct Literal {};
+
+
+  struct vbox_start_ {};
+  struct vbox_end_   {};
+  struct hbox_start_ {};
+  struct hbox_end_   {};
+
+  static const Literal<vbox_start_> vbox_start = {};
+  static const Literal<vbox_end_>   vbox_end   = {};
+  static const Literal<hbox_start_> hbox_start = {};
+  static const Literal<hbox_end_>   hbox_end   = {};
 
 } // end of namespace dg.
 

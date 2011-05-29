@@ -100,7 +100,7 @@ namespace dg
       currentWidget_->updateGL();
     }
 
-    gl_widget* image_view::widget()
+    gl_widget* image_view::widget() const
     {
       return currentWidget_;
     }
