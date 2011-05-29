@@ -36,7 +36,9 @@ ENDIF(WITH_FFMPEG)
 
 include_directories(${FFMPEG_INCLUDE_DIR})
 
-add_definitions(-g -W -Wall -Wextra)
+IF (${CMAKE_C_COMPILER_ID} MATCHES GNU)
+   add_definitions(-g -W -Wall -Wextra)
+ENDIF()
 
 add_library(dige
   dige/event/or_event.cpp
