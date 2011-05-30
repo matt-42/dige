@@ -1,4 +1,4 @@
-// Copyright (C) 2010,2011 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //

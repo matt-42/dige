@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -16,24 +16,57 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   widgets/all.h
+**\file   label.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Thu May 12 21:48:59 2011
+**\date   Mon May 30 22:14:44 2011
 **
-**\brief  Include all widgets header.
+**\brief  label sources
 **
 **
 */
 
-#ifndef DIGE_WIDGETS_ALL_H_
-# define DIGE_WIDGETS_ALL_H_
+# include <string>
+# include <QLabel>
+# include <QString>
 
-# include <dige/widgets/gl_widget.h>
-# include <dige/widgets/image_view.h>
+# include <dige/need_qapp.h>
+# include <dige/named_object.h>
 # include <dige/widgets/label.h>
-# include <dige/widgets/push_button.h>
-# include <dige/widgets/slider.h>
-# include <dige/widgets/tracer.h>
-# include <dige/widgets/tracer_view.h>
 
-#endif
+namespace dg
+{
+
+  namespace widgets
+  {
+
+    label::label(const std::string&)
+    {
+      need_qapp();
+      label_ = new QLabel();
+    }
+
+    label&
+    label::set_text(const std::string& s)
+    {
+      label_->setText(QString::fromStdString(s));
+      return *this;
+    }
+
+    label::~label()
+    {
+    }
+
+    QWidget*
+    label::widget()
+    {
+      return label_;
+    }
+
+    label& Label(const std::string& title)
+    {
+      return named_instance<label>(title);
+    }
+
+  } // end of namespace widgets.
+
+} // end of namespace dg.
