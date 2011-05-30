@@ -28,7 +28,12 @@
 # include <string>
 
 # include <QSlider>
+# include <QLabel>
+# include <QVBoxLayout>
+# include <QHBoxLayout>
+# include <QSpacerItem>
 
+# include <dige/need_qapp.h>
 # include <dige/named_object.h>
 # include <dige/widgets/slider.h>
 # include <dige/event/custom_events.h>
@@ -39,26 +44,55 @@ namespace dg
   namespace widgets
   {
 
-    slider::slider(const std::string&, slider::orientation o)
+    slider::slider(const std::string& s, slider::orientation o)
     {
-      if (o == slider::horizontal)
-        slider_ = new slider_impl(Qt::Horizontal);
-      else
-        slider_ = new slider_impl(Qt::Vertical);
+      build_layout(s, o);
     }
 
-
-    slider::slider(const std::string&,
+    slider::slider(const std::string& s,
                    int min, int max, int value,
                    slider::orientation o)
     {
-      if (o == slider::horizontal)
-        slider_ = new slider_impl(Qt::Horizontal);
-      else
-        slider_ = new slider_impl(Qt::Vertical);
+      build_layout(s, o);
 
       set_min_max(min, max);
       set_value(value);
+    }
+
+    void slider::build_layout(const std::string& s, slider::orientation o)
+    {
+      need_qapp();
+      if (o == slider::horizontal)
+      {
+        slider_ = new slider_impl(Qt::Horizontal);
+        layout_ = new QVBoxLayout();
+      }
+      else
+      {
+        slider_ = new slider_impl(Qt::Vertical);
+        layout_ = new QHBoxLayout();
+      }
+
+      QHBoxLayout* anot = new QHBoxLayout();
+      QLabel* l = new QLabel(QString::fromStdString(s) + " :");
+      anot->addWidget(l);
+      l->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,
+                                   QSizePolicy::Fixed));
+      QLabel* number_label = new QLabel();
+      number_label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+      anot->addWidget(number_label);
+
+      QSpacerItem* sp = new QSpacerItem(1, 1, QSizePolicy::Expanding,
+                                       QSizePolicy::Expanding);
+      anot->addSpacerItem(sp);
+      QObject::connect(slider_, SIGNAL(valueChanged(int)),
+              number_label, SLOT(setNum(int)));
+
+      layout_->addLayout(anot);
+      layout_->addWidget(slider_);
+      sp = new QSpacerItem(1, 1, QSizePolicy::Expanding,
+                           QSizePolicy::Expanding);
+      layout_->addSpacerItem(sp);
     }
 
     void slider::set_min_max(int min, int max)
@@ -87,10 +121,10 @@ namespace dg
       delete slider_;
     }
 
-    QWidget*
+    QLayout*
     slider::widget()
     {
-      return slider_;
+      return layout_;
     }
 
     event::any_event
@@ -118,7 +152,6 @@ namespace dg
     slider_changed_event::slider_changed_event(QObject* s)
       : slider_(s)
     {
-      std::cout << s << std::endl;
     }
 
     bool

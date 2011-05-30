@@ -35,6 +35,7 @@
 # include <dige/widgets/widget.h>
 
 class QBoxLayout;
+class QLayout;
 class QWidget;
 
 namespace dg
@@ -81,6 +82,8 @@ namespace dg
     ui_layout& operator<<(stretched_layout e);
 
     void add(QWidget* w);
+    void add(QLayout* l);
+
     QBoxLayout* root();
 
   private:
@@ -113,7 +116,7 @@ namespace dg
   template <typename T>
   ui_layout& ui_layout::operator<<(T& w)
   {
-    add((QWidget*)w.widget());
+    add(w.widget());
     return *this;
   }
 

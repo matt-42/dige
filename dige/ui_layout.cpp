@@ -100,6 +100,11 @@ namespace dg
     set_stretch_for_last_item(1);
   }
 
+  void ui_layout::add(QLayout* l)
+  {
+    stack_.top()->addLayout(l);
+  }
+
   QBoxLayout* ui_layout::root()
   {
     return root_;

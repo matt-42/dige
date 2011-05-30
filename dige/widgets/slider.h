@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010,2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -37,6 +37,8 @@
 // Forward declaration.
 class QWidget;
 class QSlider;
+class QBoxLayout;
+class QLayout;
 
 namespace dg
 {
@@ -74,12 +76,15 @@ namespace dg
       /// Destructor.
       ~slider();
 
-      QWidget* widget();
+      QLayout* widget();
 
       event::any_event changed_event() const;
 
     private:
+      void build_layout(const std::string& s, slider::orientation o);
+
       slider_impl* slider_;
+      QBoxLayout* layout_;
     };
 
     /*!
