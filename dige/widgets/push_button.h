@@ -90,7 +90,7 @@ namespace dg
     **
     ** \return the push_button.
     */
-    push_button& Push_button(const std::string& title, bool checkable = false);
+    push_button& PushButton(const std::string& title, bool checkable = false);
 
   } // end of namespace widgets.
 
