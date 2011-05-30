@@ -31,6 +31,7 @@
 # include <map>
 # include <string>
 
+# include <dige/widgets/widget.h>
 # include <dige/widgets/tracer_accu.h>
 
 // Forward declaration.
@@ -48,7 +49,7 @@ namespace dg
     ** in an OpenGL context.
     ** It listen to the tracer event (exposure, resizing...).
     */
-    class tracer
+    class tracer : public Widget<tracer>
     {
     public:
       /*!

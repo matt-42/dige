@@ -31,6 +31,7 @@
 # include <map>
 # include <string>
 # include <dige/event/event.h>
+# include <dige/widgets/widget.h>
 # include <dige/widgets/slider_impl.h>
 
 // Forward declaration.
@@ -48,7 +49,7 @@ namespace dg
     ** in an OpenGL context.
     ** It listen to the slider event (exposure, resizing...).
     */
-    class slider
+    class slider : public Widget<slider>
     {
     public:
       enum orientation { horizontal, vertical };

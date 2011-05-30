@@ -31,6 +31,7 @@
 # include <map>
 # include <string>
 
+# include <dige/widgets/widget.h>
 # include <dige/event/click.h>
 
 // Forward declaration.
@@ -48,7 +49,7 @@ namespace dg
     ** in an OpenGL context.
     ** It listen to the push_button event (exposure, resizing...).
     */
-    class push_button
+    class push_button : public Widget<push_button>
     {
     public:
       /*!
