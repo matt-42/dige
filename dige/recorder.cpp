@@ -24,6 +24,7 @@ extern "C"
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 #include <libavcodec/opt.h>
+#include <libavutil/error.h>
 }
 
 #include <dige/recorder.h>
@@ -35,7 +36,9 @@ namespace dg
   bool recorder::ffmpeg_initialized_ = false;
 
 //#define VIDEO_CODEC CODEC_ID_MPEG2VIDEO
-#define VIDEO_CODEC CODEC_ID_FFVHUFF
+//#define VIDEO_CODEC CODEC_ID_MPEG4
+#define VIDEO_CODEC CODEC_ID_H264
+//#define VIDEO_CODEC CODEC_ID_FFVHUFF
 #define FRAME_FORMAT PIX_FMT_YUV420P
 
   recorder::recorder(const std::string& path)
@@ -44,6 +47,7 @@ namespace dg
       swcontext_(0),
       yuvframe_(0),
       rgbframe_(0),
+      video_buffer_(0),
       video_buffer_size_(0),
       output_(path.c_str(), std::ios::binary),
       path_(path),
@@ -56,6 +60,7 @@ namespace dg
       avcodec_init();
       avcodec_register_all();
       av_register_all();
+      av_log_set_level(10);
       ffmpeg_initialized_ = true;
     }
 
@@ -65,7 +70,7 @@ namespace dg
 
   recorder::~recorder()
   {
-    if (!init_failed_)
+    if (!init_failed_ && avcontext_)
     {
       // record delayed frames.
       unsigned frame_size = 1;
@@ -76,7 +81,7 @@ namespace dg
         {
           AVPacket pkt;
           av_init_packet(&pkt);
-
+          assert(avcontext_ && avcontext_->coded_frame);
           if(avcontext_->coded_frame->key_frame)
             pkt.flags |= PKT_FLAG_KEY;
           pkt.stream_index = video_st_->index;
@@ -89,7 +94,7 @@ namespace dg
       }
 
       av_write_trailer (fmtcontext_);
-      url_fclose (fmtcontext_->pb);
+      avio_close (fmtcontext_->pb);
 
       avcodec_close(avcontext_);
 
@@ -101,6 +106,7 @@ namespace dg
       delete [] window_capture_;
     }
   }
+
 
   void recorder::init_context(unsigned width, unsigned height)
   {
@@ -125,6 +131,7 @@ namespace dg
 
 
     avcontext_ = video_st_->codec;
+    avcodec_get_context_defaults(avcontext_);
 
     yuvframe_ = avcodec_alloc_frame();
     rgbframe_ = avcodec_alloc_frame();
@@ -132,25 +139,36 @@ namespace dg
     avcontext_->codec_id = VIDEO_CODEC;
     avcontext_->codec_type = CODEC_TYPE_VIDEO;
 
-    // put sample parameters
-    avcontext_->bit_rate = 400000;
-    // resolution must be a multiple of two
     avcontext_->width = width;
     avcontext_->height = height;
-    // frames per second
+    avcontext_->flags = CODEC_FLAG_4MV | CODEC_FLAG_AC_PRED | CODEC_FLAG_PASS1;
+    avcontext_->mb_decision = FF_MB_DECISION_RD;
+    avcontext_->me_cmp = 2;
+    avcontext_->me_sub_cmp = 2;
+    avcontext_->trellis = 2;
+
+    avcontext_->bit_rate = 2000000*1000;
+    avcontext_->bit_rate_tolerance = avcontext_->bit_rate;
+    avcontext_->b_frame_strategy = 1;
+    avcontext_->coder_type = 1;
+    avcontext_->me_method = ME_EPZS;
+    avcontext_->me_subpel_quality = 5;
+    avcontext_->i_quant_factor = 0.71;
+    avcontext_->qcompress = 0.6;
+    avcontext_->max_qdiff = 4;
+    avcontext_->directpred = 1;
+    avcontext_->gop_size = 300;
+    avcontext_->max_b_frames=3;
 
     avcontext_->time_base.den = 25;
     avcontext_->time_base.num = 1;
 
-    avcontext_->gop_size = 10; // emit one intra frame every ten frames
-    avcontext_->max_b_frames=1;
     avcontext_->pix_fmt = FRAME_FORMAT;
-    //av_set_int(avcontext_, "dia", 4);
 
     assert(av_set_parameters(fmtcontext_, NULL) >= 0);
 
 
-    dump_format(fmtcontext_, 0, path_.c_str(), 1);
+    av_dump_format(fmtcontext_, 0, path_.c_str(), 1);
 
 
     // find the mpeg1 video encoder
@@ -163,9 +181,14 @@ namespace dg
     }
 
     // open the codec.
-    if (avcodec_open(avcontext_, avcodec_) < 0)
+    int err;
+    if (err = avcodec_open(avcontext_, avcodec_) < 0)
     {
-      std::cerr << "Could not open codec" << std::endl;
+      char err_message[1000];
+      memset(err_message, 0, 1000);
+      int err_err = av_strerror(-err, err_message, 1000);
+      std::cerr << "Could not open codec: error " << err_err << ": "
+                << err_message << std::endl;
       goto init_failed;
     }
 
@@ -176,13 +199,14 @@ namespace dg
     // Initialization of ffmpeg frames.
     {
       unsigned size = avcontext_->width * avcontext_->height;
-      window_capture_size_ = size * 3 * sizeof(char); // size for RGB
-      window_capture_ = new char[window_capture_size_];
+      window_capture_size_ = 2*size * 3 * sizeof(unsigned char); // size for RGB
+      window_capture_ = new unsigned char[window_capture_size_];
       window_capture_width_ = avcontext_->width;
       window_capture_height_ = avcontext_->height;
 
+
       rgbframe_->data[0] = (uint8_t*) window_capture_;
-      rgbframe_->linesize[0] = avcontext_->width * 3 * sizeof(char);
+      rgbframe_->linesize[0] = avcontext_->width * 3 * sizeof(unsigned char);
 
       yuvframe_->data[0] = new uint8_t[(size * 3) / 2];
       yuvframe_->data[1] = yuvframe_->data[0] + size;
@@ -193,10 +217,13 @@ namespace dg
     }
 
     // Swscale context.
-    swcontext_ = sws_getContext(width, height, PIX_FMT_RGB24,
-                                width, height, FRAME_FORMAT,
-                                SWS_POINT,
-                                0, 0, 0);
+    swcontext_ = sws_getCachedContext(0,
+                                      width, height, PIX_FMT_RGB24,
+                                      width, height, FRAME_FORMAT,
+                                      SWS_POINT,
+                                      0,
+                                      0,
+                                      0);
     if(!swcontext_)
     {
       std::cerr<< "Cannot initialize the swscale conversion context" << std::endl;
@@ -206,7 +233,7 @@ namespace dg
     /* open the output file, if needed */
     if (!(outputfmt_->flags & AVFMT_NOFILE))
     {
-      if (url_fopen (&fmtcontext_->pb, path_.c_str(), URL_WRONLY) < 0)
+      if (avio_open (&fmtcontext_->pb, path_.c_str(), URL_WRONLY) < 0)
       {
         std::cerr << "Could not open "<< path_ << std::endl;
         assert(0 && "Could not open ouput file");
@@ -234,6 +261,7 @@ namespace dg
   void
   recorder::operator<<=(widgets::image_view& w)
   {
+  
     if (!avcontext_ && !init_failed_)
       init_context(w.width(), w.height());
     if (init_failed_)
@@ -243,30 +271,33 @@ namespace dg
     unsigned old_width = window_capture_width_;
     unsigned old_height = window_capture_height_;
     w.dump_rgb_frame_buffer(window_capture_, window_capture_size_, window_capture_width_, window_capture_height_);
+
     if (old_width != window_capture_width_ || old_height != window_capture_height_)
     {
       std::cout << "new context" << std::endl;
 
-      sws_freeContext(swcontext_);
-      swcontext_ = sws_getContext(window_capture_width_, window_capture_height_, PIX_FMT_RGB24,
-                                  avcontext_->width, avcontext_->height, FRAME_FORMAT,
-                                  SWS_BILINEAR,
-                                  0, 0, 0);
+      sws_getCachedContext(swcontext_,
+                           window_capture_width_, window_capture_height_,
+                           PIX_FMT_RGB24,
+                           avcontext_->width, avcontext_->height,
+                           FRAME_FORMAT,
+                           SWS_BILINEAR,
+                           0, 0, 0);
       rgbframe_->data[0] = (uint8_t*) window_capture_;
-      rgbframe_->linesize[0] = window_capture_width_ * 3 * sizeof(char);
+      rgbframe_->linesize[0] = window_capture_width_ * 3 * sizeof(unsigned char);
     }
 
 
     // Flip and convert the image to YUV for video encoding.
     uint8_t* data = rgbframe_->data[0] +
       window_capture_width_ * 3 * (window_capture_height_ - 1);
-
     unsigned s = -window_capture_width_ * 3;
+
     uint8_t* tmp[1] = { data };
     int stride[1] = { s };
     // int r =
-      sws_scale(swcontext_, tmp, stride, 0,
-                      window_capture_height_, yuvframe_->data, yuvframe_->linesize);
+    sws_scale(swcontext_, tmp, stride, 0,
+              window_capture_height_, yuvframe_->data, yuvframe_->linesize);
 
     // Encode video.
     int encode_size

@@ -119,18 +119,25 @@ namespace dg
     }
 
     void
-    image_view::dump_rgb_frame_buffer(char*& buffer,
+    image_view::dump_rgb_frame_buffer(unsigned char*& buffer,
                                       unsigned& buffer_size,
                                       unsigned& buffer_width,
                                       unsigned& buffer_height)
     {
       currentWidget_->makeCurrent();
+      unsigned actual_size = currentWidget_->width() *
+        currentWidget_->height() *
+        3 * sizeof(unsigned char);
 
-      if (int(buffer_size) < currentWidget_->width() * currentWidget_->height() * 3)
+      // std::cout << actual_size << ": " << currentWidget_->width()
+      //           << "x" << currentWidget_->height() << std::endl;
+
+      if (buffer_size < actual_size)
       {
+        std::cout << " new buffer" << std::endl; 
         delete[] buffer;
-        buffer_size = currentWidget_->width() * currentWidget_->height() * 3;
-        buffer = new char[buffer_size];
+        buffer_size = actual_size;
+        buffer = new unsigned char[buffer_size];
       }
       if (int(buffer_height) != currentWidget_->height() ||
           int(buffer_width) != currentWidget_->width())
@@ -139,8 +146,11 @@ namespace dg
         buffer_height = currentWidget_->height();
       }
 
+      assert(buffer);
+      glPixelStorei(GL_PACK_ALIGNMENT, 1);
       glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
                    GL_RGB, GL_UNSIGNED_BYTE, buffer);
+
     }
 
     image_view& ImageView(const std::string& title, unsigned width, unsigned height)

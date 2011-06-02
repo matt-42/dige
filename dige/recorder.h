@@ -122,7 +122,7 @@ namespace dg
     std::ofstream output_;      /*!< output stream. */
     std::string path_;
     bool init_failed_;          /*!< remember a failed initialization. */
-    char* window_capture_;      /*!< rgbframe buffer use to capture windows content. */
+    unsigned char* window_capture_;      /*!< rgbframe buffer use to capture windows content. */
     unsigned window_capture_size_; /*!< rgbframe buffer size. */
     unsigned window_capture_width_; /*!< rgbframe width. */
     unsigned window_capture_height_; /*!< rgbframe height. */

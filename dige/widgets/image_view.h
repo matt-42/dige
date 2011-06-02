@@ -106,7 +106,7 @@ namespace dg
       ** \todo The size of the buffer should stay constant even during
       ** image_view resizing. We may need to use opengl FBO.
       */
-      void dump_rgb_frame_buffer(char*& buffer,
+      void dump_rgb_frame_buffer(unsigned char*& buffer,
                                  unsigned& buffer_size,
                                  unsigned& buffer_width,
                                  unsigned& buffer_height);
