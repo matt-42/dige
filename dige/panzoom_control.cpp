@@ -35,7 +35,8 @@ namespace dg
 {
 
   panzoom_control::panzoom_control()
-    : QGLWidget(0, widgets::image_view::image_views().begin()->second->widget(),
+    : QGLWidget(0, static_cast<widgets::gl_widget*>
+                (widgets::image_view::image_views().begin()->second->widget()),
                 Qt::FramelessWindowHint),
       widget_(0)
   {

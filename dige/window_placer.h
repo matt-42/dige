@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -31,13 +31,11 @@
 # include <QDesktopWidget>
 # include <QRect>
 
-# include <ctime>
-
 namespace dg
 {
   /*!
-  ** Randomly place windows on the screen. To make sure that the window
-  ** manager doesn't automatically cascade newly created window.
+  ** Randomly place windows on the screen. To minimize window
+  ** overlapping.
   **
   */
   class window_placer
@@ -55,7 +53,6 @@ namespace dg
     {
       if (screen_.width() == 0)
       {
-        srand(time(0));
         screen_ = QApplication::desktop()->availableGeometry();
       }
 

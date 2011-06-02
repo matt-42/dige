@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -17,6 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <QApplication>
+#include <QGLWidget>
 #include <dige/widgets/image_view.h>
 
 #include <dige/displaylist.h>
@@ -41,7 +42,7 @@ namespace dg
         currentWidget_ = new gl_widget(dlist_);
       else
         currentWidget_ = new gl_widget(dlist_,
-                                       image_view::image_views().begin()->second->widget());
+                                       image_view::image_views().begin()->second->currentWidget_);
 
       currentWidget_->setGeometry(window_placer::place(width, height));
       currentWidget_->setWindowTitle(QString::fromStdString(title));
@@ -100,9 +101,10 @@ namespace dg
       currentWidget_->updateGL();
     }
 
-    gl_widget* image_view::widget() const
+    QWidget*
+    image_view::widget() const
     {
-      return currentWidget_;
+      return static_cast<QWidget*>(currentWidget_);
     }
 
     displaylist& image_view::dlist()

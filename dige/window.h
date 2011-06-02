@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -40,9 +40,8 @@ namespace dg
 {
 
   /*!
-  ** The window class allow to display the content of a displaylist
-  ** in an OpenGL context.
-  ** It listen to the window event (exposure, resizing...).
+  ** The window class holds a window (as a QFrame). User interface
+  ** layout of a window is set using operator<<=.
   */
   class window
   {
@@ -67,25 +66,37 @@ namespace dg
     unsigned height() const;
 
     /*!
-    ** Set \p l to be drawn in the window.
+    ** Attach the interface layout \p l to the window.
     **
-    ** \param l a displaylist
+    ** \param l a layout
     **
     ** \return the window.
     */
     window& operator<<=(ui_layout& l);
 
+    /*!
+    ** Set \p x to be the only item drawn on the window.
+    ** This operator is just a shortcut for:
+    ** window <<= hbox_start << x << hbox_end;
+    **
+    ** \param x Any type of widget
+    **
+    ** \return the window
+    */
     template <typename T>
     window& operator<<=(T& x)
     {
       return *this <<= hbox_start << x << hbox_end;
     }
 
+    /*!
+    ** \return all window instances.
+    */
     static const std::map<const std::string, window*>& windows();
 
   private:
-    QFrame* currentWidget_; /*!< Underlying sfml window. */
-    ui_layout ui_layout_;         /*!< Current displaylist. */
+    QFrame* currentWidget_; /*!< Underlying QFrame. */
+    ui_layout ui_layout_;   /*!< Current layout. */
   };
 
   window& Window(const std::string& title, unsigned width, unsigned height);

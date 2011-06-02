@@ -34,6 +34,8 @@
 # include <dige/widgets/widget.h>
 # include <dige/displaylist.h>
 
+class QWidget;
+
 namespace dg
 {
 
@@ -82,7 +84,7 @@ namespace dg
       /// Refresh the image_view content.
       void refresh();
 
-      gl_widget* widget() const;
+      QWidget* widget() const;
 
       /// Displaylist accessor.
       displaylist& dlist();

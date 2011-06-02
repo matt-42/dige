@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -30,15 +30,19 @@
 
 namespace dg
 {
+
   namespace trait
   {
 
     namespace format
     {
+
       /// Statically mark an image values as RGB.
       struct rgb { enum {to_gl_format = GL_RGB }; };
+
       /// Statically mark an image values as RGBA.
       struct rgba { enum {to_gl_format = GL_RGBA }; };
+
       /// Statically mark an image values as gray levels.
       struct luminance { enum {to_gl_format = GL_LUMINANCE }; };
 
@@ -79,7 +83,6 @@ namespace dg
     //@}
 
   }; // end of namespace trait.
-
 
 } // end of namespace dg.
 
