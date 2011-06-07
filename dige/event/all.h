@@ -36,9 +36,10 @@
 # include <dige/event/event_waiter.h>
 # include <dige/event/keycode.h>
 # include <dige/event/key_release.h>
+# include <dige/event/key_press.h>
 # include <dige/event/make_event.h>
 # include <dige/event/mouse_move.h>
 # include <dige/event/or_event.h>
-# include <dige/event/wait.h>
+# include <dige/event/wait_event.h>
 
 #endif
