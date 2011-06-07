@@ -34,7 +34,7 @@ struct rgb_image
 
   ~rgb_image()
   {
-    delete data;
+    delete[] data;
   }
 
   unsigned width;
