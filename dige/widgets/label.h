@@ -57,7 +57,7 @@ namespace dg
       /// Destructor.
       ~label();
 
-      QWidget* widget();
+      QWidget* widget() const;
 
     private:
       QLabel* label_;

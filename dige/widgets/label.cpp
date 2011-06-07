@@ -39,10 +39,11 @@ namespace dg
   namespace widgets
   {
 
-    label::label(const std::string&)
+    label::label(const std::string& s)
     {
       need_qapp();
       label_ = new QLabel();
+      set_text(s);
     }
 
     label&
@@ -57,7 +58,7 @@ namespace dg
     }
 
     QWidget*
-    label::widget()
+    label::widget() const
     {
       return label_;
     }
