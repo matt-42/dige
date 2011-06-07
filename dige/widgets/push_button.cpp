@@ -72,7 +72,7 @@ namespace dg
 
 
     push_button&
-    Push_button(const std::string& title, bool checkable)
+    PushButton(const std::string& title, bool checkable)
     {
       return named_instance<push_button>(title, checkable);
     }
