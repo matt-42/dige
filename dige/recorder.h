@@ -31,15 +31,9 @@
 # include <map>
 # include <fstream>
 # include <boost/shared_ptr.hpp>
+# include <boost/cstdint.hpp>
 
 # include <dige/widgets/image_view.h>
-
-/* extern "C" */
-/* { */
-/* #include <libavcodec/avcodec.h> */
-/* #include <libswscale/swscale.h> */
-/* #include <libavcodec/opt.h> */
-/* } */
 
 extern "C"
 {
@@ -52,9 +46,6 @@ extern "C"
   struct SwsContext;
   struct AVFrame;
 }
-
-//typedef unsigned __int8   uint8_t;
-typedef unsigned char   uint8_t;
 
 namespace dg
 {
@@ -117,7 +108,7 @@ namespace dg
     SwsContext* swcontext_;     /*!< swscale context. */
     AVFrame* yuvframe_;         /*!< current yuv frame. */
     AVFrame* rgbframe_;         /*!< current rgb frame. */
-    uint8_t* video_buffer_;     /*!< encoding buffer. */
+    boost::uint8_t* video_buffer_;     /*!< encoding buffer. */
     int video_buffer_size_;     /*!< encoding buffer size. */
     std::ofstream output_;      /*!< output stream. */
     std::string path_;

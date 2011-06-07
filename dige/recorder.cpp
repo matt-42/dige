@@ -30,6 +30,8 @@ extern "C"
 #include <dige/recorder.h>
 #include <dige/widgets/image_view.h>
 
+using boost::uint8_t;
+
 namespace dg
 {
   std::map<const std::string, boost::shared_ptr<recorder> > recorder::recorders_;
@@ -83,7 +85,7 @@ namespace dg
           av_init_packet(&pkt);
           assert(avcontext_ && avcontext_->coded_frame);
           if(avcontext_->coded_frame->key_frame)
-            pkt.flags |= PKT_FLAG_KEY;
+            pkt.flags |= AV_PKT_FLAG_KEY;
           pkt.stream_index = video_st_->index;
           pkt.data = video_buffer_;
           pkt.size = frame_size;
@@ -137,7 +139,7 @@ namespace dg
     rgbframe_ = avcodec_alloc_frame();
 
     avcontext_->codec_id = VIDEO_CODEC;
-    avcontext_->codec_type = CODEC_TYPE_VIDEO;
+    avcontext_->codec_type = AVMEDIA_TYPE_VIDEO;
 
     avcontext_->width = width;
     avcontext_->height = height;
@@ -182,7 +184,7 @@ namespace dg
 
     // open the codec.
     int err;
-    if (err = avcodec_open(avcontext_, avcodec_) < 0)
+    if ((err = avcodec_open(avcontext_, avcodec_)) < 0)
     {
       char err_message[1000];
       memset(err_message, 0, 1000);
@@ -310,7 +312,7 @@ namespace dg
       av_init_packet(&pkt);
 
       if(avcontext_->coded_frame->key_frame)
-        pkt.flags |= PKT_FLAG_KEY;
+        pkt.flags |= AV_PKT_FLAG_KEY;
       pkt.stream_index = video_st_->index;
       pkt.data = video_buffer_;
       pkt.size = encode_size;
