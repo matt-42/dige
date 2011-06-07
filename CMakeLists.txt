@@ -32,9 +32,9 @@ IF(WITH_FFMPEG)
   add_definitions(-D__STDC_CONSTANT_MACROS) # Needed by ffmpeg.
   set(RECORDING_SRC dige/recorder.cpp)
   message(STATUS "Recording enabled")
+  include_directories(${FFMPEG_INCLUDE_DIRS})
 ENDIF(WITH_FFMPEG)
 
-include_directories(${FFMPEG_INCLUDE_DIR})
 
 IF (${CMAKE_C_COMPILER_ID} MATCHES GNU)
    add_definitions(-g -W -Wall -Wextra)
