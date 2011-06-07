@@ -29,7 +29,7 @@
 # include <QApplication>
 # include <QEvent>
 # include <dige/window.h>
-# include <dige/event/wait.h>
+# include <dige/event/wait_event.h>
 # include <dige/event/click.h>
 
 namespace dg
@@ -38,7 +38,7 @@ namespace dg
   void wait_for_dblclick()
   {
     assert(window::windows().size() > 0);
-    event::wait(event::click(0));
+    event::wait_event(event::click(0));
   }
 
 } // end of namespace dg.
