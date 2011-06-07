@@ -44,6 +44,7 @@ add_library(dige
   dige/event/or_event.cpp
   dige/event/click.cpp
   dige/event/key_release.cpp
+  dige/event/key_press.cpp
   dige/event/event.cpp
   dige/event/event_set.cpp
   dige/event/make_event.cpp
