@@ -16,17 +16,17 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   wait.h
+**\file   wait_event.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
 **\date   Sun Nov  7 13:51:44 2010
 **
-**\brief  wait header.
+**\brief  wait_event header.
 **
 **
 */
 
-#ifndef DIGE_WAIT_H_
-# define DIGE_WAIT_H_
+#ifndef DIGE_WAIT_EVENT_H_
+# define DIGE_WAIT_EVENT_H_
 
 # include <QObject>
 # include <QApplication>
@@ -43,7 +43,7 @@ namespace dg
   {
 
     template <typename U>
-    any_event wait(const U& e)
+    any_event wait_event(const U& e)
     {
       event_waiter<U> w;
       w.start_waiting_for(e);
@@ -57,14 +57,14 @@ namespace dg
     }
 
 #define for_each_event_until(E, C, U)           \
-    for (dg::any_event E = dg::wait(C | U);     \
+    for (dg::any_event E = dg::event::wait_event(C | U);     \
          !dg::event_match(U, E);                \
-         E = dg::wait(C | U))
+         E = dg::event::wait_event(C | U))
 
 #define for_each_event(E, C)                    \
-    for (dg::any_event E = dg::wait(C);         \
+    for (dg::any_event E = dg::event::wait_event(C);         \
          ;                                      \
-         E = dg::wait(C))
+         E = dg::event::wait_event(C))
 
   } // end of namespace event.
 
