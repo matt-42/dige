@@ -19,15 +19,15 @@
 #include <QApplication>
 #include <dige/window.h>
 
-#include <dige/event/wait.h>
-#include <dige/event/key_release.h>
+#include <dige/event/wait_event.h>
+#include <dige/event/key_press.h>
 
 namespace dg
 {
 
   void pause()
   {
-    event::wait(event::key_release(event::key_space));
+    event::wait_event(event::key_press(event::key_space));
   }
 
 } // end of namespace dg.
