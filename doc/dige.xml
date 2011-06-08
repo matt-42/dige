@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-  "/usr/share/xml/docbook/schema/dtd/4.4/docbookx.dtd">
+  "/usr/share/xml/docbook/xml-dtd-4.5/docbookx.dtd">
 <article id="dige" last-revision="$Date: 2010/10/03 19:27:41 $" xmlns:xi="http://www.w3.org/2001/XInclude">
   <title>Dige 0.1</title>
   <articleinfo>
@@ -22,12 +22,25 @@
   <section id="dige.intro">
     <title>Introduction</title>
     <para>
-      Dige is a library of tools to visualize and record what is happening in
-      your code. It provides a set of C++ operators that display content of
-      images. In few lines of code, you can display any types of images. The
-      aim of the library is to help developers detect bugs faster, and easily
-      get more intuition about algorithms there are writing. Dige is licensed
-      under LGPL.
+      As a developer of image processing applications, I always need
+      to visualize evolution of algorithms over the time. Typically,
+      if a loop is updating an image X, I want to display X after each
+      iteration. Or, if an algorithm acts according to parameter x, I
+      want to tune x using a slider and directly see its impact.  The
+      goal of this project is to provide very simple tools to make
+      this possible.
+
+      Dige wraps a subset of the Qt framework and defines a very
+      simple API to create and manage basic graphical user interfaces
+      (GUI) that aims to:
+      <itemizedlist>
+        <listitem>Visualize data</listitem>
+        <listitem>Control the state of some variables</listitem>
+      </itemizedlist>
+
+      To be as light as possible, no additional thread is needed by
+      the GUI. This library is build on top of the Qt framework.
+      It is licensed under LGPL.
     </para>
     <para>
       Tested environments:

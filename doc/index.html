@@ -1,7 +1,4 @@
-
-<html><head>
-      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Dige 0.1</title><link rel="stylesheet" href="style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<html><head><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Dige 0.1</title><link href="style.css" type="text/css" rel="stylesheet"><meta content="DocBook XSL Stylesheets V1.76.1" name="generator">
     <meta name="keywords" content="dige, c++, image processing algorithms
     development, visualization framework, Matthieu Garrigues"/>
 
@@ -35,15 +32,25 @@
 </script>
 
 </head>
-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="d0e19"></a><p>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10017"></a><p>
         Distributed under the LGPL License, Version 3.0.
       </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.screenshot">Screenshot</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Tutorial</a></span></dt><dt><span class="section"><a href="#dige.shortcuts">Shortcuts</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
-      Dige is a library of tools to visualize and record what is happening in
-      your code. It provides a set of C++ operators that display content of
-      images. In few lines of code, you can display any types of images. The
-      aim of the library is to help developers detect bugs faster, and easily
-      get more intuition about algorithms there are writing. Dige is licensed
-      under LGPL.
+      As a developer of image processing applications, I always need
+      to visualize evolution of algorithms over the time. Typically,
+      if a loop is updating an image X, I want to display X after each
+      iteration. Or, if an algorithm acts according to parameter x, I
+      want to tune x using a slider and directly see its impact.  The
+      goal of this project is to provide very simple tools to make
+      this possible.
+
+      Dige wraps a subset of the Qt framework and defines a very
+      simple API to create and manage basic graphical user interfaces
+      (GUI) that aims to:
+      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Visualize data</li><li class="listitem">Control the state of some variables</li></ul></div><p>
+
+      To be as light as possible, no additional thread is needed by
+      the GUI. This library is build on top of the Qt framework.
+      It is licensed under LGPL.
     </p><p>
       Tested environments:
       </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Linux (Ubuntu) / g++-4.4.3</li></ul></div><p>
@@ -67,57 +74,58 @@ make
     </p></div><div class="section" title="Tutorial"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.tutorial"></a>Tutorial</h2></div></div></div><p>
 This little piece of code shows how to use dige to display a
 simple <code class="code">rgb_image</code> image type.
-</p><pre class="programlisting">
+</p>
+<pre class="programlisting">
       
- <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Needed by rand.</span>
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;cstdlib&gt;</span>
+ <span xmlns:saxon="http://saxon.sf.net/" xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color: #800" class="hl-comment">// Needed by rand.</span>
+<span style="color: #402080" class="hl-directive">#include &lt;cstdlib&gt;</span>
 
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige includes.</span>
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;dige/window.h&gt;</span>
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-directive" style="color: #402080">#include &lt;dige/image.h&gt;</span>
+<span style="color: #800" class="hl-comment">// Dige includes.</span>
+<span style="color: #402080" class="hl-directive">#include &lt;dige/window.h&gt;</span>
+<span style="color: #402080" class="hl-directive">#include &lt;dige/image.h&gt;</span>
 
     </pre><p>
 We define here our simple 2d image type that will be displayed by dige.
 </p><pre class="programlisting">
       
 
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// A simple rgb image type</span>
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">struct</span> rgb_image
+<span style="color: #800" class="hl-comment">// A simple rgb image type</span>
+<span style="color: #008" class="hl-keyword">struct</span> rgb_image
 {
-  rgb_image(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> w, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> h)
+  rgb_image(<span style="color: #008" class="hl-keyword">unsigned</span> w, <span style="color: #008" class="hl-keyword">unsigned</span> h)
     : width(w),
       height(h),
-      image_size(w * h * <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">3</span>)
+      image_size(w * h * <span style="color: #066" class="hl-number">3</span>)
   {
-    data = <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">new</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>[image_size];
+    data = <span style="color: #008" class="hl-keyword">new</span> <span style="color: #008" class="hl-keyword">unsigned</span> <span style="color: #008" class="hl-keyword">char</span>[image_size];
   }
 
   ~rgb_image()
   {
-    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">delete</span> data;
+    <span style="color: #008" class="hl-keyword">delete</span> data;
   }
 
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> width;
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> height;
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> image_size;
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>* data;
+  <span style="color: #008" class="hl-keyword">unsigned</span> width;
+  <span style="color: #008" class="hl-keyword">unsigned</span> height;
+  <span style="color: #008" class="hl-keyword">unsigned</span> image_size;
+  <span style="color: #008" class="hl-keyword">unsigned</span> <span style="color: #008" class="hl-keyword">char</span>* data;
 };
 
     </pre><p>
 Now, let's adapt our image type to dige's internal image type. Since
 <code class="code">rgb_image</code> handle a buffer of contiguous rgb pixels
-with <code class="code"><span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span></code>, we can adapt it
-into <code class="code">dg::image&lt;dg::trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span>
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;</code>.
+with <code class="code"><span style="color: #008" class="hl-keyword">unsigned</span> <span style="color: #008" class="hl-keyword">char</span></code>, we can adapt it
+into <code class="code">dg::image&lt;dg::trait::format::rgb, <span style="color: #008" class="hl-keyword">unsigned</span>
+<span style="color: #008" class="hl-keyword">char</span>&gt;</code>.
 
 </p><pre class="programlisting">
       
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">namespace</span> dg
+<span style="color: #008" class="hl-keyword">namespace</span> dg
 {
-  image&lt;trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;
-  adapt(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">const</span> rgb_image&amp; i)
+  image&lt;trait::format::rgb, <span style="color: #008" class="hl-keyword">unsigned</span> <span style="color: #008" class="hl-keyword">char</span>&gt;
+  adapt(<span style="color: #008" class="hl-keyword">const</span> rgb_image&amp; i)
   {
-    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">return</span> image&lt;trait::format::rgb, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">char</span>&gt;
+    <span style="color: #008" class="hl-keyword">return</span> image&lt;trait::format::rgb, <span style="color: #008" class="hl-keyword">unsigned</span> <span style="color: #008" class="hl-keyword">char</span>&gt;
       (i.width, i.height, i.data);
   }
 }
@@ -129,29 +137,29 @@ into <code class="code">dg::image&lt;dg::trait::format::rgb, <span xmlns:fo="htt
       of <code class="code">rgb_image</code> can be directly passed to dige operator.
     </p><pre class="programlisting">
       
-<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">int</span> main()
+<span style="color: #008" class="hl-keyword">int</span> main()
 {
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">using</span> dg::display; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige display.</span>
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">using</span> dg::dl; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Dige list starter</span>
+  <span style="color: #008" class="hl-keyword">using</span> dg::display; <span style="color: #800" class="hl-comment">// Dige display.</span>
+  <span style="color: #008" class="hl-keyword">using</span> dg::dl; <span style="color: #800" class="hl-comment">// Dige list starter</span>
 
-  srand(time(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">0</span>));
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Initialize an image.</span>
-  rgb_image img(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>);
+  srand(time(<span style="color: #066" class="hl-number">0</span>));
+  <span style="color: #800" class="hl-comment">// Initialize an image.</span>
+  rgb_image img(<span style="color: #066" class="hl-number">200</span>, <span style="color: #066" class="hl-number">200</span>);
 
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> t = clock();
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">while</span> (clock() - t &lt; <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">5</span> * CLOCKS_PER_SEC)
+  <span style="color: #008" class="hl-keyword">unsigned</span> t = clock();
+  <span style="color: #008" class="hl-keyword">while</span> (clock() - t &lt; <span style="color: #066" class="hl-number">5</span> * CLOCKS_PER_SEC)
   {
-    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Fill img with random values.</span>
-    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">for</span> (<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-keyword" style="color: #008">unsigned</span> i = <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">0</span>; i &lt; img.image_size; i++)
+    <span style="color: #800" class="hl-comment">// Fill img with random values.</span>
+    <span style="color: #008" class="hl-keyword">for</span> (<span style="color: #008" class="hl-keyword">unsigned</span> i = <span style="color: #066" class="hl-number">0</span>; i &lt; img.image_size; i++)
       img.data[i] = rand();
 
-    <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// display it.</span>
-    display(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"random"</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">300</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>)
+    <span style="color: #800" class="hl-comment">// display it.</span>
+    display(<span style="color: #080" class="hl-string">"random"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">200</span>)
       &lt;&lt;= dl() - img - img +
                     img;
   }
 
-  <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-comment" style="color: #800">// Pause the program at the end, and make the last image stay on the window.</span>
+  <span style="color: #800" class="hl-comment">// Pause the program at the end, and make the last image stay on the window.</span>
   dg::pause();
 }
 
@@ -169,12 +177,12 @@ into <code class="code">dg::image&lt;dg::trait::format::rgb, <span xmlns:fo="htt
          Finally <code class="code">operator&lt;&lt;=</code> tells to the window "random" to draw
          our newly created displaylist.
        </li></ul></div><p>
-     </p><div class="figure"><a name="d0e139"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
+     </p><div class="figure"><a name="N100A6"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
    </p><p>
      To capture the content of a window into a video, use the following:
     </p><pre class="programlisting">
       
-      record(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"video.avi"</span>) &lt;&lt;= display(<span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-string" style="color: #080">"random"</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">300</span>, <span xmlns:fo="http://www.w3.org/1999/XSL/Format" class="hl-number" style="color: #066">200</span>)
+      record(<span style="color: #080" class="hl-string">"video.avi"</span>) &lt;&lt;= display(<span style="color: #080" class="hl-string">"random"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">200</span>)
       &lt;&lt;= dl() - img - img +
                     img;
 

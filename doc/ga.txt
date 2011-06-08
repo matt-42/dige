@@ -1,0 +1,32 @@
+    <meta name="keywords" content="dige, c++, image processing algorithms
+    development, visualization framework, Matthieu Garrigues"/>
+
+    <meta name="description" content="Dige website"/>
+    <meta name="abstract" content="Dige, a visualization framework to help image processing algorithms development."/>
+
+    <meta name="author" content="Matthieu Garrigues"/>
+    <meta name="copyright" content="2010, Matthieu Garrigues"/>
+    <meta name="revisit-after" content="14 days"/>
+    <meta http-equiv="Last-Modified" content="10 October 2010 21:23:40 GMT" />
+    <meta http-equiv="Expires" content="15 October 2010 21:23:40 GMT" />
+    <meta name="distribution" content="global"/>
+    <meta name="robots" content="all"/>
+    <meta http-equiv="content-type" content="text/html;charset=iso-8859-1"/>
+    <meta http-equiv="content-language" content="en"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta name="generator" content="emacs"/>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-16982622-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+

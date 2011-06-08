@@ -1,15 +1,17 @@
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 xmlns:xslthl="http://xslthl.sf.net"
+		xmlns:saxon="http://saxon.sf.net/"
                 exclude-result-prefixes="xslthl">
 
-  <xsl:import href="/usr/share/xml/docbook/stylesheet/nwalsh/html/docbook.xsl"/>
-  <xsl:import href="/usr/share/xml/docbook/stylesheet/nwalsh/html/highlight.xsl"/>
+  <xsl:import href="/usr/share/xml/docbook/xsl-stylesheets-1.76.1/html/docbook.xsl"/>
+  <xsl:import href="/usr/share/xml/docbook/xsl-stylesheets-1.76.1/html/highlight.xsl"/>
 
   <xsl:param name="highlight.source" select="1"/>
-  <xsl:param name="highlight.xslthl.config">file:./xslthl-2.0.2/conf.xml</xsl:param>
+  <xsl:param name="highlight.xslthl.config">file:/usr/share/xml/docbook/xsl-stylesheets-1.76.1/highlighting/xslthl-config.xml</xsl:param>
   <xsl:param name="html.stylesheet">style.css</xsl:param>
+
 
   <xsl:template match='xslthl:comment' mode="xslthl">
     <span class="hl-comment" style="color: #800"><xsl:apply-templates mode="xslthl"/></span>
