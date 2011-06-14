@@ -122,7 +122,7 @@ namespace dg
     }
 
     QLayout*
-    slider::widget()
+    slider::widget() const
     {
       return layout_;
     }

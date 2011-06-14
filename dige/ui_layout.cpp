@@ -74,7 +74,7 @@ namespace dg
     return *this;
   }
 
-  ui_layout& ui_layout::operator<<(ui_layout& n)
+  ui_layout& ui_layout::operator<<(const ui_layout& n)
   {
     QBoxLayout* l = stack_.top();
     l->addLayout(n.root(), 1000);
@@ -105,7 +105,7 @@ namespace dg
     stack_.top()->addLayout(l);
   }
 
-  QBoxLayout* ui_layout::root()
+  QBoxLayout* ui_layout::root() const
   {
     return root_;
   }

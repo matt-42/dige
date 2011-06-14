@@ -76,7 +76,7 @@ namespace dg
       /// Destructor.
       ~slider();
 
-      QLayout* widget();
+      QLayout* widget() const;
 
       event::any_event changed_event() const;
 

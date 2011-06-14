@@ -55,13 +55,13 @@ namespace dg
     ** \param widget The widget.
     ** \param stretch_factor stretch factor.
     */
-    stretched_widget(T& widget, unsigned stretch_factor)
-      : w_(&widget),
+    stretched_widget(const T& widget, unsigned stretch_factor)
+      : w_(widget),
         s_(stretch_factor)
     {
     }
 
-    T* w_;                      /*!< The widget. */
+    const T& w_;                      /*!< The widget. */
     unsigned s_;                /*!< Stretch factor. */
   };
 
@@ -82,28 +82,28 @@ namespace dg
     /// Operators that dynamically build the interface.
     //@{
     template <typename T>
-    ui_layout& operator<<(T& w);
+    ui_layout& operator<<(const T& w);
     ui_layout& operator<<(const Literal<vbox_start_>&);
     ui_layout& operator<<(const Literal<vbox_end_>&);
     ui_layout& operator<<(const Literal<hbox_start_>&);
     ui_layout& operator<<(const Literal<hbox_end_>&);
-    ui_layout& operator<<(ui_layout& l);
+    ui_layout& operator<<(const ui_layout& l);
 
     template <typename T>
-    ui_layout& operator<<(stretched_widget<T> e)
+    ui_layout& operator<<(const stretched_widget<T> e)
     {
-      *this << *(e.w_);
+      *this << (e.w_);
       set_stretch_for_last_item(e.s_);
       return *this;
     }
 
-    ui_layout& operator<<(stretched_layout e);
+    ui_layout& operator<<(const stretched_layout e);
     void add(QWidget* w);
     void add(QLayout* l);
     //@}
 
     /// Root layout accessor.
-    QBoxLayout* root();
+    QBoxLayout* root() const;
 
   private:
     void set_stretch_for_last_item(unsigned s);
@@ -142,9 +142,9 @@ namespace dg
     ** \return The stretched_widget.
     */
     template <typename T>
-    stretched_widget<T> operator/(Widget<T>& w, unsigned s)
+    stretched_widget<T> operator/(const Widget<T>& w, unsigned s)
     {
-      T& e = exact(w);
+      const T& e = exact(w);
       return stretched_widget<T>(e, s);
     }
   }
@@ -160,7 +160,7 @@ namespace dg
   stretched_layout operator/(ui_layout l, unsigned s);
 
   template <typename T>
-  ui_layout& ui_layout::operator<<(T& w)
+  ui_layout& ui_layout::operator<<(const T& w)
   {
     add(w.widget());
     return *this;
