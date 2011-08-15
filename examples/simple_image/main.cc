@@ -47,52 +47,55 @@ namespace dg
 {
 
   // We then define the bridge between our custom rgb_image type and the
-  // internal dg::image type. This will be called before each display of an
-  // rgb_image. image takes to template parameters:
+  // internal dg::image type. This will be called before displaying each
+  // rgb_image. dg::image takes two template parameters:
   //
-  // -> The format of the pixels which can be : - trait::format::rgb
+  // 1> The format of the pixels which can be : - trait::format::rgb
   //                                            - trait::format::rgba
   //                                            - trait::format::luminance
-  //     Or, if your version of opengl support it:
+  //     Or, if your opengl version supports it:
   //                                            - trait::format::bgr
   //                                            - trait::format::bgra
-  // -> The data type which can be: float, char, short, int,
+  // 2> The data type which can be: float, char, short, int,
   //    unsigned float, unsigned char, unsigned short, unsigned int.
   // Note that when displaying float, values has to be normalized between
-  // 0.f and 1.f.
+  // 0 and 1.
   image<trait::format::rgb, unsigned char>
   adapt(const ::rgb_image& i)
   {
     return image<trait::format::rgb, unsigned char>
       (i.width, i.height, i.data);
-    // Warning: dg::image only handle contiguous buffers of pixel.
+    // Warning: dg::image only handles contiguous buffers of pixel.
   }
 
 }
 
 int main()
 {
-  using namespace dg::widgets;
-  using namespace dg::event;
+  namespace dw = dg::widgets;
+  namespace de = dg::event;
   using dg::dl; // image list starter.
 
   srand(time(0));
   rgb_image img(20, 20);
 
-  // Create a window containing an ImageView named random that will
+  // Create a window containing an ImageView named "random" that will
   // display our rgb_image.
-  dg::Window("simple_image", 500, 300) <<= ImageView("random");
+  dg::Window("simple_image example", 500, 300) <<= dw::ImageView("random");
 
   unsigned t = clock();
+  // Each iteration generates a random image and display it in
+  // dw::ImageView("random")
   while (clock() - t < 2 * CLOCKS_PER_SEC)
   {
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    // Display img in the ImageView. dl() starts a list of images.
-    ImageView("random")  <<= dl() - img;
+    // Display img 3 times in the ImageView. 
+    // dl() starts a list of images.
+    dw::ImageView("random")  <<= dl() - img - img + img;
   }
 
   // Wait for any key press event.
-  wait_event(key_press());
+  de::wait_event(de::key_press());
 }
