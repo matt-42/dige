@@ -1,0 +1,8 @@
+Dige library
+----------------
+
+The dige library allows you to build and plug a graphical user interface on
+top of your application in order to visualize evolution of data (images,
+scalars).
+
+It depends on Qt (for GUI) and FFMPEG for video encoding.
