@@ -41,6 +41,7 @@ namespace dg
 //#define VIDEO_CODEC CODEC_ID_MPEG4
 #define VIDEO_CODEC CODEC_ID_H264
 //#define VIDEO_CODEC CODEC_ID_FFVHUFF
+
 #define FRAME_FORMAT PIX_FMT_YUV420P
 
   recorder::recorder(const std::string& path)
@@ -167,11 +168,7 @@ namespace dg
 
     avcontext_->pix_fmt = FRAME_FORMAT;
 
-    assert(av_set_parameters(fmtcontext_, NULL) >= 0);
-
-
     av_dump_format(fmtcontext_, 0, path_.c_str(), 1);
-
 
     // find the mpeg1 video encoder
     avcodec_ = avcodec_find_encoder(avcontext_->codec_id);
@@ -243,7 +240,7 @@ namespace dg
     }
 
     /* write the stream header, if any */
-    av_write_header(fmtcontext_);
+    avformat_write_header(fmtcontext_, NULL);
 
     return;
 
