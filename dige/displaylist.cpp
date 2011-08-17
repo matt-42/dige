@@ -43,7 +43,8 @@ namespace dg
   }
 
   displaylist::displaylist()
-    : textures_(new std::vector<std::vector<abstract_texture*> >(1), free_textures)
+    : textures_(new std::vector<std::vector<abstract_texture*> >(1), free_textures),
+      is_loaded_(false)
   {
   }
 
@@ -57,8 +58,21 @@ namespace dg
     for (unsigned i = 0; i < textures_->size(); i++)
       for (unsigned j = 0; j < (*textures_)[i].size(); j++)
         (*textures_)[i][j]->load();
+    is_loaded_ = true;
   }
 
+  void
+  displaylist::clear()
+  {
+    assert(!is_loaded_);
+    textures_->clear();
+  }
+
+  void
+  displaylist::newline()
+  {
+    textures_->push_back(std::vector<abstract_texture*>());
+  }
 
   void
   displaylist::unload()
@@ -66,6 +80,7 @@ namespace dg
     for (unsigned i = 0; i < textures_->size(); i++)
       for (unsigned j = 0; j < (*textures_)[i].size(); j++)
         (*textures_)[i][j]->unload();
+    is_loaded_ = false;
   }
 
   point2d<int>

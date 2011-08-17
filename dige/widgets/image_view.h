@@ -81,6 +81,11 @@ namespace dg
       */
       image_view& operator<<=(displaylist& l);
 
+      template <typename T>
+      image_view& operator<<(const T& i);
+
+      image_view& operator<<(image_view& (*)(image_view&));
+
       /// Refresh the image_view content.
       void refresh();
 
@@ -89,10 +94,19 @@ namespace dg
       /// Displaylist accessor.
       displaylist& dlist();
 
+      /// Load dlist images to video memory.
+      void load_dlist();
+
       /// Set unresizable
       void set_unresizable();
 
+      /// Newline separator.
+      void newline();
+
       point2d<int> selected_coords() const;
+
+      /// Unload display list from video memory.
+      void unload_list();
 
       /*!
       ** Dump the image_view content to \p buffer.
@@ -117,7 +131,7 @@ namespace dg
     private:
       gl_widget* currentWidget_; /*!< Underlying qt widget. */
       displaylist dlist_;         /*!< Current displaylist. */
-
+      bool list_on_screen_;
       friend image_view& ImageView(const std::string& title, unsigned width,
                                    unsigned height);
     };
@@ -134,8 +148,15 @@ namespace dg
     image_view& ImageView(const std::string& title, unsigned width = 400,
                           unsigned height = 400);
 
+
+    image_view& newline(image_view& iv);
+
+    image_view& show(image_view& iv);
+
   } // end of namespace widgets.
 
 } // end of namespace dg.
+
+# include <dige/widgets/image_view.hpp>
 
 #endif

@@ -96,9 +96,28 @@ namespace dg
       return *this;
     }
 
+    image_view& image_view::operator<<(image_view& (*fun)(image_view&))
+    {
+      return fun(*this);
+    }
+
+    void image_view::unload_list()
+    {
+      currentWidget_->makeCurrent();
+      dlist_.unload();
+      dlist_.clear();
+    }
+
     void image_view::refresh()
     {
+      list_on_screen_ = true;
       currentWidget_->updateGL();
+    }
+
+
+    void image_view::newline()
+    {
+      dlist_.newline();
     }
 
     QWidget*
@@ -110,6 +129,13 @@ namespace dg
     displaylist& image_view::dlist()
     {
       return dlist_;
+    }
+
+    void image_view::load_dlist()
+    {
+      currentWidget_->show();
+      currentWidget_->makeCurrent();
+      dlist_.load();
     }
 
     const std::map<const std::string, image_view*>&
@@ -151,6 +177,22 @@ namespace dg
       glReadPixels(0, 0, currentWidget_->width(), currentWidget_->height(),
                    GL_RGB, GL_UNSIGNED_BYTE, buffer);
 
+    }
+
+
+    image_view& newline(image_view& iv)
+    {
+      iv.newline();
+      return iv;
+    }
+
+    image_view& show(image_view& iv)
+    {
+      iv.load_dlist();
+      iv.refresh();
+      QApplication::processEvents();
+      QApplication::sendPostedEvents();
+      return iv;
     }
 
     image_view& ImageView(const std::string& title, unsigned width, unsigned height)

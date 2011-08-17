@@ -79,8 +79,13 @@ namespace dg
 
     /// Load all objects on the video memory.
     void load();
+
     /// Unload all objects on the video memory.
     void unload();
+
+    /// Clear the list.
+    void clear();
+
     /*!
     ** Draw the list in the given dimensions.
     **
@@ -88,6 +93,9 @@ namespace dg
     ** \param height height.
     */
     void draw(unsigned width, unsigned height);
+
+    // New line separator.
+    void newline();
 
     /*!
     ** Draw the list in the given dimensions and fill \p layout.
@@ -141,6 +149,8 @@ namespace dg
 
     boost::shared_ptr<std::vector<std::vector<abstract_texture*> > >
       textures_; /*!< 2d array of textures. */
+
+    bool is_loaded_;
   };
 
   typedef displaylist dl;
