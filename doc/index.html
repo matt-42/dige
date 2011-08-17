@@ -32,34 +32,38 @@
 </script>
 
 </head>
-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10017"></a><p>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10018"></a><p>
         Distributed under the LGPL License, Version 3.0.
-      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
-      As a developer of image processing applications, I always need
-      to visualize evolution of algorithms over the time. Typically,
-      if a loop is updating an image X, I want to display X after each
-      iteration. Or, if an algorithm acts according to parameter x, I
-      want to tune x using a slider and directly see its impact.  The
-      goal of this project is to provide very simple C++ tools to make
-      this possible.
+      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
+<div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
+      Dige is a C++ toolbox designed for visual and interactive
+      debugging. It allows basic interactions with a graphical user
+      interface with only few C++ statement:
 
-      Dige wraps a subset of the Qt framework and defines a very
-      simple API to create and manage basic graphical user interfaces
-      (GUI) that aims to:
-      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Visualize images</li><li class="listitem">Control the state of some variables</li></ul></div><p>
+    </p><pre class="programlisting">
+      
+  <span xmlns:saxon="http://saxon.sf.net/" xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color: #800" class="hl-comment">// GUI definition and creation.</span>
+  Window(<span style="color: #080" class="hl-string">"simple_image example"</span>, <span style="color: #066" class="hl-number">500</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;= ImageView(<span style="color: #080" class="hl-string">"view"</span>);
 
-      To be as light as possible, no additional thread is needed by
-      the GUI so you don't need to change the main layout of your code.
-      This library is build on top of the Qt framework.
+  my_rgb_image_type my_image;
+  for_each_event(e, key_release())
+  {
+    <span style="color: #800" class="hl-comment">// [...Process my_image...]</span>
+
+    <span style="color: #800" class="hl-comment">// Display result</span>
+    ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt;= dl() - my_image;
+  }
+
+   </pre><p>
+
+      This library is built on top of the Qt framework.
       It is licensed under LGPL.
-    </p><p>
-      Dependencies:
-      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">FFMPEG <a class="ulink" href="http://www.ffmpeg.org" target="_top">http://www.ffmpeg.org</a></li><li class="listitem">Qt <a class="ulink" href="http://qt.nokia.com" target="_top">http://qt.nokia.com</a></li></ul></div><p>
-    </p><p>
-      Tested environments:
+    </p></div><div class="section" title="Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.deps"></a>Dependencies</h2></div></div></div><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Qt4 <a class="ulink" href="http://qt.nokia.com" target="_top">http://qt.nokia.com</a></li><li class="listitem">FFMPEG <a class="ulink" href="http://www.ffmpeg.org" target="_top">http://www.ffmpeg.org</a></li></ul></div><p>
+    </p></div><div class="section" title="Tested environments"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.envs"></a>Tested environments</h2></div></div></div><p>
       </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Linux (Archlinux) / g++-4.6.1</li><li class="listitem">Windows7 / visual studio 2008</li></ul></div><p>
     </p></div><div class="section" title="Features"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.features"></a>Features</h2></div></div></div><p>
-      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">GUI definition in one C++ statement</li><li class="listitem">Event handling</li><li class="listitem">Video encoding</li><li class="listitem">Image display (Pan-zoom, color picker)</li></ul></div><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">GUI definition</li><li class="listitem">Event handling</li><li class="listitem">Image display (Pan-zoom, color picker)</li><li class="listitem">Scalar display</li><li class="listitem">Video encoding</li></ul></div><p>
     </p></div><div class="section" title="Compilation and Installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.install"></a>Compilation and Installation</h2></div></div></div><p>
       </p><pre class="programlisting">
 git clone git://github.com/matt-42/dige.git
@@ -74,12 +78,11 @@ make
       than the default one.
       <code class="code">-DWITH_RECORDING:bool=ON</code> enable video recording. Need FFmpeg.
     </p></div><div class="section" title="Getting started"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.tutorial"></a>Getting started</h2></div></div></div><p>
-The following piece of code shows how to use dige to display a
-simple <code class="code">rgb_image</code> image type.
-</p>
-<pre class="programlisting">
+The following example shows how to use dige to display a
+simple user defined <code class="code">rgb_image</code> image type.
+</p><pre class="programlisting">
       
-<span xmlns:saxon="http://saxon.sf.net/" xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color: #402080" class="hl-directive">#include &lt;cstdlib&gt;</span>
+<span style="color: #402080" class="hl-directive">#include &lt;cstdlib&gt;</span>
 <span style="color: #402080" class="hl-directive">#include &lt;ctime&gt;</span>
 
 <span style="color: #800" class="hl-comment">// Dige include.</span>
@@ -185,7 +188,7 @@ We define here our simple 2d image type that will be displayed by dige.
          Finally, <code class="code">operator&lt;&lt;=</code> tells "random" to draw
          our newly created image list.
        </li></ul></div><p>
-     </p><div class="figure"><a name="N100BC"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
+     </p><div class="figure"><a name="N100C6"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
    </p></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
-     </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li></ul></div><p>
+     </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li></ul></div><p>
     </p></div></div></body></html>

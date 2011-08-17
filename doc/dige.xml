@@ -10,7 +10,7 @@
     </author>
     </authorgroup>
     <copyright>
-      <year>2010-2011</year> <holder>Matthieu Garrigues</holder>
+      <year>2010-2011</year> <holder>Matthieu Garrigues</holder> firstname.lastname@gmail.com
     </copyright>
     <legalnotice>
       <para>
@@ -22,36 +22,44 @@
   <section id="dige.intro">
     <title>Introduction</title>
     <para>
-      As a developer of image processing applications, I always need
-      to visualize evolution of algorithms over the time. Typically,
-      if a loop is updating an image X, I want to display X after each
-      iteration. Or, if an algorithm acts according to parameter x, I
-      want to tune x using a slider and directly see its impact.  The
-      goal of this project is to provide very simple C++ tools to make
-      this possible.
+      Dige is a C++ toolbox designed for visual and interactive
+      debugging. It allows basic interactions with a graphical user
+      interface with only few C++ statement:
 
-      Dige wraps a subset of the Qt framework and defines a very
-      simple API to create and manage basic graphical user interfaces
-      (GUI) that aims to:
-      <itemizedlist>
-        <listitem>Visualize images</listitem>
-        <listitem>Control the state of some variables</listitem>
-      </itemizedlist>
+    <programlisting language="cpp">
+      <![CDATA[
+  // GUI definition and creation.
+  Window("simple_image example", 500, 300) <<= ImageView("view");
 
-      To be as light as possible, no additional thread is needed by
-      the GUI so you don't need to change the main layout of your code.
-      This library is build on top of the Qt framework.
+  my_rgb_image_type my_image;
+  for_each_event(e, key_release())
+  {
+    // [...Process my_image...]
+
+    // Display result
+    ImageView("view") <<= dl() - my_image;
+  }
+]]>
+   </programlisting>
+
+      This library is built on top of the Qt framework.
       It is licensed under LGPL.
     </para>
+  </section>
+
+  <section id="dige.deps">
+    <title>Dependencies</title>
     <para>
-      Dependencies:
       <itemizedlist>
-        <listitem>Qt <ulink url="http://qt.nokia.com"/></listitem>
+        <listitem>Qt4 <ulink url="http://qt.nokia.com"/></listitem>
         <listitem>FFMPEG <ulink url="http://www.ffmpeg.org"/></listitem>
       </itemizedlist>
     </para>
+  </section>
+
+  <section id="dige.envs">
+    <title>Tested environments</title>
     <para>
-      Tested environments:
       <itemizedlist>
         <listitem>Linux (Archlinux) / g++-4.6.1</listitem>
         <listitem>Windows7 / visual studio 2008</listitem>
@@ -63,10 +71,11 @@
     <title>Features</title>
     <para>
       <itemizedlist>
-        <listitem>GUI definition in one C++ statement</listitem>
+        <listitem>GUI definition</listitem>
         <listitem>Event handling</listitem>
-        <listitem>Video encoding</listitem>
         <listitem>Image display (Pan-zoom, color picker)</listitem>
+        <listitem>Scalar display</listitem>
+        <listitem>Video encoding</listitem>
       </itemizedlist>
     </para>
   </section>
@@ -94,8 +103,8 @@ make
     <title>Getting started</title>
 
 <para>
-The following piece of code shows how to use dige to display a
-simple <code>rgb_image</code> image type.
+The following example shows how to use dige to display a
+simple user defined <code>rgb_image</code> image type.
 </para>
 
     <programlisting language="cpp">
