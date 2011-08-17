@@ -121,7 +121,7 @@ int main()
     //  |-------------|
     //
     //  std::cout << " create dl "  << std::endl;
-    display("random", 300, 200)
+    ImageView("random", 300, 200)
       <<=
       dl() - img - img +
                     img;

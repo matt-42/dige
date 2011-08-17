@@ -91,9 +91,9 @@ int main()
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    // Display img 3 times in the ImageView. 
-    // dl() starts a list of images.
-    dw::ImageView("random")  <<= dl() - img - img + img;
+    // Display img 3 times in the ImageView.
+    dw::ImageView("random")  << img << img << dw::newline
+                             << img << dw::show;
   }
 
   // Wait for any key press event.

@@ -39,7 +39,7 @@ struct rgb_image
 
   ~rgb_image()
   {
-    delete data;
+    delete[] data;
   }
 
   unsigned width;
@@ -59,19 +59,22 @@ namespace dg
   }
 }
 
+using namespace dg::widgets;
+
 int main()
 {
-  using dg::display; // Dige display.
   using dg::record; // Dige video recorder.
   using dg::dl; // Dige list starter
 
   srand(time(0));
   rgb_image img(20, 20);
 
-  dg::Window("Random test", 500, 300) <<=
-    (dg::hbox_start -
-     display("random") -
-     dg::hbox_end);
+  dg::Window("Random test", 250-28, 250-28) <<=
+    dg::hbox_start <<
+    ImageView("random") <<
+     dg::hbox_end;
+
+  record("random.avi");
 
   unsigned t = clock();
   // while (true)
@@ -90,12 +93,12 @@ int main()
     //  |     img     |
     //  |-------------|
     //
-    record("random.avi")
-      <<= display("random")
-      <<= dl() - img - img +
-                    img;
+
+    record("random.avi") <<=
+      ImageView("random")
+      << img << img << newline << img << show;
   }
 
   // Pause the program on the last image.
-  dg::pause();
+  //dg::pause();
 }
