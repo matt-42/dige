@@ -28,8 +28,8 @@ int main()
   dg::Window("Event demo", 100, 100) <<=
     dg::vbox_start <<
     dw::ImageView("view") <<
-    dw::PushButton("button", true) <<
-    dg::vbox_end; // Checkable push button
+    dw::PushButton("button", true) << // Checkable push button
+    dg::vbox_end;
 
   // Block until the user release any key
   std::cout << "Press any key" << std::endl;
