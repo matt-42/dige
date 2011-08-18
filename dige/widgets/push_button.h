@@ -45,9 +45,7 @@ namespace dg
   {
 
     /*!
-    ** The push_button class allow to display the content of a displaylist
-    ** in an OpenGL context.
-    ** It listen to the push_button event (exposure, resizing...).
+    ** Classical [checkable] push button..
     */
     class push_button : public Widget<push_button>
     {
@@ -57,8 +55,7 @@ namespace dg
       ** Initialize a new push_button.
       **
       ** \param title The title of the push_button
-      ** \param width width in pixels.
-      ** \param height height in pixels.
+      ** \param checkable true to set the button checkable.
       **
       */
       push_button(const std::string& title, bool checkable);
@@ -67,16 +64,26 @@ namespace dg
       ~push_button();
 
       template <typename T>
-        const T& operator()(const T& if_checked,
-                            const T& if_unchecked)
+      const T& operator()(const T& if_checked,
+                          const T& if_unchecked)
       {
         return is_checked() ? if_checked : if_unchecked;
       }
 
       QWidget* widget() const;
 
+      /*!
+      ** Check if the button is checked.
+      **
+      ** \return true if it is checked.
+      */
       bool is_checked();
 
+      /*!
+      ** Button click event
+      **
+      ** \return the event.
+      */
       event::any_event click();
 
     private:

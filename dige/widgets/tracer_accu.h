@@ -46,9 +46,8 @@ namespace dg
   {
 
     /*!
-    ** The tracer_accu class allow to display the content of a displaylist
-    ** in an OpenGL context.
-    ** It listen to the tracer_accu event (exposure, resizing...).
+    ** The tracer_accu hold and trace in tracer_view history of one
+    ** traced value.
     */
     class tracer_accu
     {

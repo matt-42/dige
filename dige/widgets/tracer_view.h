@@ -39,7 +39,7 @@ namespace dg
   {
 
     /*!
-    ** Fixme
+    ** QGraphicsView used to render a tracer.
     */
     class tracer_view : public QGraphicsView
     {
@@ -50,12 +50,19 @@ namespace dg
       */
       tracer_view(QGraphicsScene* s);
 
+      // Set time scale.
       void set_view_dtime(float dt);
+
+      // Set Y scale.
       void set_view_dy(float dy);
 
+      // time (X) scale.
       float dt();
+
+      // Y scale.
       float dy();
 
+      // Apply change to scale.
       void update_scale();
 
     protected:

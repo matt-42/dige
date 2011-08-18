@@ -66,11 +66,14 @@ namespace dg
       /// Destructor.
       ~tracer();
 
+      /// Set time scale.
       void set_dtime(float t);
 
+      /// Access to an accumulator to add values to the tracer.
       tracer_accu&
         operator[](const std::string& id);
 
+      /// Underling QWidget.
       QWidget* widget();
 
     private:

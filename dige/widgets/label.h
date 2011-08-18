@@ -40,6 +40,9 @@ namespace dg
   namespace widgets
   {
 
+    /*!
+    ** Label to display raw text in the interface.
+    */
     class label : public Widget<label>
     {
     public:
@@ -52,11 +55,19 @@ namespace dg
       */
       label(const std::string& title);
 
+      /*!
+      ** Set the label text.
+      **
+      ** \param s the text
+      **
+      ** \return the label.
+      */
       label& set_text(const std::string& s);
 
       /// Destructor.
       ~label();
 
+      /// \return the underlying widget.
       QWidget* widget() const;
 
     private:

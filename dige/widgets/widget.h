@@ -34,17 +34,26 @@ namespace dg
   namespace widgets
   {
 
+    /*!
+    ** Widget concept.
+    */
     template <typename T>
     class Widget
     {
     };
 
+    /*!
+    ** Downcast a Widget into its exact type.
+    */
     template <typename T>
     T& exact(Widget<T>& x)
     {
       return *static_cast<T*>(&x);
     }
 
+    /*!
+    ** Downcast a Widget into its exact type.
+    */
     template <typename T>
     const T& exact(const Widget<T>& x)
     {
