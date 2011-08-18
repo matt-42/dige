@@ -5,6 +5,7 @@ all: xslthl-2.0.2.jar
 	| sed 's/Loading Xslthl configuration from file.*$///' \
 	| sed  's/<\/head>/\n<google analytics>\n&\n/' \
 	| sed  -e '/<google analytics>/  {r ga.txt' -e';d}' > index.html
+	./update-gh-pages.sh
 
 xslthl-2.0.2.jar:
 	mkdir -p /tmp/xslthl

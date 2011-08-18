@@ -34,7 +34,7 @@
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10018"></a><p>
         Distributed under the LGPL License, Version 3.0.
-      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.events">Event management</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
+      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.events">Event management</a></span></dt><dt><span class="section"><a href="#dige.widgets">Available widgets</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
 <div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
       Dige is a C++ toolbox designed for visual and interactive
       debugging. It allows basic interactions with a graphical user
@@ -302,6 +302,38 @@ We define here our simple 2d image type that will be displayed by dige.
         std::cout &lt;&lt; <span style="color: #080" class="hl-string">"key a release"</span> &lt;&lt; std::endl;
     }
   }
+      
+   </pre></div><div class="section" title="Available widgets"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.widgets"></a>Available widgets</h2></div></div></div><pre class="programlisting">
+      
+  dg::Window(<span style="color: #080" class="hl-string">"dige demo"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+    dg::vbox_start &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Image view with dynamic size.</span>
+    dw::ImageView(<span style="color: #080" class="hl-string">"test1"</span>) &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Image view with static size. Not resized by window resizing.</span>
+    dw::ImageView(<span style="color: #080" class="hl-string">"test2"</span>, <span style="color: #066" class="hl-number">150</span>, <span style="color: #066" class="hl-number">100</span>) &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Label with text "label1".</span>
+    <span style="color: #800" class="hl-comment">// Call dw::ImageView("label1").setText("another string")</span>
+    <span style="color: #800" class="hl-comment">// to update label.</span>
+    dw::Label(<span style="color: #080" class="hl-string">"label1"</span>) &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Horizontal slider with minimum value 1, max value 100 and</span>
+    <span style="color: #800" class="hl-comment">// current value at 42.</span>
+    <span style="color: #800" class="hl-comment">// Slider value is retrieved by dw::Slider("slider").value().</span>
+    <span style="color: #800" class="hl-comment">// Change can be monitored using dw::Slider("slider").changed_event().</span>
+    dw::Slider(<span style="color: #080" class="hl-string">"slider"</span>, <span style="color: #066" class="hl-number">1</span>, <span style="color: #066" class="hl-number">100</span>, <span style="color: #066" class="hl-number">42</span>, dw::slider::horizontal) &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Checkable button. dw::PushButton("button").is_checked() gives</span>
+    <span style="color: #800" class="hl-comment">// its state.</span>
+    dw::PushButton(<span style="color: #080" class="hl-string">"button1"</span>, <span style="color: #008" class="hl-keyword">true</span>) &lt;&lt;
+
+    <span style="color: #800" class="hl-comment">// Non-checkable button. Listen to button click using</span>
+    <span style="color: #800" class="hl-comment">// dw::PushButton("button2").click()</span>
+    dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>, <span style="color: #008" class="hl-keyword">false</span>) &lt;&lt;
+
+    dg::vbox_end;
       
    </pre></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li></ul></div><p>
