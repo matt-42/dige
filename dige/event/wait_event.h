@@ -57,12 +57,12 @@ namespace dg
     }
 
 #define for_each_event_until(E, C, U)           \
-    for (dg::any_event E = dg::event::wait_event(C | U);     \
-         !dg::event_match(U, E);                \
+    for (dg::event::any_event E = dg::event::wait_event(C | U);     \
+         !dg::event::event_match(U, E);                             \
          E = dg::event::wait_event(C | U))
 
 #define for_each_event(E, C)                    \
-    for (dg::any_event E = dg::event::wait_event(C);         \
+    for (dg::event::any_event E = dg::event::wait_event(C);     \
          ;                                      \
          E = dg::event::wait_event(C))
 
