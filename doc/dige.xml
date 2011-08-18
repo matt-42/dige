@@ -37,13 +37,27 @@
     // [...Process my_image...]
 
     // Display result
-    ImageView("view") <<= dl() - my_image;
+    ImageView("view") << my_image << show;
   }
 ]]>
    </programlisting>
 
-      This library is built on top of the Qt framework.
-      It is licensed under LGPL.
+   Video captures is also easy:
+    <programlisting language="cpp">
+      <![CDATA[
+     // Recording "view" content.
+     record("my_video.avi") <<= ImageView("view") << my_image << show;
+  }
+]]>
+   </programlisting>
+
+   This library is designed for helping image processing development,
+   but can be usefull in many other case, when users only need basic
+   features and do not want to learn how to use a real world UI
+   framework.
+
+   It is built on top of the Qt framework and is licensed under LGPL.
+
     </para>
   </section>
 
@@ -192,7 +206,6 @@ int main()
 {
   namespace dw = dg::widgets;
   namespace de = dg::event;
-  using dg::dl; // image list starter.
 
   srand(time(0));
   rgb_image img(20, 20);
@@ -210,8 +223,7 @@ int main()
       img.data[i] = rand();
 
     // Display img 3 times in the ImageView. 
-    // dl() starts a list of images.
-    dw::ImageView("random")  <<= dl() - img - img + img;
+    dw::ImageView("random")  << img << img << newline << img << show;
   }
 
   // Wait for any key press event.
