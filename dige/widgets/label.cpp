@@ -46,7 +46,6 @@ namespace dg
       label_ = new QLabel();
       set_text(s);
       label_->adjustSize();
-      label_->setGeometry(0,0, 200, 30);
       label_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
 
@@ -55,7 +54,6 @@ namespace dg
     {
       label_->setText(QString::fromStdString(s));
       label_->adjustSize();
-      label_->setGeometry(0,0, 200, 30);
       label_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
       return *this;
     }

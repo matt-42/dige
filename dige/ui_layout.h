@@ -65,9 +65,6 @@ namespace dg
     unsigned s_;                /*!< Stretch factor. */
   };
 
-  /// Forward declaration.
-  struct stretched_layout;
-
   /*!
   ** Class ui_layout use Qt layouts to build and hold the layout tree of a
   ** graphical user interface.
@@ -97,10 +94,18 @@ namespace dg
       return *this;
     }
 
-    ui_layout& operator<<(const stretched_layout e);
     void add(QWidget* w);
     void add(QLayout* l);
     //@}
+
+    ui_layout& operator%(unsigned s);
+
+    /*!
+    ** Set stretch factor of the layout.
+    **
+    ** \param sf the stretch factor.
+    */
+    void set_stretch(unsigned sf);
 
     /// Root layout accessor.
     QBoxLayout* root() const;
@@ -110,25 +115,7 @@ namespace dg
 
     QBoxLayout* root_;          /*!< Root layout. */
     std::stack<QBoxLayout*> stack_; /*!< Stack of layout. */
-  };
-
-  /*!
-  ** Holds a layout with its stretch factor to be used during
-  ** its insertion in a parent hbox or vbox layout.
-  ** See Qt documentation for more infos on Qt Layout system.
-  */
-  struct stretched_layout
-  {
-    /*!
-    ** Constructor
-    **
-    ** \param widget The layout.
-    ** \param stretch_factor stretch factor.
-    */
-    stretched_layout(ui_layout layout, unsigned stretch_factor);
-
-    ui_layout l_;               /*!< The layout. */
-    unsigned s_;                /*!< Stretch factor. */
+    unsigned sf_;                /*!< Stretch factor. */
   };
 
   namespace widgets
@@ -142,7 +129,7 @@ namespace dg
     ** \return The stretched_widget.
     */
     template <typename T>
-    stretched_widget<T> operator/(const Widget<T>& w, unsigned s)
+    stretched_widget<T> operator%(const Widget<T>& w, unsigned s)
     {
       const T& e = exact(w);
       return stretched_widget<T>(e, s);
@@ -157,7 +144,7 @@ namespace dg
   **
   ** \return The stretched_layout.
   */
-  stretched_layout operator/(ui_layout l, unsigned s);
+  // stretched_layout operator%(ui_layout l, unsigned s);
 
   template <typename T>
   ui_layout& ui_layout::operator<<(const T& w)

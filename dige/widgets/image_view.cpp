@@ -45,11 +45,10 @@ namespace dg
                                        image_view::image_views().begin()->second->currentWidget_);
 
       currentWidget_->setGeometry(window_placer::place(width, height));
-      // currentWidget_->setGeometry(0,0,100, 50);
       currentWidget_->setFixedSize(width, height);
-       // currentWidget_->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
       currentWidget_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
       currentWidget_->setWindowTitle(QString::fromStdString(title));
+      currentWidget_->show();
     }
 
     image_view::image_view(const std::string& title)
@@ -61,9 +60,12 @@ namespace dg
         currentWidget_ = new gl_widget(dlist_,
                                        image_view::image_views().begin()->second->currentWidget_);
 
+      currentWidget_->setGeometry(window_placer::place(400, 400));
+
       currentWidget_->setSizePolicy(QSizePolicy::Expanding,
                                     QSizePolicy::Expanding);
       currentWidget_->setWindowTitle(QString::fromStdString(title));
+      currentWidget_->show();
     }
 
     image_view::~image_view()

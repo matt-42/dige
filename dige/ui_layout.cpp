@@ -34,7 +34,8 @@ namespace dg
 {
 
   ui_layout::ui_layout()
-    : root_(new QHBoxLayout())
+    : root_(new QHBoxLayout()),
+      sf_(1)
   {
     need_qapp();
 
@@ -83,20 +84,8 @@ namespace dg
   ui_layout& ui_layout::operator<<(const ui_layout& n)
   {
     QBoxLayout* l = stack_.top();
-    l->addLayout(n.root(), 1000);
+    l->addLayout(n.root(), n.sf_);
     return *this;
-  }
-
-  ui_layout& ui_layout::operator<<(stretched_layout e)
-  {
-    *this << e.l_;
-    set_stretch_for_last_item(e.s_);
-    return *this;
-  }
-
-  stretched_layout operator/(ui_layout w, unsigned s)
-  {
-    return stretched_layout(w, s);
   }
 
   void ui_layout::add(QWidget* w)
@@ -121,11 +110,15 @@ namespace dg
     l->setStretch(l->count() - 1, s);
   }
 
-  stretched_layout::stretched_layout(ui_layout layout,
-                                     unsigned stretch_factor)
-    : l_(layout),
-      s_(stretch_factor)
+  void ui_layout::set_stretch(unsigned sf)
   {
+    sf_ = sf;
+  }
+
+  ui_layout& ui_layout::operator%(unsigned sf)
+  {
+    sf_ = sf;
+    return *this;
   }
 
 } // end of namespace dg.
