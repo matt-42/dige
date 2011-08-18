@@ -51,13 +51,27 @@
     <span style="color: #800" class="hl-comment">// [...Process my_image...]</span>
 
     <span style="color: #800" class="hl-comment">// Display result</span>
-    ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt;= dl() - my_image;
+    ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; my_image &lt;&lt; show;
   }
 
    </pre><p>
 
-      This library is built on top of the Qt framework.
-      It is licensed under LGPL.
+   Video captures is also easy:
+    </p><pre class="programlisting">
+      
+     <span style="color: #800" class="hl-comment">// Recording "view" content.</span>
+     record(<span style="color: #080" class="hl-string">"my_video.avi"</span>) &lt;&lt;= ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; my_image &lt;&lt; show;
+  }
+
+   </pre><p>
+
+   This library is designed for helping image processing development,
+   but can be usefull in many other case, when users only need basic
+   features and do not want to learn how to use a real world UI
+   framework.
+
+   It is built on top of the Qt framework and is licensed under LGPL.
+
     </p></div><div class="section" title="Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.deps"></a>Dependencies</h2></div></div></div><p>
       </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Qt4 <a class="ulink" href="http://qt.nokia.com" target="_top">http://qt.nokia.com</a></li><li class="listitem">FFMPEG <a class="ulink" href="http://www.ffmpeg.org" target="_top">http://www.ffmpeg.org</a></li></ul></div><p>
     </p></div><div class="section" title="Tested environments"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.envs"></a>Tested environments</h2></div></div></div><p>
@@ -148,7 +162,6 @@ We define here our simple 2d image type that will be displayed by dige.
 {
   <span style="color: #008" class="hl-keyword">namespace</span> dw = dg::widgets;
   <span style="color: #008" class="hl-keyword">namespace</span> de = dg::event;
-  <span style="color: #008" class="hl-keyword">using</span> dg::dl; <span style="color: #800" class="hl-comment">// image list starter.</span>
 
   srand(time(<span style="color: #066" class="hl-number">0</span>));
   rgb_image img(<span style="color: #066" class="hl-number">20</span>, <span style="color: #066" class="hl-number">20</span>);
@@ -166,8 +179,7 @@ We define here our simple 2d image type that will be displayed by dige.
       img.data[i] = rand();
 
     <span style="color: #800" class="hl-comment">// Display img 3 times in the ImageView. </span>
-    <span style="color: #800" class="hl-comment">// dl() starts a list of images.</span>
-    dw::ImageView(<span style="color: #080" class="hl-string">"random"</span>)  &lt;&lt;= dl() - img - img + img;
+    dw::ImageView(<span style="color: #080" class="hl-string">"random"</span>)  &lt;&lt; img &lt;&lt; img &lt;&lt; newline &lt;&lt; img &lt;&lt; show;
   }
 
   <span style="color: #800" class="hl-comment">// Wait for any key press event.</span>
@@ -188,7 +200,7 @@ We define here our simple 2d image type that will be displayed by dige.
          Finally, <code class="code">operator&lt;&lt;=</code> tells "random" to draw
          our newly created image list.
        </li></ul></div><p>
-     </p><div class="figure"><a name="N100C6"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
+     </p><div class="figure"><a name="N100CB"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
    </p></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li></ul></div><p>
     </p></div></div></body></html>
