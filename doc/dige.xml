@@ -263,6 +263,122 @@ int main()
 
   </section>
 
+  <section id="dige.complex_ui">
+    <title>GUI creation</title>
+
+    <programlisting language="cpp">
+      <![CDATA[
+  namespace dw = dg::widgets;
+  namespace de = dg::event;
+
+  // Stand alone window named "testalone" that contains one image view.
+  dw::ImageView("testalone");
+
+  // Two vertically aligned image views in one window named "dige demo".
+  dg::Window("dige demo", 300, 300) <<=
+    dg::vbox_start <<
+    dw::ImageView("test1") <<
+    dw::ImageView("test2") <<
+    dg::vbox_end;
+
+  // Two horizontally aligned image views in one window named "dige demo".
+  // test1 will be twice larger than test2
+  dg::Window("proportions", 300, 300) <<=
+    dg::hbox_start <<
+    dw::ImageView("test3") % 2 <<  // Use operator % to set proportions of widget.
+    dw::ImageView("test4") % 1 <<
+    dg::hbox_end;
+
+  // image view size can be fixed.
+  dg::Window("Fixed size", 300, 300) <<=
+    dg::vbox_start <<
+    dw::ImageView("test5", 100, 20) << // Fixed size image view
+    dw::ImageView("test6") << // Dynamically sized image view that expands to fill the window.
+    dg::vbox_end;
+
+  // Box layouts can be nested.
+  dg::Window("Nested layouts", 300, 300) <<=
+
+    dg::hbox_start << // Main horizontal layout.
+
+    (  dg::vbox_start << // First vertical sub layout.
+       dw::Label("label7") <<
+       dw::ImageView("test7") <<
+       dg::vbox_end) <<
+
+    (  dg::vbox_start << // Second vertical sub layout.
+       dw::Label("label8") <<
+       dw::ImageView("test8") <<
+       dg::vbox_end) <<
+
+    dg::hbox_end;
+
+      ]]>
+   </programlisting>
+
+  </section>
+
+  <section id="dige.events">
+    <title>Event management</title>
+
+    <programlisting language="cpp">
+      <![CDATA[
+  namespace de = dg::event;
+  namespace dw = dg::widgets;
+
+  // In order to listen to events, at least one window must be created.
+  dg::Window("Event demo", 100, 100) <<=
+    dg::vbox_start <<
+    dw::ImageView("view") <<
+    dw::PushButton("button", true) <<
+    dg::vbox_end; // Checkable push button
+
+  // Block until the user release any key
+  std::cout << "Press any key" << std::endl;
+  de::wait_event(de::key_release());
+
+
+  // Sleep until the user release key a OR key d. Events can be combined
+  // with operator|
+  std::cout << "Press key a or b" << std::endl;
+  de::wait_event(de::key_release(de::key_a) | de::key_release(de::key_b));
+
+  // Event based for loop.
+  // Iterate after each mouse movement or release of key d until
+  // escape has been released.
+  // Passively wait for events between iterations.
+  std::cout << "Move mouse or press d, escape to go to next step" 
+            << std::endl;
+  for_each_event_until(e, de::mouse_move() | de::key_release(de::key_d),
+                          de::key_release(de::key_escape))
+  {
+    if (e == de::mouse_move())
+      std::cout << "mouse move" << std::endl;
+    else if (e == de::key_release(de::key_d))
+      std::cout << "key d release" << std::endl;
+  }
+
+  // Non blocking event managment.
+  de::event_queue q(dw::PushButton("button").click() | de::key_release(de::key_a));
+  de::event_queue q_esc(de::key_release(de::key_escape));
+
+  std::cout << "Click button or press a, escape to quit" << std::endl;
+  while (q_esc.is_empty())
+  {
+    if (!q.is_empty())
+    {
+      de::any_event e = q.pop_front();
+      if (e == dw::PushButton("button").click())
+        std::cout << "button click" << std::endl;
+      if (e == de::key_release(de::key_a))
+        std::cout << "key a release" << std::endl;
+    }
+  }
+      ]]>
+   </programlisting>
+
+  </section>
+
   <section id="dige.links">
     <title>Links</title>
     <para>

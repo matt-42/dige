@@ -34,7 +34,7 @@
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10018"></a><p>
         Distributed under the LGPL License, Version 3.0.
-      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
+      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
 <div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
       Dige is a C++ toolbox designed for visual and interactive
       debugging. It allows basic interactions with a graphical user
@@ -51,13 +51,27 @@
     <span style="color: #800" class="hl-comment">// [...Process my_image...]</span>
 
     <span style="color: #800" class="hl-comment">// Display result</span>
-    ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt;= dl() - my_image;
+    ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; my_image &lt;&lt; show;
   }
 
    </pre><p>
 
-      This library is built on top of the Qt framework.
-      It is licensed under LGPL.
+   Video captures is also easy:
+    </p><pre class="programlisting">
+      
+     <span style="color: #800" class="hl-comment">// Recording "view" content.</span>
+     record(<span style="color: #080" class="hl-string">"my_video.avi"</span>) &lt;&lt;= ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; my_image &lt;&lt; show;
+  }
+
+   </pre><p>
+
+   This library is designed for helping image processing development,
+   but can be usefull in many other case, when users only need basic
+   features and do not want to learn how to use a real world UI
+   framework.
+
+   It is built on top of the Qt framework and is licensed under LGPL.
+
     </p></div><div class="section" title="Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.deps"></a>Dependencies</h2></div></div></div><p>
       </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Qt4 <a class="ulink" href="http://qt.nokia.com" target="_top">http://qt.nokia.com</a></li><li class="listitem">FFMPEG <a class="ulink" href="http://www.ffmpeg.org" target="_top">http://www.ffmpeg.org</a></li></ul></div><p>
     </p></div><div class="section" title="Tested environments"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.envs"></a>Tested environments</h2></div></div></div><p>
@@ -148,7 +162,6 @@ We define here our simple 2d image type that will be displayed by dige.
 {
   <span style="color: #008" class="hl-keyword">namespace</span> dw = dg::widgets;
   <span style="color: #008" class="hl-keyword">namespace</span> de = dg::event;
-  <span style="color: #008" class="hl-keyword">using</span> dg::dl; <span style="color: #800" class="hl-comment">// image list starter.</span>
 
   srand(time(<span style="color: #066" class="hl-number">0</span>));
   rgb_image img(<span style="color: #066" class="hl-number">20</span>, <span style="color: #066" class="hl-number">20</span>);
@@ -166,8 +179,7 @@ We define here our simple 2d image type that will be displayed by dige.
       img.data[i] = rand();
 
     <span style="color: #800" class="hl-comment">// Display img 3 times in the ImageView. </span>
-    <span style="color: #800" class="hl-comment">// dl() starts a list of images.</span>
-    dw::ImageView(<span style="color: #080" class="hl-string">"random"</span>)  &lt;&lt;= dl() - img - img + img;
+    dw::ImageView(<span style="color: #080" class="hl-string">"random"</span>)  &lt;&lt; img &lt;&lt; img &lt;&lt; newline &lt;&lt; img &lt;&lt; show;
   }
 
   <span style="color: #800" class="hl-comment">// Wait for any key press event.</span>
@@ -188,7 +200,55 @@ We define here our simple 2d image type that will be displayed by dige.
          Finally, <code class="code">operator&lt;&lt;=</code> tells "random" to draw
          our newly created image list.
        </li></ul></div><p>
-     </p><div class="figure"><a name="N100C6"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
-   </p></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
+     </p><div class="figure"><a name="N100CB"></a><p class="title"><b>Figure&nbsp;1.&nbsp;Random screenshot</b></p><div class="figure-contents"><div><img src="images/dige_random_example.jpeg" alt="Random screenshot"></div></div></div><p><br class="figure-break">
+   </p></div><div class="section" title="GUI creation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.complex_ui"></a>GUI creation</h2></div></div></div><pre class="programlisting">
+      
+  <span style="color: #008" class="hl-keyword">namespace</span> dw = dg::widgets;
+  <span style="color: #008" class="hl-keyword">namespace</span> de = dg::event;
+
+  <span style="color: #800" class="hl-comment">// Stand alone window named "testalone" that contains one image view.</span>
+  dw::ImageView(<span style="color: #080" class="hl-string">"testalone"</span>);
+
+  <span style="color: #800" class="hl-comment">// Two vertically aligned image views in one window named "dige demo".</span>
+  dg::Window(<span style="color: #080" class="hl-string">"dige demo"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+    dg::vbox_start &lt;&lt;
+    dw::ImageView(<span style="color: #080" class="hl-string">"test1"</span>) &lt;&lt;
+    dw::ImageView(<span style="color: #080" class="hl-string">"test2"</span>) &lt;&lt;
+    dg::vbox_end;
+
+  <span style="color: #800" class="hl-comment">// Two horizontally aligned image views in one window named "dige demo".</span>
+  <span style="color: #800" class="hl-comment">// test1 will be twice larger than test2</span>
+  dg::Window(<span style="color: #080" class="hl-string">"proportions"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+    dg::hbox_start &lt;&lt;
+    dw::ImageView(<span style="color: #080" class="hl-string">"test3"</span>) % <span style="color: #066" class="hl-number">2</span> &lt;&lt;  <span style="color: #800" class="hl-comment">// Use operator % to set proportions of widget.</span>
+    dw::ImageView(<span style="color: #080" class="hl-string">"test4"</span>) % <span style="color: #066" class="hl-number">1</span> &lt;&lt;
+    dg::hbox_end;
+
+  <span style="color: #800" class="hl-comment">// image view size can be fixed.</span>
+  dg::Window(<span style="color: #080" class="hl-string">"Fixed size"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+    dg::vbox_start &lt;&lt;
+    dw::ImageView(<span style="color: #080" class="hl-string">"test5"</span>, <span style="color: #066" class="hl-number">100</span>, <span style="color: #066" class="hl-number">20</span>) &lt;&lt; <span style="color: #800" class="hl-comment">// Fixed size image view</span>
+    dw::ImageView(<span style="color: #080" class="hl-string">"test6"</span>) &lt;&lt; <span style="color: #800" class="hl-comment">// Dynamically sized image view that expands to fill the window.</span>
+    dg::vbox_end;
+
+  <span style="color: #800" class="hl-comment">// Box layouts can be nested.</span>
+  dg::Window(<span style="color: #080" class="hl-string">"Nested layouts"</span>, <span style="color: #066" class="hl-number">300</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+
+    dg::hbox_start &lt;&lt; <span style="color: #800" class="hl-comment">// Main horizontal layout.</span>
+
+    (  dg::vbox_start &lt;&lt; <span style="color: #800" class="hl-comment">// First vertical sub layout.</span>
+       dw::Label(<span style="color: #080" class="hl-string">"label7"</span>) &lt;&lt;
+       dw::ImageView(<span style="color: #080" class="hl-string">"test7"</span>) &lt;&lt;
+       dg::vbox_end) &lt;&lt;
+
+    (  dg::vbox_start &lt;&lt; <span style="color: #800" class="hl-comment">// Second vertical sub layout.</span>
+       dw::Label(<span style="color: #080" class="hl-string">"label8"</span>) &lt;&lt;
+       dw::ImageView(<span style="color: #080" class="hl-string">"test8"</span>) &lt;&lt;
+       dg::vbox_end) &lt;&lt;
+
+    dg::hbox_end;
+
+      
+   </pre></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li></ul></div><p>
     </p></div></div></body></html>
