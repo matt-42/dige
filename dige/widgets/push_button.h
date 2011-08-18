@@ -73,7 +73,7 @@ namespace dg
         return is_checked() ? if_checked : if_unchecked;
       }
 
-      QWidget* widget();
+      QWidget* widget() const;
 
       bool is_checked();
 

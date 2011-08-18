@@ -31,6 +31,7 @@
 # include <QPushButton>
 
 # include <dige/named_object.h>
+# include <dige/need_qapp.h>
 # include <dige/widgets/push_button.h>
 
 
@@ -41,8 +42,10 @@ namespace dg
   {
 
     push_button::push_button(const std::string& title, bool checkable)
-      : button_(new QPushButton())
     {
+      need_qapp();
+
+      button_ = new QPushButton();
       button_->setText(QString::fromStdString(title));
       button_->setCheckable(checkable);
     }
@@ -53,7 +56,7 @@ namespace dg
     }
 
     QWidget*
-    push_button::widget()
+    push_button::widget() const
     {
       return button_;
     }
