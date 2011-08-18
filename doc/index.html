@@ -34,7 +34,7 @@
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10018"></a><p>
         Distributed under the LGPL License, Version 3.0.
-      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
+      </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.events">Event management</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
 <div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
       Dige is a C++ toolbox designed for visual and interactive
       debugging. It allows basic interactions with a graphical user
@@ -248,6 +248,60 @@ We define here our simple 2d image type that will be displayed by dige.
 
     dg::hbox_end;
 
+      
+   </pre></div><div class="section" title="Event management"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.events"></a>Event management</h2></div></div></div><pre class="programlisting">
+      
+  <span style="color: #008" class="hl-keyword">namespace</span> de = dg::event;
+  <span style="color: #008" class="hl-keyword">namespace</span> dw = dg::widgets;
+
+  <span style="color: #800" class="hl-comment">// In order to listen to events, at least one window must be created.</span>
+  dg::Window(<span style="color: #080" class="hl-string">"Event demo"</span>, <span style="color: #066" class="hl-number">100</span>, <span style="color: #066" class="hl-number">100</span>) &lt;&lt;=
+    dg::vbox_start &lt;&lt;
+    dw::ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt;
+    dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>, <span style="color: #008" class="hl-keyword">true</span>) &lt;&lt; <span style="color: #800" class="hl-comment">// Checkable push button</span>
+    dg::vbox_end;
+
+  <span style="color: #800" class="hl-comment">// Block until the user release any key</span>
+  std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Press any key"</span> &lt;&lt; std::endl;
+  de::wait_event(de::key_release());
+
+
+  <span style="color: #800" class="hl-comment">// Sleep until the user release key a OR key d. Events can be combined</span>
+  <span style="color: #800" class="hl-comment">// with operator|</span>
+  std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Press key a or b"</span> &lt;&lt; std::endl;
+  de::wait_event(de::key_release(de::key_a) | de::key_release(de::key_b));
+
+  <span style="color: #800" class="hl-comment">// Event based for loop.</span>
+  <span style="color: #800" class="hl-comment">// Iterate after each mouse movement or release of key d until</span>
+  <span style="color: #800" class="hl-comment">// escape has been released.</span>
+  <span style="color: #800" class="hl-comment">// Passively wait for events between iterations.</span>
+  std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Move mouse or press d, escape to go to next step"</span> 
+            &lt;&lt; std::endl;
+  for_each_event_until(e, de::mouse_move() | de::key_release(de::key_d),
+                          de::key_release(de::key_escape))
+  {
+    <span style="color: #008" class="hl-keyword">if</span> (e == de::mouse_move())
+      std::cout &lt;&lt; <span style="color: #080" class="hl-string">"mouse move"</span> &lt;&lt; std::endl;
+    <span style="color: #008" class="hl-keyword">else</span> <span style="color: #008" class="hl-keyword">if</span> (e == de::key_release(de::key_d))
+      std::cout &lt;&lt; <span style="color: #080" class="hl-string">"key d release"</span> &lt;&lt; std::endl;
+  }
+
+  <span style="color: #800" class="hl-comment">// Non blocking event managment.</span>
+  de::event_queue q(dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>).click() | de::key_release(de::key_a));
+  de::event_queue q_esc(de::key_release(de::key_escape));
+
+  std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Click button or press a, escape to quit"</span> &lt;&lt; std::endl;
+  <span style="color: #008" class="hl-keyword">while</span> (q_esc.is_empty())
+  {
+    <span style="color: #008" class="hl-keyword">if</span> (!q.is_empty())
+    {
+      de::any_event e = q.pop_front();
+      <span style="color: #008" class="hl-keyword">if</span> (e == dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>).click())
+        std::cout &lt;&lt; <span style="color: #080" class="hl-string">"button click"</span> &lt;&lt; std::endl;
+      <span style="color: #008" class="hl-keyword">if</span> (e == de::key_release(de::key_a))
+        std::cout &lt;&lt; <span style="color: #080" class="hl-string">"key a release"</span> &lt;&lt; std::endl;
+    }
+  }
       
    </pre></div><div class="section" title="Links"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dige.links"></a>Links</h2></div></div></div><p>
      </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><a class="ulink" href="https://github.com/matt-42/dige" target="_top">Dige on Github</a></li><li class="listitem"><a class="ulink" href="http://www.ohloh.net/p/dige" target="_top">Dige on Ohloh</a></li></ul></div><p>
