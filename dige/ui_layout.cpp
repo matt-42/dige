@@ -38,6 +38,8 @@ namespace dg
   {
     need_qapp();
 
+    root_->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Expanding,
+                                         QSizePolicy::Expanding));
     stack_.push(root_);
   }
 
@@ -45,6 +47,8 @@ namespace dg
   {
     QBoxLayout* l = stack_.top();
     QVBoxLayout* n = new QVBoxLayout();
+    n->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Expanding,
+                                     QSizePolicy::Expanding));
 
     l->addLayout(n, 1);
     stack_.push(n);
@@ -61,6 +65,8 @@ namespace dg
   {
     QBoxLayout* l = stack_.top();
     QHBoxLayout* n = new QHBoxLayout();
+    n->addSpacerItem(new QSpacerItem(0,0, QSizePolicy::Expanding,
+                                     QSizePolicy::Expanding));
 
     l->addLayout(n, 1000);
     set_stretch_for_last_item(1);
@@ -95,7 +101,6 @@ namespace dg
 
   void ui_layout::add(QWidget* w)
   {
-    w->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
     stack_.top()->addWidget(w, 1000);
     set_stretch_for_last_item(1);
   }

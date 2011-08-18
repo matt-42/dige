@@ -61,10 +61,18 @@ namespace dg
       ** \param height height in pixels.
       **
       */
-      image_view(const std::string& title, unsigned width = 800, unsigned height = 600);
+      image_view(const std::string& title, unsigned width, unsigned height);
+
+      /*!
+      ** Constructor.
+      ** Initialize a new image_view.
+      **
+      ** \param title The title of the image_view
+      */
+      image_view(const std::string& title);
+
       /// Destructor.
       ~image_view();
-
 
       /// \return width of the image_view.
       unsigned width() const;
@@ -137,16 +145,27 @@ namespace dg
     };
 
     /*!
-    ** image_view factory. Retrieve the image_view named \p title. Create it if
-    ** it doesn't exists.
+    ** image_view factory. Retrieve the image_view named \p
+    ** title. Create it if it doesn't exists.
+    ** Set the view size to width*height.
     **
     ** \param width image_view width in pixel.
     ** \param height image_view height in pixel.
     **
     ** \return the image_view.
     */
-    image_view& ImageView(const std::string& title, unsigned width = 400,
-                          unsigned height = 400);
+    image_view& ImageView(const std::string& title, unsigned width,
+                          unsigned height);
+
+    /*!
+    ** image_view factory. Retrieve the image_view named \p
+    ** title. Create it if it doesn't exists. The view size will set
+    ** according to the parent window size.
+    **
+    **
+    ** \return the image_view.
+    */
+    image_view& ImageView(const std::string& title);
 
 
     image_view& newline(image_view& iv);

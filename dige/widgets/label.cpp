@@ -28,6 +28,7 @@
 # include <string>
 # include <QLabel>
 # include <QString>
+# include <QSizePolicy>
 
 # include <dige/need_qapp.h>
 # include <dige/named_object.h>
@@ -44,12 +45,18 @@ namespace dg
       need_qapp();
       label_ = new QLabel();
       set_text(s);
+      label_->adjustSize();
+      label_->setGeometry(0,0, 200, 30);
+      label_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     }
 
     label&
     label::set_text(const std::string& s)
     {
       label_->setText(QString::fromStdString(s));
+      label_->adjustSize();
+      label_->setGeometry(0,0, 200, 30);
+      label_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
       return *this;
     }
 

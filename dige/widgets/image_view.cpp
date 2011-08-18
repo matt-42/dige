@@ -45,6 +45,24 @@ namespace dg
                                        image_view::image_views().begin()->second->currentWidget_);
 
       currentWidget_->setGeometry(window_placer::place(width, height));
+      // currentWidget_->setGeometry(0,0,100, 50);
+      currentWidget_->setFixedSize(width, height);
+       // currentWidget_->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+      currentWidget_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+      currentWidget_->setWindowTitle(QString::fromStdString(title));
+    }
+
+    image_view::image_view(const std::string& title)
+    {
+      need_qapp();
+      if (image_views().size() == 0)
+        currentWidget_ = new gl_widget(dlist_);
+      else
+        currentWidget_ = new gl_widget(dlist_,
+                                       image_view::image_views().begin()->second->currentWidget_);
+
+      currentWidget_->setSizePolicy(QSizePolicy::Expanding,
+                                    QSizePolicy::Expanding);
       currentWidget_->setWindowTitle(QString::fromStdString(title));
     }
 
@@ -193,6 +211,11 @@ namespace dg
       QApplication::processEvents();
       QApplication::sendPostedEvents();
       return iv;
+    }
+
+    image_view& ImageView(const std::string& title)
+    {
+      return named_instance<image_view>(title);
     }
 
     image_view& ImageView(const std::string& title, unsigned width, unsigned height)
