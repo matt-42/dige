@@ -379,6 +379,47 @@ int main()
 
   </section>
 
+  <section id="dige.widgets">
+    <title>Available widgets</title>
+
+    <programlisting language="cpp">
+      <![CDATA[
+  dg::Window("dige demo", 300, 300) <<=
+    dg::vbox_start <<
+
+    // Image view with dynamic size.
+    dw::ImageView("test1") <<
+
+    // Image view with static size. Not resized by window resizing.
+    dw::ImageView("test2", 150, 100) <<
+
+    // Label with text "label1".
+    // Call dw::ImageView("label1").setText("another string")
+    // to update label.
+    dw::Label("label1") <<
+
+    // Horizontal slider with minimum value 1, max value 100 and
+    // current value at 42.
+    // Slider value is retrieved by dw::Slider("slider").value().
+    // Change can be monitored using dw::Slider("slider").changed_event().
+    dw::Slider("slider", 1, 100, 42, dw::slider::horizontal) <<
+
+    // Checkable button. dw::PushButton("button").is_checked() gives
+    // its state.
+    dw::PushButton("button1", true) <<
+
+    // Non-checkable button. Listen to button click using
+    // dw::PushButton("button2").click()
+    dw::PushButton("button", false) <<
+
+    dg::vbox_end;
+      ]]>
+   </programlisting>
+
+  </section>
+
+
+
   <section id="dige.links">
     <title>Links</title>
     <para>
