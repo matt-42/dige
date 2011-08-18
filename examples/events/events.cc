@@ -31,7 +31,7 @@ int main()
     dw::PushButton("button", true) << // Checkable push button
     dg::vbox_end;
 
-  // Block until the user release any key
+  // Block until the user release a key
   std::cout << "Press any key" << std::endl;
   de::wait_event(de::key_release());
 
@@ -56,7 +56,7 @@ int main()
       std::cout << "key d release" << std::endl;
   }
 
-  // Non blocking event managment.
+  // Non blocking event management.
   de::event_queue q(dw::PushButton("button").click() | de::key_release(de::key_a));
   de::event_queue q_esc(de::key_release(de::key_escape));
 

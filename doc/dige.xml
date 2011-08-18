@@ -6,11 +6,11 @@
   <articleinfo>
     <authorgroup>
     <author>
-      <firstname>Matthieu</firstname> <surname>Garrigues</surname>
+      <firstname>Matthieu</firstname> <surname>Garrigues</surname> <email>firstname.lastname@gmail.com</email>
     </author>
     </authorgroup>
     <copyright>
-      <year>2010-2011</year> <holder>Matthieu Garrigues</holder> firstname.lastname@gmail.com
+      <year>2010-2011</year> <holder>Matthieu Garrigues</holder>
     </copyright>
     <legalnotice>
       <para>
@@ -333,10 +333,9 @@ int main()
     dw::PushButton("button", true) << // Checkable push button
     dg::vbox_end;
 
-  // Block until the user release any key
+  // Block until the user release a key
   std::cout << "Press any key" << std::endl;
   de::wait_event(de::key_release());
-
 
   // Sleep until the user release key a OR key d. Events can be combined
   // with operator|
@@ -358,7 +357,7 @@ int main()
       std::cout << "key d release" << std::endl;
   }
 
-  // Non blocking event managment.
+  // Non blocking event management.
   de::event_queue q(dw::PushButton("button").click() | de::key_release(de::key_a));
   de::event_queue q_esc(de::key_release(de::key_escape));
 
