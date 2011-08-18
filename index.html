@@ -43,10 +43,12 @@
     </p><pre class="programlisting">
       
   <span xmlns:saxon="http://saxon.sf.net/" xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color: #800" class="hl-comment">// GUI definition and creation.</span>
-  Window(<span style="color: #080" class="hl-string">"simple_image example"</span>, <span style="color: #066" class="hl-number">500</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;= ImageView(<span style="color: #080" class="hl-string">"view"</span>);
+  Window(<span style="color: #080" class="hl-string">"digedemo"</span>, <span style="color: #066" class="hl-number">500</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+     vbox_start &lt;&lt; ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; PushButton(<span style="color: #080" class="hl-string">"next"</span>)
+                &lt;&lt; vbox_end;
 
   my_rgb_image_type my_image;
-  for_each_event(e, key_release())
+  for_each_event(e, PushButton(<span style="color: #080" class="hl-string">"next"</span>).click())
   {
     <span style="color: #800" class="hl-comment">// [...Process my_image...]</span>
 
