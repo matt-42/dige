@@ -21,60 +21,12 @@
 
 #include <dige/dige.h>
 
-// Our simple rgb image type
-struct rgb_image
-{
-  rgb_image(unsigned w, unsigned h)
-    : width(w),
-      height(h),
-      image_size(w * h * 3)
-  {
-    data = new unsigned char[image_size];
-  }
-
-  ~rgb_image()
-  {
-    delete[] data;
-  }
-
-  unsigned width;
-  unsigned height;
-  unsigned image_size;
-  unsigned char* data;
-};
-
-namespace dg
-{
-
-  // We then define the bridge between our custom rgb_image type and the
-  // internal dg::image type. This will be called before displaying each
-  // rgb_image. dg::image takes two template parameters:
-  //
-  // 1> The format of the pixels which can be : - trait::format::rgb
-  //                                            - trait::format::rgba
-  //                                            - trait::format::luminance
-  //     Or, if your opengl version supports it:
-  //                                            - trait::format::bgr
-  //                                            - trait::format::bgra
-  // 2> The data type which can be: float, char, short, int,
-  //    unsigned float, unsigned char, unsigned short, unsigned int.
-  // Note that when displaying float, values has to be normalized between
-  // 0 and 1.
-  image<trait::format::rgb, unsigned char>
-  adapt(const ::rgb_image& i)
-  {
-    return image<trait::format::rgb, unsigned char>
-      (i.width, i.height, i.data);
-    // Warning: dg::image only handles contiguous buffers of pixel.
-  }
-
-}
+#include "../rgb_image.h"
 
 int main()
 {
   namespace dw = dg::widgets;
   namespace de = dg::event;
-  using dg::dl; // image list starter.
 
   srand(time(0));
   rgb_image img(20, 20);
@@ -91,7 +43,7 @@ int main()
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    // Display img 3 times in the ImageView.
+    // Display 3 copy of img in the ImageView.
     dw::ImageView("random")  << img << img << dw::newline
                              << img << dw::show;
   }

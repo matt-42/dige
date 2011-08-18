@@ -1,4 +1,4 @@
-// Copyright (C) 2010 Matthieu Garrigues
+// Copyright (C) 2010, 2011 Matthieu Garrigues
 //
 // This file is part of dige.
 //
@@ -19,86 +19,32 @@
 #include <cstdlib>
 #include <ctime>
 
-// Dige includes.
-#include <dige/window.h>
-#include <dige/widgets/image_view.h>
-#include <dige/recorder.h>
-#include <dige/image.h>
-#include <dige/pause.h>
+#include <dige/dige.h>
 
-// A simple rgb image type
-struct rgb_image
-{
-  rgb_image(unsigned w, unsigned h)
-    : width(w),
-      height(h),
-      image_size(w * h * 3)
-  {
-    data = new unsigned char[image_size];
-  }
-
-  ~rgb_image()
-  {
-    delete[] data;
-  }
-
-  unsigned width;
-  unsigned height;
-  unsigned image_size;
-  unsigned char* data;
-};
-
-namespace dg
-{
-  // Adapt our rgb_image type into the dige image type.
-  image<trait::format::rgb, unsigned char>
-  adapt(const rgb_image& i)
-  {
-    return image<trait::format::rgb, unsigned char>
-      (i.width, i.height, i.data);
-  }
-}
-
-using namespace dg::widgets;
+#include "../rgb_image.h"
 
 int main()
 {
-  using dg::record; // Dige video recorder.
-  using dg::dl; // Dige list starter
+  namespace dw = dg::widgets;
+  namespace de = dg::event;
 
   srand(time(0));
   rgb_image img(20, 20);
 
-  dg::Window("Random test", 250-28, 250-28) <<=
-    dg::hbox_start <<
-    ImageView("random") <<
-     dg::hbox_end;
-
-  record("random.avi");
+  dw::ImageView("random", 200, 200);
 
   unsigned t = clock();
-  // while (true)
   while (clock() - t < 5 * CLOCKS_PER_SEC)
   {
     for (unsigned i = 0; i < img.image_size; i++)
       img.data[i] = rand();
 
-    // Display in a 300*200 window called "random" 3 copy of our image.
-    // It will looks like:
-    //
-    //  |-------------|
-    //  | img     img |
-    //  |             |
-    //  |             |
-    //  |     img     |
-    //  |-------------|
-    //
-
-    record("random.avi") <<=
-      ImageView("random")
-      << img << img << newline << img << show;
+    // Display 3 copy of img in the "random" image view and
+    // record it in random.avi. The video takes the same dimension than
+    // the view (i.e. 200x200)
+    dg::record("random.avi") <<=
+      dw::ImageView("random") << img << img
+                              << dw::newline << img << dw::show;
   }
 
-  // Pause the program on the last image.
-  //dg::pause();
 }
