@@ -64,6 +64,8 @@ namespace dg
     bool
     event_queue::is_empty() const
     {
+      QApplication::processEvents();
+      QApplication::sendPostedEvents();
       return queue_.empty();
     }
 
@@ -77,6 +79,9 @@ namespace dg
     event_queue::pop_front()
     {
       assert(!is_empty());
+      QApplication::processEvents();
+      QApplication::sendPostedEvents();
+
       any_event r = queue_.front();
       queue_.pop();
       return r;
