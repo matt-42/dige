@@ -261,10 +261,9 @@ We define here our simple 2d image type that will be displayed by dige.
     dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>, <span style="color: #008" class="hl-keyword">true</span>) &lt;&lt; <span style="color: #800" class="hl-comment">// Checkable push button</span>
     dg::vbox_end;
 
-  <span style="color: #800" class="hl-comment">// Block until the user release any key</span>
+  <span style="color: #800" class="hl-comment">// Block until the user release a key</span>
   std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Press any key"</span> &lt;&lt; std::endl;
   de::wait_event(de::key_release());
-
 
   <span style="color: #800" class="hl-comment">// Sleep until the user release key a OR key d. Events can be combined</span>
   <span style="color: #800" class="hl-comment">// with operator|</span>
@@ -286,7 +285,7 @@ We define here our simple 2d image type that will be displayed by dige.
       std::cout &lt;&lt; <span style="color: #080" class="hl-string">"key d release"</span> &lt;&lt; std::endl;
   }
 
-  <span style="color: #800" class="hl-comment">// Non blocking event managment.</span>
+  <span style="color: #800" class="hl-comment">// Non blocking event management.</span>
   de::event_queue q(dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>).click() | de::key_release(de::key_a));
   de::event_queue q_esc(de::key_release(de::key_escape));
 
