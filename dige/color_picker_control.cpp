@@ -36,9 +36,14 @@
 namespace dg
 {
 
+  tooltip_generator::~tooltip_generator()
+  {
+  }
+
   color_picker_control::color_picker_control()
     : QWidget(0, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint |
-              Qt::X11BypassWindowManagerHint)
+              Qt::X11BypassWindowManagerHint),
+      generator_(0)
   {
     setFocusPolicy(Qt::NoFocus);
     resize(200, 200);
@@ -71,6 +76,12 @@ namespace dg
   }
 
   void
+  color_picker_control::set_tooltip_generator(tooltip_generator* g)
+  {
+    generator_ = g;
+  }
+
+  void
   color_picker_control::paintEvent(QPaintEvent *)
   {
     QPainter painter(this);
@@ -81,16 +92,27 @@ namespace dg
     QPainter writer(this);
     writer.setPen(Qt::black);
     writer.setFont(QFont("Helvetica", 9));
-    QString text;
-    QTextStream ss(&text);
-    ss << '(' << pos_.x() << ", " << pos_.y() << ")";
-    if (image_pos_.x() >= 0)
-      ss << " (" << image_pos_.x() << ", " << image_pos_.y() << ")";
-    ss << "\nrgb(" << color_.red() << ", " << color_.green()
-       << ", " << color_.blue() <<  ")";
-    writer.drawText(QRect(height() + 10, 0,
-                          width() - height() - 10, height()), Qt::AlignLeft,
-                    text);
+
+    if (generator_ && image_pos_.x() >= 0)
+    {
+      QString text = QString::fromStdString((*generator_)(image_pos_.x(), image_pos_.y()));
+      writer.drawText(QRect(height() + 10, 0,
+                      width() - height() - 10, height()), Qt::AlignLeft,
+                      text);
+    }
+    else
+    {
+      QString text;
+      QTextStream ss(&text);
+      ss << '(' << pos_.x() << ", " << pos_.y() << ")";
+      if (image_pos_.x() >= 0)
+        ss << " (" << image_pos_.x() << ", " << image_pos_.y() << ")";
+      ss << "\nrgb(" << color_.red() << ", " << color_.green()
+        << ", " << color_.blue() <<  ")";
+      writer.drawText(QRect(height() + 10, 0,
+                      width() - height() - 10, height()), Qt::AlignLeft,
+                      text);
+    }
   }
 
 } // end of namespace dg.

@@ -42,6 +42,22 @@ namespace dg
       QApplication::instance()->installEventFilter(this);
     }
 
+    event_queue::event_queue(const event_queue& q)
+      : QObject(),
+        queue_(q.queue_),
+        s_(q.s_)
+    {
+      QApplication::instance()->installEventFilter(this);
+    }
+
+    event_queue&
+    event_queue::operator=(const event_queue& q)
+    {
+      queue_ = q.queue_;
+      s_ = q.s_;
+      return *this;
+    }
+
     event_queue::event_queue(const any_event& e)
       : s_(any_event(e))
     {

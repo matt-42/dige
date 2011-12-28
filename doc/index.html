@@ -32,7 +32,7 @@
 </script>
 
 </head>
-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3><code class="email">&lt;<a class="email" href="mailto:firstname.lastname@gmail.com">firstname.lastname@gmail.com</a>&gt;</code></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10019"></a><p>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" title="Dige 0.1"><div class="titlepage"><div><div><h2 class="title"><a name="dige"></a>Dige 0.1</h2></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Matthieu</span> <span class="surname">Garrigues</span></h3><code class="email">&lt;<a class="email" href="mailto:matthieu.garrigues@gmail.com">matthieu.garrigues@gmail.com</a>&gt;</code></div></div></div><div><p class="copyright">Copyright &copy; 2010-2011 Matthieu Garrigues</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10019"></a><p>
         Distributed under the LGPL License, Version 3.0.
       </p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dige.intro">Introduction</a></span></dt><dt><span class="section"><a href="#dige.deps">Dependencies</a></span></dt><dt><span class="section"><a href="#dige.envs">Tested environments</a></span></dt><dt><span class="section"><a href="#dige.features">Features</a></span></dt><dt><span class="section"><a href="#dige.install">Compilation and Installation</a></span></dt><dt><span class="section"><a href="#dige.tutorial">Getting started</a></span></dt><dt><span class="section"><a href="#dige.complex_ui">GUI creation</a></span></dt><dt><span class="section"><a href="#dige.events">Event management</a></span></dt><dt><span class="section"><a href="#dige.widgets">Available widgets</a></span></dt><dt><span class="section"><a href="#dige.links">Links</a></span></dt></dl></div><div class="section" title="Introduction"><div class="titlepage"><div>
 <div><h2 class="title" style="clear: both"><a name="dige.intro"></a>Introduction</h2></div></div></div><p>
@@ -43,10 +43,12 @@
     </p><pre class="programlisting">
       
   <span xmlns:saxon="http://saxon.sf.net/" xmlns:fo="http://www.w3.org/1999/XSL/Format" style="color: #800" class="hl-comment">// GUI definition and creation.</span>
-  Window(<span style="color: #080" class="hl-string">"simple_image example"</span>, <span style="color: #066" class="hl-number">500</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;= ImageView(<span style="color: #080" class="hl-string">"view"</span>);
+  Window(<span style="color: #080" class="hl-string">"digedemo"</span>, <span style="color: #066" class="hl-number">500</span>, <span style="color: #066" class="hl-number">300</span>) &lt;&lt;=
+     vbox_start &lt;&lt; ImageView(<span style="color: #080" class="hl-string">"view"</span>) &lt;&lt; PushButton(<span style="color: #080" class="hl-string">"next"</span>)
+                &lt;&lt; vbox_end;
 
   my_rgb_image_type my_image;
-  for_each_event(e, key_release())
+  for_each_event(e, PushButton(<span style="color: #080" class="hl-string">"next"</span>).click())
   {
     <span style="color: #800" class="hl-comment">// [...Process my_image...]</span>
 
@@ -261,10 +263,9 @@ We define here our simple 2d image type that will be displayed by dige.
     dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>, <span style="color: #008" class="hl-keyword">true</span>) &lt;&lt; <span style="color: #800" class="hl-comment">// Checkable push button</span>
     dg::vbox_end;
 
-  <span style="color: #800" class="hl-comment">// Block until the user release any key</span>
+  <span style="color: #800" class="hl-comment">// Block until the user release a key</span>
   std::cout &lt;&lt; <span style="color: #080" class="hl-string">"Press any key"</span> &lt;&lt; std::endl;
   de::wait_event(de::key_release());
-
 
   <span style="color: #800" class="hl-comment">// Sleep until the user release key a OR key d. Events can be combined</span>
   <span style="color: #800" class="hl-comment">// with operator|</span>
@@ -286,7 +287,7 @@ We define here our simple 2d image type that will be displayed by dige.
       std::cout &lt;&lt; <span style="color: #080" class="hl-string">"key d release"</span> &lt;&lt; std::endl;
   }
 
-  <span style="color: #800" class="hl-comment">// Non blocking event managment.</span>
+  <span style="color: #800" class="hl-comment">// Non blocking event management.</span>
   de::event_queue q(dw::PushButton(<span style="color: #080" class="hl-string">"button"</span>).click() | de::key_release(de::key_a));
   de::event_queue q_esc(de::key_release(de::key_escape));
 

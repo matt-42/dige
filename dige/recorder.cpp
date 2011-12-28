@@ -17,6 +17,16 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <iostream>
+#include <boost/cstdint.hpp>
+
+using boost::uint8_t;
+using boost::uint16_t;
+using boost::uint32_t;
+using boost::uint64_t;
+using boost::int8_t;
+using boost::int16_t;
+using boost::int32_t;
+using boost::int64_t;
 
 extern "C"
 {
@@ -30,7 +40,7 @@ extern "C"
 #include <dige/recorder.h>
 #include <dige/widgets/image_view.h>
 
-using boost::uint8_t;
+
 
 namespace dg
 {

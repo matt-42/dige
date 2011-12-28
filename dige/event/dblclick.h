@@ -16,21 +16,22 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   make_event.cpp
+**\file   dblclick.h
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 14:15:17 2010
+**\date   Sun Nov  7 13:44:07 2010
 **
-**\brief  make_event implementation.
+**\brief  dblclick header.
 **
 **
 */
 
-# include <dige/event/click.h>
-# include <dige/event/dblclick.h>
-# include <dige/event/mouse_move.h>
-# include <dige/event/key_release.h>
-# include <dige/event/key_press.h>
-# include <dige/widgets/slider.h>
+#ifndef DIGE_DBLCLICK_H_
+# define DIGE_DBLCLICK_H_
+
+# include <dige/event/event.h>
+
+class QObject;
+class QEvent;
 
 namespace dg
 {
@@ -38,30 +39,22 @@ namespace dg
   namespace event
   {
 
-    typedef any_event (*event_factory)(QObject *obj, QEvent *event);
-
-    event_factory factories[] =
+    class dblclick : public Event<dblclick>
     {
-      make_click,
-      make_dblclick,
-      make_mouse_move,
-      make_key_release_event,
-      make_key_press_event,
-      make_slider_changed_event
+    public:
+      dblclick();
+      dblclick(QObject* widget);
+
+      bool operator==(const dblclick& b) const;
+
+    private:
+      QObject* widget_;
     };
 
-    any_event make_event(QObject *obj, QEvent *event)
-    {
-      any_event res;
-      for (unsigned i = 0; i < sizeof(factories) / sizeof(event_factory); i++)
-      {
-        res = factories[i](obj, event);
-        if (res.event())
-          return res;
-      }
-      return res;
-    }
+    any_event make_dblclick(QObject *obj, QEvent *event);
 
   } // end of namespace event.
 
 } // end of namespace dg.
+
+#endif

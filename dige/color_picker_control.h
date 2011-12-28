@@ -36,6 +36,13 @@
 
 namespace dg
 {
+  class tooltip_generator
+  {
+  public:
+    virtual ~tooltip_generator();
+
+    virtual std::string operator()(unsigned x, unsigned y) const = 0;
+  };
 
   /*!
   ** color_picker_control display information about a color.
@@ -65,6 +72,12 @@ namespace dg
     */
     void paintEvent(QPaintEvent *);
 
+
+    /*!
+    ** Set the tooltip generator.
+    */
+    void set_tooltip_generator(tooltip_generator* g);
+
   private:
     /*!
     ** Constructor. Build the window.
@@ -77,6 +90,8 @@ namespace dg
 
     static const unsigned width_ = 170;
     static const unsigned height_ = 40;
+
+    tooltip_generator* generator_;
   };
 
 } // end of namespace dg.

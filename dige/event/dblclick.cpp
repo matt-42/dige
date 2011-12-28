@@ -16,21 +16,20 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 /*!
-**\file   make_event.cpp
+**\file   dblclick.cpp
 **\author Matthieu Garrigues <matthieu.garrigues@gmail.com>
-**\date   Sun Nov  7 14:15:17 2010
+**\date   Sun Nov  7 14:23:15 2010
 **
-**\brief  make_event implementation.
+**\brief  dblclick implementation.
 **
 **
 */
 
-# include <dige/event/click.h>
+# include <iostream>
+# include <QObject>
+# include <QEvent>
+
 # include <dige/event/dblclick.h>
-# include <dige/event/mouse_move.h>
-# include <dige/event/key_release.h>
-# include <dige/event/key_press.h>
-# include <dige/widgets/slider.h>
 
 namespace dg
 {
@@ -38,28 +37,30 @@ namespace dg
   namespace event
   {
 
-    typedef any_event (*event_factory)(QObject *obj, QEvent *event);
-
-    event_factory factories[] =
+    dblclick::dblclick()
+      : widget_(0)
     {
-      make_click,
-      make_dblclick,
-      make_mouse_move,
-      make_key_release_event,
-      make_key_press_event,
-      make_slider_changed_event
-    };
+    }
 
-    any_event make_event(QObject *obj, QEvent *event)
+    dblclick::dblclick(QObject* widget)
+      : widget_(widget)
     {
-      any_event res;
-      for (unsigned i = 0; i < sizeof(factories) / sizeof(event_factory); i++)
-      {
-        res = factories[i](obj, event);
-        if (res.event())
-          return res;
-      }
-      return res;
+    }
+
+    bool dblclick::operator==(const dblclick& b) const
+    {
+      if (!widget_ || !b.widget_)
+        return true;
+      else
+        return b.widget_ == widget_;
+    }
+
+    any_event make_dblclick(QObject *obj, QEvent *event)
+    {
+      if (event->type() == QEvent::MouseButtonDblClick)
+        return dblclick(obj);
+
+      return any_event();
     }
 
   } // end of namespace event.

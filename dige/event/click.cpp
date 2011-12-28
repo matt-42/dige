@@ -57,8 +57,7 @@ namespace dg
 
     any_event make_click(QObject *obj, QEvent *event)
     {
-      if (event->type() == QEvent::MouseButtonPress ||
-          event->type() == QEvent::MouseButtonDblClick)
+      if (event->type() == QEvent::MouseButtonPress)
         return click(obj);
 
       return any_event();

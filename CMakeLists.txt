@@ -33,16 +33,18 @@ IF(WITH_FFMPEG)
   set(RECORDING_SRC dige/recorder.cpp)
   message(STATUS "Recording enabled")
   include_directories(${FFMPEG_INCLUDE_DIRS})
+  message(STATUS "FFMPEG INCLUDE: " ${FFMPEG_INCLUDE_DIRS})
 ENDIF(WITH_FFMPEG)
 
 
 IF (${CMAKE_C_COMPILER_ID} MATCHES GNU)
-   add_definitions(-g -W -Wall -Wextra)
+   add_definitions(-W -Wall -Wextra)
 ENDIF()
 
 add_library(dige
   dige/event/or_event.cpp
   dige/event/click.cpp
+  dige/event/dblclick.cpp
   dige/event/key_release.cpp
   dige/event/key_press.cpp
   dige/event/event.cpp
@@ -76,7 +78,9 @@ add_library(dige
   dige/panzoom_control.cpp
   ${RECORDING_SRC})
 
-install(TARGETS dige DESTINATION lib)
+install(TARGETS dige DESTINATION lib/Debug CONFIGURATIONS Debug)
+install(TARGETS dige DESTINATION lib/Release CONFIGURATIONS Release)
+
 install(DIRECTORY dige DESTINATION include
   FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY dige DESTINATION include

@@ -44,9 +44,12 @@ namespace dg
     class event_queue : public QObject
     {
     public:
+      event_queue(const event_queue& e);
       event_queue(const any_event_set& e);
       event_queue(const any_event& e);
       ~event_queue();
+
+      event_queue& operator=(const event_queue& e);
 
       bool is_empty() const;
       unsigned size() const;

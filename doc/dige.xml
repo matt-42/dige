@@ -6,7 +6,7 @@
   <articleinfo>
     <authorgroup>
     <author>
-      <firstname>Matthieu</firstname> <surname>Garrigues</surname> <email>firstname.lastname@gmail.com</email>
+      <firstname>Matthieu</firstname> <surname>Garrigues</surname> <email>matthieu.garrigues@gmail.com</email>
     </author>
     </authorgroup>
     <copyright>
@@ -29,10 +29,12 @@
     <programlisting language="cpp">
       <![CDATA[
   // GUI definition and creation.
-  Window("simple_image example", 500, 300) <<= ImageView("view");
+  Window("digedemo", 500, 300) <<=
+     vbox_start << ImageView("view") << PushButton("next")
+                << vbox_end;
 
   my_rgb_image_type my_image;
-  for_each_event(e, key_release())
+  for_each_event(e, PushButton("next").click())
   {
     // [...Process my_image...]
 

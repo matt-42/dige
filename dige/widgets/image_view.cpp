@@ -47,7 +47,7 @@ namespace dg
       currentWidget_->setGeometry(window_placer::place(width, height));
       currentWidget_->setFixedSize(width, height);
       currentWidget_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-      currentWidget_->setWindowTitle(QString::fromStdString(title));
+      //currentWidget_->setWindowTitle(QString::fromStdString(title));
       currentWidget_->show();
     }
 
