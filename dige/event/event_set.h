@@ -100,7 +100,7 @@ namespace dg
       any_event_set(const any_event& e);
 
       template <typename T>
-      any_event_set(const event_set<T>& e)
+        any_event_set(const ::dg::event::event_set<T>& e)
         : event_set_(new generic_event_set<T>(e.subcast()))
       {
       }

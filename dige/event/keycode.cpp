@@ -313,8 +313,6 @@ namespace dg
         case Qt::Key_MediaPrevious: return key_mediaprevious;
         case Qt::Key_MediaNext: return key_medianext;
         case Qt::Key_MediaRecord: return key_mediarecord;
-        case Qt::Key_MediaPause: return key_mediapause;
-        case Qt::Key_MediaTogglePlayPause: return key_mediatoggleplaypause;
         case Qt::Key_HomePage: return key_homepage;
         case Qt::Key_Favorites: return key_favorites;
         case Qt::Key_Search: return key_search;
@@ -338,8 +336,6 @@ namespace dg
         case Qt::Key_LaunchD: return key_launchd;
         case Qt::Key_LaunchE: return key_launche;
         case Qt::Key_LaunchF: return key_launchf;
-        case Qt::Key_LaunchG: return key_launchg;
-        case Qt::Key_LaunchH: return key_launchh;
         case Qt::Key_MonBrightnessUp: return key_monbrightnessup;
         case Qt::Key_MonBrightnessDown: return key_monbrightnessdown;
         case Qt::Key_KeyboardLightOnOff: return key_keyboardlightonoff;
@@ -435,8 +431,6 @@ namespace dg
         case Qt::Key_MediaLast: return key_medialast;
         case Qt::Key_unknown: return key_unknown;
         case Qt::Key_Call: return key_call;
-        case Qt::Key_Camera: return key_camera;
-        case Qt::Key_CameraFocus: return key_camerafocus;
         case Qt::Key_Context1: return key_context1;
         case Qt::Key_Context2: return key_context2;
         case Qt::Key_Context3: return key_context3;
@@ -446,9 +440,6 @@ namespace dg
         case Qt::Key_No: return key_no;
         case Qt::Key_Select: return key_select;
         case Qt::Key_Yes: return key_yes;
-        case Qt::Key_ToggleCallHangup: return key_togglecallhangup;
-        case Qt::Key_VoiceDial: return key_voicedial;
-        case Qt::Key_LastNumberRedial: return key_lastnumberredial;
         case Qt::Key_Execute: return key_execute;
         case Qt::Key_Printer: return key_printer;
         case Qt::Key_Play: return key_play;
@@ -740,8 +731,6 @@ namespace dg
         case key_mediaprevious: return Qt::Key_MediaPrevious;
         case key_medianext: return Qt::Key_MediaNext;
         case key_mediarecord: return Qt::Key_MediaRecord;
-        case key_mediapause: return Qt::Key_MediaPause;
-        case key_mediatoggleplaypause: return Qt::Key_MediaTogglePlayPause;
         case key_homepage: return Qt::Key_HomePage;
         case key_favorites: return Qt::Key_Favorites;
         case key_search: return Qt::Key_Search;
@@ -765,8 +754,6 @@ namespace dg
         case key_launchd: return Qt::Key_LaunchD;
         case key_launche: return Qt::Key_LaunchE;
         case key_launchf: return Qt::Key_LaunchF;
-        case key_launchg: return Qt::Key_LaunchG;
-        case key_launchh: return Qt::Key_LaunchH;
         case key_monbrightnessup: return Qt::Key_MonBrightnessUp;
         case key_monbrightnessdown: return Qt::Key_MonBrightnessDown;
         case key_keyboardlightonoff: return Qt::Key_KeyboardLightOnOff;
@@ -862,8 +849,6 @@ namespace dg
         case key_medialast: return Qt::Key_MediaLast;
         case key_unknown: return Qt::Key_unknown;
         case key_call: return Qt::Key_Call;
-        case key_camera: return Qt::Key_Camera;
-        case key_camerafocus: return Qt::Key_CameraFocus;
         case key_context1: return Qt::Key_Context1;
         case key_context2: return Qt::Key_Context2;
         case key_context3: return Qt::Key_Context3;
@@ -873,9 +858,6 @@ namespace dg
         case key_no: return Qt::Key_No;
         case key_select: return Qt::Key_Select;
         case key_yes: return Qt::Key_Yes;
-        case key_togglecallhangup: return Qt::Key_ToggleCallHangup;
-        case key_voicedial: return Qt::Key_VoiceDial;
-        case key_lastnumberredial: return Qt::Key_LastNumberRedial;
         case key_execute: return Qt::Key_Execute;
         case key_printer: return Qt::Key_Printer;
         case key_play: return Qt::Key_Play;

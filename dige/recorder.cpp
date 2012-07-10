@@ -48,8 +48,8 @@ namespace dg
   bool recorder::ffmpeg_initialized_ = false;
 
 //#define VIDEO_CODEC CODEC_ID_MPEG2VIDEO
-//#define VIDEO_CODEC CODEC_ID_MPEG4
-#define VIDEO_CODEC CODEC_ID_H264
+#define VIDEO_CODEC CODEC_ID_MPEG4
+  //#define VIDEO_CODEC CODEC_ID_H264
 //#define VIDEO_CODEC CODEC_ID_FFVHUFF
 
 #define FRAME_FORMAT PIX_FMT_YUV420P
@@ -70,7 +70,7 @@ namespace dg
   {
     if (!ffmpeg_initialized_)
     {
-      avcodec_init();
+      //avcodec_init();
       avcodec_register_all();
       av_register_all();
       av_log_set_level(10);
@@ -169,7 +169,7 @@ namespace dg
     avcontext_->i_quant_factor = 0.71;
     avcontext_->qcompress = 0.6;
     avcontext_->max_qdiff = 4;
-    avcontext_->directpred = 1;
+    //DEPRECATED avcontext_->directpred = 1;
     avcontext_->gop_size = 300;
     avcontext_->max_b_frames=3;
 
@@ -242,7 +242,11 @@ namespace dg
     /* open the output file, if needed */
     if (!(outputfmt_->flags & AVFMT_NOFILE))
     {
+#ifdef URL_WRONLY
       if (avio_open (&fmtcontext_->pb, path_.c_str(), URL_WRONLY) < 0)
+#else
+      if (avio_open (&fmtcontext_->pb, path_.c_str(), AVIO_FLAG_WRITE) < 0)
+#endif
       {
         std::cerr << "Could not open "<< path_ << std::endl;
         assert(0 && "Could not open ouput file");

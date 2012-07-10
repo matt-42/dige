@@ -84,7 +84,7 @@ namespace dg
     check_gl_error();
     assert(gl_id_);
     glBindTexture(GL_TEXTURE_2D, gl_id_);
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT,4);
     glTexImage2D(GL_TEXTURE_2D,
                  0, GL_RGB, width_, height_,
                  0, format_, comp_type_, buffer_);

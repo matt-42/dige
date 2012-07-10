@@ -78,6 +78,7 @@ add_library(dige
   dige/panzoom_control.cpp
   ${RECORDING_SRC})
 
+install(TARGETS dige DESTINATION lib/)
 install(TARGETS dige DESTINATION lib/Debug CONFIGURATIONS Debug)
 install(TARGETS dige DESTINATION lib/Release CONFIGURATIONS Release)
 
