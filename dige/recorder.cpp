@@ -88,6 +88,7 @@ namespace dg
     {
       // record delayed frames.
       // unsigned frame_size = 1;
+#ifdef FFMPEG_54
       int got_packet_ptr = 1;
       while (got_packet_ptr)
       {
@@ -111,6 +112,28 @@ namespace dg
 	}
 	av_destruct_packet(&pkt);
       }
+
+#else
+      unsigned frame_size = 1;
+      while (frame_size)
+      {
+        frame_size = avcodec_encode_video(avcontext_, video_buffer_, video_buffer_size_, NULL);
+        if (frame_size > 0)
+        {
+          AVPacket pkt;
+          av_init_packet(&pkt);
+          assert(avcontext_ && avcontext_->coded_frame);
+          if(avcontext_->coded_frame->key_frame)
+            pkt.flags |= AV_PKT_FLAG_KEY;
+          pkt.stream_index = video_st_->index;
+          pkt.data = video_buffer_;
+          pkt.size = frame_size;
+
+          int ret = av_write_frame(fmtcontext_, &pkt);
+          assert(ret >= 0);
+        }
+      }
+#endif
 
       av_write_trailer (fmtcontext_);
       avio_close (fmtcontext_->pb);
@@ -316,6 +339,7 @@ namespace dg
     sws_scale(swcontext_, tmp, stride, 0,
               window_capture_height_, yuvframe_->data, yuvframe_->linesize);
 
+#ifdef FFMPEG_54
     {
       AVPacket pkt;
       av_init_packet(&pkt);
@@ -336,6 +360,28 @@ namespace dg
       }
       av_destruct_packet(&pkt);
     }
+    
+#else
+
+    int encode_size
+      = avcodec_encode_video(avcontext_, video_buffer_, video_buffer_size_,
+                             yuvframe_);
+
+    if (encode_size > 0)
+    {
+      AVPacket pkt;
+      av_init_packet(&pkt);
+      if(avcontext_->coded_frame->key_frame)
+	pkt.flags |= AV_PKT_FLAG_KEY;
+      pkt.stream_index = video_st_->index;
+      pkt.data = video_buffer_;
+      pkt.size = encode_size;
+      int ret = av_write_frame(fmtcontext_, &pkt);
+      assert(ret >= 0);
+    }
+
+#endif
+
   }
 
   std::map<const std::string, boost::shared_ptr<recorder> >&
