@@ -43,12 +43,14 @@ namespace dg
     {
     public:
       mouse_move();
-      mouse_move(QObject* widget);
+      mouse_move(QObject* widget, float x, float y);
 
       bool operator==(const mouse_move& b) const;
 
+      const float* pos() const;
     private:
       QObject* widget_;
+      float pos_[2];
     };
 
     any_event make_mouse_move(QObject *obj, QEvent *event);

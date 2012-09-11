@@ -28,7 +28,7 @@
 # include <iostream>
 # include <QObject>
 # include <QEvent>
-
+# include <QMouseEvent>
 # include <dige/event/mouse_move.h>
 
 namespace dg
@@ -42,9 +42,11 @@ namespace dg
     {
     }
 
-    mouse_move::mouse_move(QObject* widget)
+    mouse_move::mouse_move(QObject* widget, float x, float y)
       : widget_(widget)
     {
+      pos_[0] = x;
+      pos_[1] = y;
     }
 
     bool mouse_move::operator==(const mouse_move& b) const
@@ -55,10 +57,18 @@ namespace dg
         return b.widget_ == widget_;
     }
 
+    const float* mouse_move::pos() const
+    {
+      return pos_;
+    }
+
     any_event make_mouse_move(QObject *obj, QEvent *event)
     {
       if (event->type() == QEvent::MouseMove)
-        return mouse_move(obj);
+      {
+	const QMouseEvent& e = * static_cast<QMouseEvent*>(event);
+        return mouse_move(obj, e.pos().x(), e.pos().y());
+      }
 
       return any_event();
     }

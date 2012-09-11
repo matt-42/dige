@@ -39,8 +39,8 @@ namespace dg
   namespace event
   {
 
-    key_press::key_press(keycode k)
-      : k_(k)
+    key_press::key_press(keycode k, bool auto_repeat)
+      : k_(k), auto_repeat_(auto_repeat)
     {
     }
 
@@ -51,7 +51,7 @@ namespace dg
 
     bool key_press::operator==(const key_press& b) const
     {
-      return b.k_ == k_ || k_ == key_any || b.k_ == key_any;
+      return (b.k_ == k_ || k_ == key_any || b.k_ == key_any) && b.auto_repeat_ == auto_repeat_;
     }
 
     any_event make_key_press_event(QObject*, QEvent* event)
@@ -59,10 +59,9 @@ namespace dg
       if (event->type() == QEvent::KeyPress)
       {
         QKeyEvent* e = (QKeyEvent*) event;
-        if (e->isAutoRepeat())
-          return any_event();
-
-        return key_press(qt_key_to_dige_key(e->key()));
+        // if (e->isAutoRepeat() && !auto_repeat_)
+        //   return any_event();
+        return key_press(qt_key_to_dige_key(e->key()), e->isAutoRepeat());
       }
       return any_event();
     }

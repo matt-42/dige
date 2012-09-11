@@ -29,7 +29,6 @@
 # define DIGE_IMAGE_H_
 
 #include <dige/texture.h>
-#include <dige/displaylist.h>
 
 namespace dg
 {

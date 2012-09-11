@@ -116,6 +116,15 @@ namespace dg
     draw_(width, height);
   }
 
+  bool
+  displaylist::is_empty() const
+  {
+    unsigned size = 0;
+    for (unsigned i = 0; i < textures_->size(); i++)
+      size += (*textures_)[i].size();
+    return !textures_ || (size == 0);
+  }
+
   void
   displaylist::draw_(unsigned width, unsigned height, layout* layout)
   {

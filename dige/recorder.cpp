@@ -33,8 +33,8 @@ extern "C"
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
-#include <libavcodec/opt.h>
-#include <libavutil/error.h>
+//#include <libavcodec/opt.h>
+#include <libavutil/avutil.h>
 }
 
 #include <dige/recorder.h>
@@ -47,14 +47,14 @@ namespace dg
   std::map<const std::string, boost::shared_ptr<recorder> > recorder::recorders_;
   bool recorder::ffmpeg_initialized_ = false;
 
-//#define VIDEO_CODEC CODEC_ID_MPEG2VIDEO
-#define VIDEO_CODEC CODEC_ID_MPEG4
+  //#define VIDEO_CODEC CODEC_ID_MPEG2VIDEO
+  #define VIDEO_CODEC CODEC_ID_MPEG4
   //#define VIDEO_CODEC CODEC_ID_H264
-//#define VIDEO_CODEC CODEC_ID_FFVHUFF
+  //#define VIDEO_CODEC CODEC_ID_FFVHUFF
 
 #define FRAME_FORMAT PIX_FMT_YUV420P
 
-  recorder::recorder(const std::string& path)
+  recorder::recorder(const std::string& path, int fps)
     : avcodec_(0),
       avcontext_(0),
       swcontext_(0),
@@ -66,7 +66,8 @@ namespace dg
       path_(path),
       init_failed_(false),
       window_capture_(0),
-      window_capture_size_(0)
+      window_capture_size_(0),
+      frame_per_seconds_(fps)
   {
     if (!ffmpeg_initialized_)
     {
@@ -86,24 +87,29 @@ namespace dg
     if (!init_failed_ && avcontext_)
     {
       // record delayed frames.
-      unsigned frame_size = 1;
-      while (frame_size)
+      // unsigned frame_size = 1;
+      int got_packet_ptr = 1;
+      while (got_packet_ptr)
       {
-        frame_size = avcodec_encode_video(avcontext_, video_buffer_, video_buffer_size_, NULL);
-        if (frame_size > 0)
-        {
-          AVPacket pkt;
-          av_init_packet(&pkt);
-          assert(avcontext_ && avcontext_->coded_frame);
-          if(avcontext_->coded_frame->key_frame)
-            pkt.flags |= AV_PKT_FLAG_KEY;
-          pkt.stream_index = video_st_->index;
-          pkt.data = video_buffer_;
-          pkt.size = frame_size;
+	AVPacket pkt;
+	av_init_packet(&pkt);
+	pkt.data = NULL;
+	pkt.size = 0;
+	if (avcodec_encode_video2(avcontext_, &pkt, 0, &got_packet_ptr))
+	  std::cout << "avcodec_encode_video2 fail" << std::endl;
 
-          int ret = av_write_frame(fmtcontext_, &pkt);
-          assert(ret >= 0);
-        }
+	std::cout << "got_packet_ptr: " << got_packet_ptr << std::endl;
+
+	if(avcontext_->coded_frame->key_frame)
+	  pkt.flags |= AV_PKT_FLAG_KEY;
+	pkt.stream_index = video_st_->index;
+
+	if (got_packet_ptr)
+	{
+	  int ret = av_write_frame(fmtcontext_, &pkt);
+	  assert(ret >= 0);
+	}
+	av_destruct_packet(&pkt);
       }
 
       av_write_trailer (fmtcontext_);
@@ -119,7 +125,6 @@ namespace dg
       delete [] window_capture_;
     }
   }
-
 
   void recorder::init_context(unsigned width, unsigned height)
   {
@@ -139,12 +144,12 @@ namespace dg
 
     assert(outputfmt_->video_codec != CODEC_ID_NONE);
 
-    video_st_ = av_new_stream(fmtcontext_, 0);
+    video_st_ = avformat_new_stream(fmtcontext_, 0);
     assert(video_st_);
 
-
     avcontext_ = video_st_->codec;
-    avcodec_get_context_defaults(avcontext_);
+    avcodec_ = avcodec_find_encoder(VIDEO_CODEC);
+    avcodec_get_context_defaults3(avcontext_, avcodec_);
 
     yuvframe_ = avcodec_alloc_frame();
     rgbframe_ = avcodec_alloc_frame();
@@ -169,11 +174,13 @@ namespace dg
     avcontext_->i_quant_factor = 0.71;
     avcontext_->qcompress = 0.6;
     avcontext_->max_qdiff = 4;
+
     //DEPRECATED avcontext_->directpred = 1;
+
     avcontext_->gop_size = 300;
     avcontext_->max_b_frames=3;
 
-    avcontext_->time_base.den = 25;
+    avcontext_->time_base.den = frame_per_seconds_;
     avcontext_->time_base.num = 1;
 
     avcontext_->pix_fmt = FRAME_FORMAT;
@@ -181,7 +188,6 @@ namespace dg
     av_dump_format(fmtcontext_, 0, path_.c_str(), 1);
 
     // find the mpeg1 video encoder
-    avcodec_ = avcodec_find_encoder(avcontext_->codec_id);
 
     if (!avcodec_)
     {
@@ -189,14 +195,15 @@ namespace dg
       goto init_failed;
     }
 
-    // open the codec.
     int err;
-    if ((err = avcodec_open(avcontext_, avcodec_)) < 0)
+    avopts_ = 0;
+    // open the codec.
+    if ((err = avcodec_open2(avcontext_, avcodec_, &avopts_)) < 0)
     {
       char err_message[1000];
       memset(err_message, 0, 1000);
       int err_err = av_strerror(-err, err_message, 1000);
-      std::cerr << "Could not open codec: error " << err_err << ": "
+      std::cerr << "avcodec_open2 Could not open codec: error " << err_err << ": "
                 << err_message << std::endl;
       goto init_failed;
     }
@@ -207,22 +214,19 @@ namespace dg
 
     // Initialization of ffmpeg frames.
     {
-      unsigned size = avcontext_->width * avcontext_->height;
-      window_capture_size_ = 2*size * 3 * sizeof(unsigned char); // size for RGB
+      int rgb_size = avpicture_get_size(PIX_FMT_RGB24, avcontext_->width, avcontext_->height);
+
+      window_capture_size_ = rgb_size * sizeof(uint8_t); // size for RGB
       window_capture_ = new unsigned char[window_capture_size_];
       window_capture_width_ = avcontext_->width;
       window_capture_height_ = avcontext_->height;
 
 
-      rgbframe_->data[0] = (uint8_t*) window_capture_;
-      rgbframe_->linesize[0] = avcontext_->width * 3 * sizeof(unsigned char);
+      avpicture_fill((AVPicture *)rgbframe_, window_capture_, PIX_FMT_RGB24, avcontext_->width, avcontext_->height);
 
-      yuvframe_->data[0] = new uint8_t[(size * 3) / 2];
-      yuvframe_->data[1] = yuvframe_->data[0] + size;
-      yuvframe_->data[2] = yuvframe_->data[1] + size / 4;
-      yuvframe_->linesize[0] = avcontext_->width;
-      yuvframe_->linesize[1] = avcontext_->width / 2;
-      yuvframe_->linesize[2] = avcontext_->width / 2;
+      int yuv_size = avpicture_get_size(PIX_FMT_YUV420P, avcontext_->width, avcontext_->height);
+      avpicture_fill((AVPicture *)yuvframe_, new uint8_t[yuv_size * sizeof(uint8_t)],
+      		     PIX_FMT_YUV420P, avcontext_->width, avcontext_->height);
     }
 
     // Swscale context.
@@ -308,28 +312,29 @@ namespace dg
 
     uint8_t* tmp[1] = { data };
     int stride[1] = { s };
-    // int r =
+    int r =
     sws_scale(swcontext_, tmp, stride, 0,
               window_capture_height_, yuvframe_->data, yuvframe_->linesize);
 
-    // Encode video.
-    int encode_size
-      = avcodec_encode_video(avcontext_, video_buffer_, video_buffer_size_,
-                             yuvframe_);
-
-    if (encode_size > 0)
     {
       AVPacket pkt;
       av_init_packet(&pkt);
+      pkt.data = NULL;
+      pkt.size = 0;
+      int got_packet_ptr = 0;
+      if (avcodec_encode_video2(avcontext_, &pkt, yuvframe_, &got_packet_ptr))
+      	std::cout << "avcodec_encode_video2 fail" << std::endl;
 
       if(avcontext_->coded_frame->key_frame)
         pkt.flags |= AV_PKT_FLAG_KEY;
       pkt.stream_index = video_st_->index;
-      pkt.data = video_buffer_;
-      pkt.size = encode_size;
 
-      int ret = av_write_frame(fmtcontext_, &pkt);
-      assert(ret >= 0);
+      if (got_packet_ptr)
+      {
+	int ret = av_write_frame(fmtcontext_, &pkt);
+	assert(ret >= 0);
+      }
+      av_destruct_packet(&pkt);
     }
   }
 
@@ -339,7 +344,7 @@ namespace dg
     return recorders_;
   }
 
-  recorder& record(const std::string& path)
+  recorder& record(const std::string& path, int fps)
   {
     std::map<const std::string, boost::shared_ptr<recorder> >::const_iterator it
       = recorder::recorders().find(path);
@@ -349,7 +354,7 @@ namespace dg
     }
     else
     {
-      recorder* r = new recorder(path);
+      recorder* r = new recorder(path, fps);
       recorder::recorders()[path] = boost::shared_ptr<recorder>(r);
       return *r;
     }

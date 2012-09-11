@@ -42,6 +42,7 @@ extern "C"
   struct AVFormatContext;
   struct AVOutputFormat;
   struct AVStream;
+  struct AVDictionary;
 
   struct SwsContext;
   struct AVFrame;
@@ -65,7 +66,7 @@ namespace dg
     ** \note Use record to create a new recorder.
     **
     */
-    recorder(const std::string& output_video_filepath);
+    recorder(const std::string& output_video_filepath, int fps);
 
   public:
     /*!
@@ -103,6 +104,7 @@ namespace dg
     AVCodec* avcodec_;          /*!< ffmpeg codec. */
     AVCodecContext* avcontext_; /*!< ffmpeg context. */
     AVFormatContext* fmtcontext_;
+    AVDictionary *avopts_;
     AVOutputFormat  *outputfmt_;
     AVStream        *video_st_;
     SwsContext* swcontext_;     /*!< swscale context. */
@@ -129,7 +131,7 @@ namespace dg
   **
   ** \return the recorder.
   */
-  recorder& record(const std::string& video_filepath);
+  recorder& record(const std::string& video_filepath, int fps = 25);
 
 } // end of namespace dg.
 

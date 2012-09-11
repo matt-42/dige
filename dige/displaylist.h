@@ -41,6 +41,11 @@
 namespace dg
 {
 
+  // Fwd decl.
+  class texture;
+  template <typename T>
+  texture adapt(const T& i);
+
   /// Layout.
   typedef std::vector<std::vector<rect2d> > layout;
 
@@ -85,6 +90,8 @@ namespace dg
 
     /// Clear the list.
     void clear();
+
+    bool is_empty() const;
 
     /*!
     ** Draw the list in the given dimensions.

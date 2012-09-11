@@ -44,11 +44,12 @@ namespace dg
     {
     public:
       key_press();
-      key_press(keycode k);
+      key_press(keycode k, bool auto_repeat = false);
 
       bool operator==(const key_press& b) const;
 
     private:
+      bool auto_repeat_;
       keycode k_;
     };
 

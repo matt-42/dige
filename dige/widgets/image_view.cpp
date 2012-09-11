@@ -41,8 +41,9 @@ namespace dg
       if (image_views().size() == 0)
         currentWidget_ = new gl_widget(dlist_);
       else
-        currentWidget_ = new gl_widget(dlist_,
-                                       image_view::image_views().begin()->second->currentWidget_);
+        currentWidget_ = new gl_widget(dlist_, 0
+                                       //image_view::image_views().begin()->second->currentWidget_
+				       );
 
       currentWidget_->setGeometry(window_placer::place(width, height));
       currentWidget_->setFixedSize(width, height);
@@ -132,6 +133,16 @@ namespace dg
     {
       list_on_screen_ = true;
       currentWidget_->updateGL();
+    }
+
+    void image_view::opengl_make_current()
+    {
+      currentWidget_->makeCurrent();
+    }
+
+    void image_view::swap_buffers()
+    {
+      currentWidget_->swapBuffers();
     }
 
 

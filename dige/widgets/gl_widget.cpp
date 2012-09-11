@@ -50,6 +50,7 @@ namespace dg
       installEventFilter(&panzoom::instance());
       installEventFilter(&color_picker::instance());
       setMouseTracking(true);
+      setAutoBufferSwap(false);
     }
 
     void
@@ -75,6 +76,9 @@ namespace dg
     void
     gl_widget::paintGL()
     {
+      if (dlist_->is_empty()) 
+	return;
+
       glClear(GL_COLOR_BUFFER_BIT);
       glPushMatrix();
       glScalef(scale_, scale_, 1);
@@ -83,6 +87,8 @@ namespace dg
                    0);
       dlist_->draw(width(), height(), layout_);
       glPopMatrix();
+
+      swapBuffers();
     }
 
     QColor

@@ -116,6 +116,9 @@ namespace dg
       /// Unload display list from video memory.
       void unload_list();
 
+      void opengl_make_current();
+      void swap_buffers();
+
       /*!
       ** Dump the image_view content to \p buffer.
       ** Resize it if needed
