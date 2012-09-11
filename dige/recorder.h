@@ -120,7 +120,8 @@ namespace dg
     unsigned window_capture_width_; /*!< rgbframe width. */
     unsigned window_capture_height_; /*!< rgbframe height. */
 
-    friend recorder& record(const std::string& video_filepath);
+    int frame_per_seconds_;
+    friend recorder& record(const std::string& video_filepath, int fps);
   };
 
   /*!
