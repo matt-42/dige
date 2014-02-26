@@ -11,7 +11,7 @@ include(${QT_USE_FILE})
 
 SET(CMAKE_VERBOSE_MAKEFILE off)
 
-include_directories(${CMAKE_SOURCE_DIR}
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     $ENV{HOME}/local/include
                     ${Boost_INCLUDE_DIRS})
 
